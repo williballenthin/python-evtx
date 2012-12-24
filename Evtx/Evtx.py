@@ -2,7 +2,14 @@ import binascii
 import mmap
 import contextlib
 from BinaryParser import *
+from Nodes import *
 import BinaryParser
+from exceptions import NotImplementedError
+
+
+def xml(item):
+    return item.__xml__()
+
 
 class FileHeader(Block):
     def __init__(self, buf, offset):
@@ -20,6 +27,12 @@ class FileHeader(Block):
         self.declare_field("dword",  "flags")
         self.declare_field("binary", "unused1", length=0x4c)
         self.declare_field("dword",  "checksum")
+
+    def __repr__(self):
+        return "FileHeader(buf=%r, offset=%r)" % (self._buf, self._offset)
+
+    def __str__(self):
+        return "FileHeader(offset=%s)" % (hex(self._offset))
 
     def check_magic(self):
         """
@@ -100,6 +113,8 @@ class ChunkHeader(Block):
     def __init__(self, buf, offset):
         debug("CHUNK HEADER at %s." % (hex(offset)))
         super(ChunkHeader, self).__init__(buf, offset)
+        self._cached_strings = None
+
         self.declare_field("string", "magic", 0x0, 8)
         self.declare_field("qword",  "log_first_record_number")
         self.declare_field("qword",  "log_last_record_number")
@@ -111,6 +126,12 @@ class ChunkHeader(Block):
         self.declare_field("dword",  "data_checksum")
         self.declare_field("binary", "unused", length=0x44)
         self.declare_field("dword",  "header_checksum")
+
+    def __repr__(self):
+        return "ChunkHeader(buf=%r, offset=%r)" % (self._buf, self._offset)
+
+    def __str__(self):
+        return "ChunkHeader(offset=%s)" % (hex(self._offset))
 
     def check_magic(self):
         """
@@ -146,6 +167,23 @@ class ChunkHeader(Block):
             self.calculate_header_checksum() == self.header_checksum() and \
             self.calculate_data_checksum() == self.data_checksum()
 
+    def strings(self):
+        """
+        @return A dict(offset --> NameStringNode)
+        """
+        if self._cached_strings: 
+            return self._cached_strings
+
+        self._cached_strings = {}
+        for i in xrange(64):
+            ofs = self.unpack_dword(0x80 + (i * 4))
+            while ofs > 0:
+                name_string = NameStringNode(self._buf, self._offset + ofs, 
+                                             self, self)
+                self._cached_strings[ofs] = name_string
+                ofs = name_string.next_offset()
+
+        return self._cached_strings
 
 
 def main():
@@ -162,6 +200,11 @@ def main():
             
             for ch in fh.chunks():
                 print ch.verify()
+
+            ch = fh.first_chunk()
+            for s in ch.strings().values():
+                print xml(s)
+
 
 if __name__ == "__main__":
     main()

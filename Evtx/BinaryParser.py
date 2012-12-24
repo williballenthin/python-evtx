@@ -25,20 +25,25 @@ import types
 
 verbose = False
 
+
 def debug(message):
     global verbose
     if verbose:
         print "# [d] %s" % (message)
 
+
 def warning(message):
     print "# [w] %s" % (message)
+
 
 def info(message):
     print "# [i] %s" % (message)
 
+
 def error(message):
     print "# [e] %s" % (message)
     sys.exit(-1)
+
 
 def align(offset, alignment):
     """
@@ -50,6 +55,7 @@ def align(offset, alignment):
     if offset % alignment == 0:
         return offset
         return offset + (alignment - (offset % alignment))
+
 
 def dosdate(dosdate, dostime):
     """
@@ -76,9 +82,11 @@ def dosdate(dosdate, dostime):
     except:
         return datetime.datetime.min
 
+
 def parse_windows_timestamp(qword):
     # see http://integriography.wordpress.com/2010/01/16/using-phython-to-parse-and-present-windows-64-bit-timestamps/
     return datetime.utcfromtimestamp(float(qword) * 1e-7 - 11644473600)
+
 
 class BinaryParserException(Exception):
     """
@@ -93,8 +101,12 @@ class BinaryParserException(Exception):
         super(BinaryParserException, self).__init__()
         self._value = value
 
+    def __repr__(self):
+        return "BinaryParserException(%r)" % (self._value)
+
     def __str__(self):
         return "Binary Parser Exception: %s" % (self._value)
+
 
 class ParseException(BinaryParserException):
     """
@@ -109,17 +121,25 @@ class ParseException(BinaryParserException):
         """
         super(ParseException, self).__init__(value)
 
+    def __repr__(self):
+        return "ParseException(%r)" % (self._value)
+
     def __str__(self):
         return "Parse Exception(%s)" % (self._value)
+
 
 class OverrunBufferException(ParseException):
     def __init__(self, readOffs, bufLen):
         tvalue = "read: %s, buffer length: %s" % (hex(readOffs), hex(bufLen))
         super(ParseException, self).__init__(tvalue)
 
+    def __repr__(self):
+        return "OverrunBufferException(%r)" % (self._value)
+
     def __str__(self):
         return "Tried to parse beyond the end of the file (%s)" % \
             (self._value)
+
 
 class Block(object):
     """ 
@@ -137,6 +157,9 @@ class Block(object):
         self._offset = offset
         self._implicit_offset = 0
 
+    def __repr__(self):
+        return "Block(buf=%r, offset=%r)" % (self._buf, self._offset)
+
     def __unicode__(self):
         return u"BLOCK @ %s." % (hex(self.offset()))
 
@@ -152,14 +175,11 @@ class Block(object):
         - `type`: A string. Should be one of the unpack_* types.
         - `name`: A string. 
         - `offset`: A number.
-        - `length`: (Optional) A number.
+        - `length`: (Optional) A number. For (w)strings, length in chars.
         """
         if offset == None:
             offset = self._implicit_offset
-            def handler():
-                f = getattr(self, "unpack_" + type)
-                return f(offset)
-        elif length == None:
+        if length == None:
             def handler():
                 f = getattr(self, "unpack_" + type)
                 return f(offset)
@@ -262,7 +282,8 @@ class Block(object):
 
     def unpack_int(self, offset):
         """
-        Returns a little-endian signed integer (4 bytes) from the relative offset.
+        Returns a little-endian signed integer (4 bytes) from the 
+          relative offset.
         Arguments:
         - `offset`: The relative offset from the start of the block.
         Throws:
