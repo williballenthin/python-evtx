@@ -126,17 +126,15 @@ class Block(object):
     Base class for structure blocks in binary parsing.
     A block is associated with a offset into a byte-string.
     """
-    def __init__(self, buf, offset, parent):
+    def __init__(self, buf, offset):
         """
         Constructor.
         Arguments:
         - `buf`: Byte string containing stuff to parse.
         - `offset`: The offset into the buffer at which the block starts.
-        - `parent`: The parent block, which links to this block.
         """
         self._buf = buf
         self._offset = offset
-        self._parent = parent
         self._implicit_offset = 0
 
     def __unicode__(self):
@@ -369,13 +367,6 @@ class Block(object):
         - `offset`: The relative offset into this block.
         """
         return self._offset + offset
-
-    def parent(self):
-        """
-        Get the parent block. See the class documentation for what 
-          the parent link is.
-        """
-        return self._parent
 
     def offset(self):
         """
