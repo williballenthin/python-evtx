@@ -7,6 +7,27 @@ class BXmlNode(Block):
         self._chunk = chunk
         self._parent = parent
 
+        self._dispatch_table = [
+            Node0x00,
+            Node0x01,
+            Node0x02,
+            Node0x03,
+            Node0x04,
+            Node0x05,
+            Node0x06,
+            Node0x07,
+            Node0x08,
+            Node0x09,
+            Node0x0A,
+            Node0x0B,
+            Node0x0C,
+            Node0x0D,
+            Node0x0E,
+            Node0x0F,
+            ]
+
+
+
     def __repr__(self):
         return "BXmlNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
             (self._buf, self._offset, self._chunk, self._parent)
@@ -26,25 +47,6 @@ class BXmlNode(Block):
         raise NotImplementedError("tag_length not implemented for %r") % \
             (self)
 
-    dispatch_table = [
-        Node0x00,
-        Node0x01,
-        Node0x02,
-        Node0x03,
-        Node0x04,
-        Node0x05,
-        Node0x06,
-        Node0x07,
-        Node0x08,
-        Node0x09,
-        Node0x0A,
-        Node0x0B,
-        Node0x0C,
-        Node0x0D,
-        Node0x0E,
-        Node0x0F,
-    ]
-
     def children(self):
         """
         @return A list containing all of the children BXmlNodes.
@@ -55,7 +57,10 @@ class BXmlNode(Block):
             token = self.unpack_byte(ofs)
             if token == 0x00:
                 break
-            child = dispatch_table[token]
+            try:
+                HandlerNodeClass = self._dispatch_table[token]
+            except IndexError:
+                child = HandlerNodeClass(self._buf, ofs, self._chunk, self)
             ret.append(child)
             ofs += child.length()
         return ret
@@ -68,6 +73,7 @@ class BXmlNode(Block):
         ret = self.tag_length()
         for child in self.children():
             ret += child.length()
+        ret += 1  # for the 0x00 token
         return ret
 
 

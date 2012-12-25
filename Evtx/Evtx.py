@@ -1,10 +1,10 @@
 import binascii
 import mmap
 import contextlib
+from exceptions import NotImplementedError
+
 from BinaryParser import *
 from Nodes import *
-import BinaryParser
-from exceptions import NotImplementedError
 
 
 def xml(item):
@@ -15,7 +15,7 @@ class FileHeader(Block):
     def __init__(self, buf, offset):
         debug("FILE HEADER at %s." % (hex(offset)))
         super(FileHeader, self).__init__(buf, offset)
-        self.declare_field("string", "magic", 0x0, 8)
+        self.declare_field("string", "magic", 0x0, length=8)
         self.declare_field("qword",  "unused0")
         self.declare_field("qword",  "current_chunk_number")
         self.declare_field("qword",  "next_record_number")
@@ -115,7 +115,7 @@ class ChunkHeader(Block):
         super(ChunkHeader, self).__init__(buf, offset)
         self._cached_strings = None
 
-        self.declare_field("string", "magic", 0x0, 8)
+        self.declare_field("string", "magic", 0x0, length=8)
         self.declare_field("qword",  "log_first_record_number")
         self.declare_field("qword",  "log_last_record_number")
         self.declare_field("qword",  "file_first_record_number")
@@ -188,8 +188,7 @@ class ChunkHeader(Block):
 
 def main():
     import sys    
-
-    
+    import BinaryParser
     BinaryParser.verbose = True
 
     with open(sys.argv[1], 'r') as f:
@@ -204,6 +203,9 @@ def main():
             ch = fh.first_chunk()
             for s in ch.strings().values():
                 print xml(s)
+                print s.children()
+
+            
 
 
 if __name__ == "__main__":
