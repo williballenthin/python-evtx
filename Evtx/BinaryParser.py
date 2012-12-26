@@ -21,6 +21,7 @@
 
 import struct, time, array, sys, cPickle, re, os, calendar
 from datetime import datetime
+from functools import partial
 import types
 
 verbose = False
@@ -43,6 +44,47 @@ def info(message):
 def error(message):
     print "# [e] %s" % (message)
     sys.exit(-1)
+
+
+class memoize(object):
+    """cache the return value of a method
+    
+    From http://code.activestate.com/recipes/577452-a-memoize-decorator-for-instance-methods/
+
+    This class is meant to be used as a decorator of methods. The return value
+    from a given method invocation will be cached on the instance whose method
+    was invoked. All arguments passed to a method decorated with memoize must
+    be hashable.
+    
+    If a memoized method is invoked directly on its class the result will not
+    be cached. Instead the method will be invoked like a static method:
+    class Obj(object):
+        @memoize
+        def add_to(self, arg):
+            return self + arg
+    Obj.add_to(1) # not enough arguments
+    Obj.add_to(1, 2) # returns 3, result is not cached
+    """
+    def __init__(self, func):
+        self.func = func
+
+    def __get__(self, obj, objtype=None):
+        if obj is None:
+            return self.func
+        return partial(self, obj)
+
+    def __call__(self, *args, **kw):
+        obj = args[0]
+        try:
+            cache = obj.__cache
+        except AttributeError:
+            cache = obj.__cache = {}
+        key = (self.func, args[1:], frozenset(kw.items()))
+        try:
+            res = cache[key]
+        except KeyError:
+            res = cache[key] = self.func(*args, **kw)
+        return res
 
 
 def align(offset, alignment):
@@ -214,6 +256,8 @@ class Block(object):
             self._implicit_offset = offset + 4
         elif type == "windows_timestamp":
             self._implicit_offset = offset + 8
+        elif type == "guid":
+            self._implicit_offset = offset + 16
         elif type == "binary":
             self._implicit_offset = offset + length
         elif type == "string" and length != None:
@@ -380,6 +424,30 @@ class Block(object):
         - `OverrunBufferException`
         """
         return parse_windows_timestamp(self.unpack_qword(offset))
+
+    def unpack_guid(self, offset):
+        """
+        Returns a string containing a GUID starting at the relative offset.
+        Arguments:
+        - `offset`: The relative offset from the start of the block.
+        Throws:
+        - `OverrunBufferException`
+        """
+        o = self._offset + offset
+
+        try:
+            _bin = self._buf[o:o + 16]
+        except IndexError:
+            raise OverrunBufferException(o, len(self._buf))
+
+        # Yeah, this is ugly
+        h = map(ord, _bin)
+        return "%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x" % \
+            (h[3], h[2], h[1], h[0],
+             h[5], h[4],
+             h[7], h[6],
+             h[8], h[9],
+             h[10], h[11], h[12], h[13], h[14], h[15])
 
     def absolute_offset(self, offset):
         """

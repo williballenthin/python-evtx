@@ -7,10 +7,6 @@ from BinaryParser import *
 from Nodes import *
 
 
-def xml(item):
-    return item.__xml__()
-
-
 class FileHeader(Block):
     def __init__(self, buf, offset):
         debug("FILE HEADER at %s." % (hex(offset)))
@@ -113,7 +109,7 @@ class ChunkHeader(Block):
     def __init__(self, buf, offset):
         debug("CHUNK HEADER at %s." % (hex(offset)))
         super(ChunkHeader, self).__init__(buf, offset)
-        self._cached_strings = None
+        self._strings = None
 
         self.declare_field("string", "magic", 0x0, length=8)
         self.declare_field("qword",  "log_first_record_number")
@@ -167,29 +163,63 @@ class ChunkHeader(Block):
             self.calculate_header_checksum() == self.header_checksum() and \
             self.calculate_data_checksum() == self.data_checksum()
 
+    def _load_strings(self):
+        if not self._strings:
+            self._strings = {}
+        for i in xrange(64):
+            ofs = self.unpack_dword(0x80 + (i * 4))
+            while ofs > 0:
+                string_node = NameStringNode(self._buf, self._offset + ofs, 
+                                             self, self)
+                self._strings[ofs] = string_node
+                ofs = string_node.next_offset()
+
     def strings(self):
         """
         @return A dict(offset --> NameStringNode)
         """
-        if self._cached_strings: 
-            return self._cached_strings
+        if not self._strings:
+            self._load_strings()
 
-        self._cached_strings = {}
-        for i in xrange(64):
-            ofs = self.unpack_dword(0x80 + (i * 4))
+        return self._strings
+
+    def add_string(self, offset, string_node):
+        """
+        @param offset An integer offset that is relative to the start of
+          this chunk.
+        @param string_node An instance of a NameStringNode
+        @return None
+        """
+        if not self._strings():
+            self._load_strings()
+            
+        self._strings[offset] = string_node
+
+    @memoize
+    def templates(self):
+        ret = {}
+        for i in xrange(32):
+            ofs = self.unpack_dword(0x180 + (i * 4))
             while ofs > 0:
-                name_string = NameStringNode(self._buf, self._offset + ofs, 
-                                             self, self)
-                self._cached_strings[ofs] = name_string
-                ofs = name_string.next_offset()
-
-        return self._cached_strings
-
+                # unclear why these are found before the offset
+                # this is a direct port from A.S.'s code
+                token   = self.unpack_byte(ofs - 10)
+                pointer = self.unpack_dword(ofs - 4)
+                if token != 0x0c or pointer != ofs:
+                    warning("Unexpected token encountered")
+                    ofs = 0
+                    continue
+                template = TemplateNode(self._buf, self._offset + ofs,
+                                        self, self)
+                ret[ofs] = template
+                ofs = template.next_offset()
+        return ret
+                                         
 
 def main():
     import sys    
     import BinaryParser
-    BinaryParser.verbose = True
+#    BinaryParser.verbose = True
 
     with open(sys.argv[1], 'r') as f:
         with contextlib.closing(mmap.mmap(f.fileno(), 0, 
@@ -197,14 +227,22 @@ def main():
             fh = FileHeader(buf, 0x0)
             print fh.verify()
             
-            for ch in fh.chunks():
-                print ch.verify()
-
+            # for ch in fh.chunks():
+            #     print ch.verify()
+            #     if ch.verify():
+            #         print "----- strings ------"
+            #         for s in ch.strings().values():
+            #             print xml(s)
+            #         print "----- templates ------"
+            #         for s in ch.templates().values():
+            #             print xml(s)
             ch = fh.first_chunk()
-            for s in ch.strings().values():
-                print xml(s)
-                print s.children()
+            t = ch.templates()[0x1c07]
+            print "(((((((((())))))))))"
 
+            print t.guid()
+            for c in t.children():
+                print xml(c)
             
 
 
