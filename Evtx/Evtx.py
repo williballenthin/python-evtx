@@ -240,12 +240,13 @@ def main():
             t = ch.templates()[0x1c07]
             print "(((((((((())))))))))"
 
-            print t.guid()
 
-            for c in t.children():
-                xml(c)
-                pass
+            def printer(n, indent=""):
+                print "..", indent, n
+                for c in n.children():
+                    printer(c, indent + "  ")
             
+            printer(t)
 
 
 if __name__ == "__main__":

@@ -16,21 +16,21 @@ class BXmlNode(Block):
         self._parent = parent
         self._dispatch_table = [
             Node0x00,
-            Node0x01,
-            Node0x02,
+            OpenStartElementNode,
+            CloseStartElementNode,
             Node0x03,
-            Node0x04,
-            Node0x05,
-            Node0x06,
+            CloseElementNode,
+            ValueNode,
+            AttributeNode,
             Node0x07,
             Node0x08,
             Node0x09,
             Node0x0A,
             Node0x0B,
             Node0x0C,
-            Node0x0D,
+            NormalSubstitutionNode,
             Node0x0E,
-            Node0x0F,
+            StreamStartNode,
             ]
         self._readable_tokens = [
             "EndItem",
@@ -46,7 +46,7 @@ class BXmlNode(Block):
             "unknown",
             "unknown",
             "unknown",
-            "unknown",
+            "Normal Substition",
             "unknown",
             "Start of Stream",            
             ]
@@ -164,7 +164,8 @@ class TemplateNode(BXmlNode):
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "TemplateNode(offset=%s)" % (hex(self._offset))
+        return "TemplateNode(offset=%s, guid=%s)" % \
+            (hex(self._offset), self.guid())
     
     def __xml__(self):
         # TODO(wb): this.
@@ -210,15 +211,15 @@ class Node0x00(BXmlNode):
     def children(self):
         return []
 
-class Node0x01(BXmlNode):
+class OpenStartElementNode(BXmlNode):
     """
     The binary XML node for the system token 0x01.
 
     This is the "open start element" token.
     """
     def __init__(self, buf, offset, chunk, parent):
-        debug("Node0x01 at %s." % (hex(offset)))
-        super(Node0x01, self).__init__(buf, offset, chunk, parent)
+        debug("OpenStartElementNode at %s." % (hex(offset)))
+        super(OpenStartElementNode, self).__init__(buf, offset, chunk, parent)
         self.declare_field("byte", "token", 0x0)
         self.declare_field("word", "unknown0")
         self.declare_field("dword", "size")
@@ -244,11 +245,11 @@ class Node0x01(BXmlNode):
         print indent, "Start Element", self, "tag length", self.tag_length()
 
     def __repr__(self):
-        return "Node0x01(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
+        return "OpenStartElementNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "Node0x01(offset=%s, name=%s)" % \
+        return "OpenStartElementNode(offset=%s, name=%s)" % \
             (hex(self._offset), self.tag_name())
     
     def __xml__(self):
@@ -271,23 +272,23 @@ class Node0x01(BXmlNode):
         return self.flags() & 0x0b == 0 and \
             self.opcode() & 0x0F == 0x01
     
-class Node0x02(BXmlNode):
+class CloseStartElementNode(BXmlNode):
     """
     The binary XML node for the system token 0x02.
 
     This is the "close start element" token.
     """
     def __init__(self, buf, offset, chunk, parent):
-        debug("Node0x02 at %s." % (hex(offset)))
-        super(Node0x02, self).__init__(buf, offset, chunk, parent)
+        debug("CloseStartElementNode at %s." % (hex(offset)))
+        super(CloseStartElementNode, self).__init__(buf, offset, chunk, parent)
         self.declare_field("byte", "token", 0x0)
 
     def __repr__(self):
-        return "Node0x02(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
+        return "CloseStartElementNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "Node0x02(offset=%s)" % (hex(self._offset))
+        return "CloseStartElementNode(offset=%s)" % (hex(self._offset))
     
     def __xml__(self):
         return ">"
@@ -328,23 +329,23 @@ class Node0x03(BXmlNode):
         raise NotImplementedError("tag_length not implemented for Node0x03")
 
 
-class Node0x04(BXmlNode):
+class CloseElementNode(BXmlNode):
     """
     The binary XML node for the system token 0x04.
 
     This is the "close element" token.
     """
     def __init__(self, buf, offset, chunk, parent):
-        debug("Node0x04 at %s." % (hex(offset)))
-        super(Node0x04, self).__init__(buf, offset, chunk, parent)
+        debug("CloseElementNode at %s." % (hex(offset)))
+        super(CloseElementNode, self).__init__(buf, offset, chunk, parent)
         self.declare_field("byte", "token", 0x0)
 
     def __repr__(self):
-        return "Node0x04(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
+        return "CloseElementNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "Node0x04(offset=%s)" % (hex(self._offset))
+        return "CloseElementNode(offset=%s)" % (hex(self._offset))
 
     def __xml__(self):
         return ""
@@ -363,72 +364,63 @@ class Node0x04(BXmlNode):
             self.opcode() & 0x0F == 0x04
 
 
-class VariantTypeNode(BXmlNode):
-    def __init__(self, buf, offset, chunk, parent):
-        debug("VariantTypeNode at %s." % (hex(offset)))
-        super(VariantTypeNode, self).__init__(buf, offset, chunk, parent)
-
-    def __repr__(self):
-        return "VariantTypeNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
-            (self._buf, self._offset, self._chunk, self._parent)
-
-    def __str__(self):
-        return "VariantTypeNode(offset=%s)" % (hex(self._offset))
-    
-    def __xml__(self):
-        raise NotImplementedError("__xml__ not implemented for VariantTypeNode")
-    
-    def tag_length(self):
-        raise NotImplementedError("tag_length not implemented for VariantTypeNode")
-
-
-class Node0x05(BXmlNode):
+class ValueNode(BXmlNode):
     """
     The binary XML node for the system token 0x05.
 
     This is the "value" token.
     """
     def __init__(self, buf, offset, chunk, parent):
-        debug("Node0x05 at %s." % (hex(offset)))
-        super(Node0x05, self).__init__(buf, offset, chunk, parent)
+        debug("ValueNode at %s." % (hex(offset)))
+        super(ValueNode, self).__init__(buf, offset, chunk, parent)
         self.declare_field("byte", "token", 0x0)
         self.declare_field("byte", "type")
+        
+        self._types = [
+            NullTypeNode,
+            WstringTypeNode,
+            ]
 
     def __repr__(self):
-        return "Node0x05(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
+        return "ValueNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "Node0x05(offset=%s)" % (hex(self._offset))
+        return "ValueNode(offset=%s)" % (hex(self._offset))
     
     def __xml__(self):
         return "<<value %s>>" % (xml(self.children()[0]))
 
     def value(self):
-        raise NotImplementedError("value not implemented for Node0x05")
+        raise NotImplementedError("value not implemented for ValueNode")
     
     def tag_length(self):
         return 2
 
     def children(self):
-        pointer = VariantTypeNode(self._buf, self._offset + self.tag_length(),
-                                  self._chunk, self)
-        return [pointer]
+        try:
+            TypeClass = self._types[self.type()]
+        except IndexError:
+            raise NotImplementedError("Type %s not implemented" % \
+                                          (self.type()))
+        child = TypeClass(self._buf, self._offset + self.tag_length(),
+                          self._chunk, self)
+        return [child]
 
     def verify(self):
         return self.flags() & 0x0B == 0 and \
             self.token() & 0x0F == 0x05
 
 
-class Node0x06(BXmlNode):
+class AttributeNode(BXmlNode):
     """
     The binary XML node for the system token 0x06.
 
     This is the "attribute" token.
     """
     def __init__(self, buf, offset, chunk, parent):
-        debug("Node0x06 at %s." % (hex(offset)))
-        super(Node0x06, self).__init__(buf, offset, chunk, parent)
+        debug("AttributeNode at %s." % (hex(offset)))
+        super(AttributeNode, self).__init__(buf, offset, chunk, parent)
         self.declare_field("byte", "token", 0x0)
         self.declare_field("dword", "string_offset")
 
@@ -447,11 +439,11 @@ class Node0x06(BXmlNode):
         print indent, "Attribute %s" % (self.attribute_name())
 
     def __repr__(self):
-        return "Node0x06(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
+        return "AttributeNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "Node0x06(offset=%s)" % (hex(self._offset))
+        return "AttributeNode(offset=%s)" % (hex(self._offset))
     
     def __xml__(self):
         return " %s" % (self.attribute_name())
@@ -609,15 +601,15 @@ class Node0x0C(BXmlNode):
         raise NotImplementedError("tag_length not implemented for Node0x0C")
 
 
-class Node0x0D(BXmlNode):
+class NormalSubstitutionNode(BXmlNode):
     """
     The binary XML node for the system token 0x0D.
 
     This is a "normal substitution" token.
     """
     def __init__(self, buf, offset, chunk, parent):
-        debug("Node0x0D at %s." % (hex(offset)))
-        super(Node0x0D, self).__init__(buf, offset, chunk, parent)
+        debug("NormalSubstitutionNode at %s." % (hex(offset)))
+        super(NormalSubstitutionNode, self).__init__(buf, offset, chunk, parent)
         self.declare_field("byte", "token", 0x0)
         self.declare_field("word", "index")
         self.declare_field("byte", "type")
@@ -627,11 +619,11 @@ class Node0x0D(BXmlNode):
 
 
     def __repr__(self):
-        return "Node0x0D(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
+        return "NormalSubstitutionNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "Node0x0D(offset=%s, index=%d, type=%d)" % \
+        return "NormalSubstitutionNode(offset=%s, index=%d, type=%d)" % \
             (hex(self._offset), self.index(), self.type())
     
     def __xml__(self):
@@ -673,25 +665,25 @@ class Node0x0E(BXmlNode):
         raise NotImplementedError("tag_length not implemented for Node0x0E")
 
 
-class Node0x0F(BXmlNode):
+class StreamStartNode(BXmlNode):
     """
     The binary XML node for the system token 0x0F.
 
     This is the "start of stream" token.
     """
     def __init__(self, buf, offset, chunk, parent):
-        debug("Node0x0F at %s." % (hex(offset)))
-        super(Node0x0F, self).__init__(buf, offset, chunk, parent)
+        debug("StreamStartNode at %s." % (hex(offset)))
+        super(StreamStartNode, self).__init__(buf, offset, chunk, parent)
         self.declare_field("byte", "token", 0x0)
         self.declare_field("byte", "unknown0")
         self.declare_field("word", "unknown1")
 
     def __repr__(self):
-        return "Node0x0F(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
+        return "StreamStartNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "Node0x0F(offset=%s)" % (hex(self._offset))
+        return "StreamStartNode(offset=%s)" % (hex(self._offset))
     
     def __xml__(self):
         # TODO(wb): implement this really
@@ -711,3 +703,78 @@ class Node0x0F(BXmlNode):
 
     def children(self):
         return []
+
+
+class VariantTypeNode(BXmlNode):
+    """
+
+    """
+    def __init__(self, buf, offset, chunk, parent):
+        debug("VariantTypeNode at %s." % (hex(offset)))
+        super(VariantTypeNode, self).__init__(buf, offset, chunk, parent)
+
+    def __repr__(self):
+        return "VariantTypeNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
+            (self._buf, self._offset, self._chunk, self._parent)
+
+    def __str__(self):
+        return "VariantTypeNode(offset=%s)" % (hex(self._offset))
+    
+    def __xml__(self):
+        raise NotImplementedError("__xml__ not implemented for %r" % \
+                                      (self))
+
+    def tag_length(self):
+        raise NotImplementedError("tag_length not implemented for %r" % \
+                                      (self))
+
+    def length(self):
+        return self.tag_length()
+    
+    def children(self):
+        return []
+
+
+class NullTypeNode(VariantTypeNode):
+    def __init__(self, buf, offset, chunk, parent):
+        debug("NullTypeNode at %s." % (hex(offset)))
+        super(NullTypeNode, self).__init__(buf, offset, chunk, parent)
+
+    def __repr__(self):
+        return "NullTypeNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
+            (self._buf, self._offset, self._chunk, self._parent)
+
+    def __str__(self):
+        return "NullTypeNode(offset=%s)" % (hex(self._offset))
+    
+    def __xml__(self):
+        return ""
+
+    def tag_length(self):
+        return 0
+
+
+class WstringTypeNode(VariantTypeNode):
+    """
+
+    """
+    def __init__(self, buf, offset, chunk, parent):
+        debug("WstringTypeNode at %s." % (hex(offset)))
+        super(WstringTypeNode, self).__init__(buf, offset, chunk, parent)
+        self.declare_field("word",    "size", 0x0)
+        self.declare_field("wstring", "string", length=(self.size() / 2))
+
+    def __repr__(self):
+        return "WstringTypeNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
+            (self._buf, self._offset, self._chunk, self._parent)
+
+    def __str__(self):
+        return "WstringTypeNode(offset=%s, string=%s)" % \
+            (hex(self._offset), self.string())
+    
+    def __xml__(self):
+        return self.string()
+
+    def tag_length(self):
+        return 2 + self.size()
+
