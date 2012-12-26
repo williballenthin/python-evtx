@@ -219,7 +219,7 @@ class ChunkHeader(Block):
 def main():
     import sys    
     import BinaryParser
-#    BinaryParser.verbose = True
+    BinaryParser.verbose = True
 
     with open(sys.argv[1], 'r') as f:
         with contextlib.closing(mmap.mmap(f.fileno(), 0, 
@@ -241,8 +241,10 @@ def main():
             print "(((((((((())))))))))"
 
             print t.guid()
+
             for c in t.children():
-                print xml(c)
+                xml(c)
+                pass
             
 
 

@@ -5,6 +5,9 @@ def xml(item):
     return item.__xml__()
 
 
+indent = ""
+
+
 class BXmlNode(Block):
     def __init__(self, buf, offset, chunk, parent):
         debug("BXmlNode at %s." % (hex(offset)))
@@ -29,6 +32,25 @@ class BXmlNode(Block):
             Node0x0E,
             Node0x0F,
             ]
+        self._readable_tokens = [
+            "EndItem",
+            "Open Start Element",
+            "Close Start Element",
+            "unknown",
+            "Close Element",
+            "Value",
+            "Attribute",
+            "unknown",
+            "unknown",
+            "unknown",
+            "unknown",
+            "unknown",
+            "unknown",
+            "unknown",
+            "unknown",
+            "Start of Stream",            
+            ]
+
 
     def __repr__(self):
         return "BXmlNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
@@ -39,6 +61,9 @@ class BXmlNode(Block):
 
     def __xml__(self):
         raise NotImplementedError("__xml__ not implemented for %r") % (self)
+
+    def flags(self):
+        return self.token() >> 4
 
     def tag_length(self):
         """
@@ -60,13 +85,18 @@ class BXmlNode(Block):
         ret = []
         ofs = self.tag_length()
 
-        print self, "children"
+        global indent
+        print indent, self, "children"
+
+        indent += "\t"
 
         while True:
             # we lose error checking by masking off the higher nibble,
             #   but, some tokens like 0x01, make use of the flags nibble.
             token = self.unpack_byte(ofs) & 0x0F
-            print "token", hex(token), "@", hex(self._offset + ofs)
+            print indent, "token", hex(token), \
+                "(%s)" % self._readable_tokens[token], \
+                "@", hex(self._offset + ofs)
             if token == 0x00:
                 break
             try:
@@ -79,6 +109,9 @@ class BXmlNode(Block):
                                           self.absolute_offset(0x0) + ofs))
             ret.append(child)
             ofs += child.length()
+
+        indent = indent[:-2]
+
         return ret
 
     #@memoize
@@ -135,6 +168,10 @@ class TemplateNode(BXmlNode):
     
     def __xml__(self):
         # TODO(wb): this.
+        cxml = "".join(xml(c) for c in self.children())
+        return "<<template %s>>\n%s<</template %s>>" % (self.guid(), 
+                                                        cxml,
+                                                        self.guid())
         return self.guid()
     
     def tag_length(self):
@@ -191,9 +228,12 @@ class Node0x01(BXmlNode):
 
         if self.flags() & 0x04:
             self._tag_length += 4
+            debug("Has extra four, total length %s" % (self._tag_length))
+
+        global indent
 
         if self.string_offset() > self._offset - self._chunk._offset:
-            print "%r" % (self), "need new string", self.string_offset()
+            print indent, "%r" % (self), "need new string", self.string_offset()
             string_node = NameStringNode(self._buf, 
                                          self._chunk._offset + self.string_offset(),
                                          self._chunk,
@@ -201,7 +241,7 @@ class Node0x01(BXmlNode):
             self._chunk.add_string(self.string_offset(), string_node)
             self._tag_length += string_node.tag_length()
 
-        print "Start Element", self
+        print indent, "Start Element", self, "tag length", self.tag_length()
 
     def __repr__(self):
         return "Node0x01(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
@@ -221,14 +261,11 @@ class Node0x01(BXmlNode):
     def tag_name(self):
         return xml(self._chunk.strings()[self.string_offset()])
 
-    def flags(self):
-        return self.token() >> 4
-    
     def tag_length(self):
         return self._tag_length
 
     def length(self):
-        return self.size() - self.tag_length()
+        return self.size()
 
     def verify(self):
         return self.flags() & 0x0b == 0 and \
@@ -255,9 +292,6 @@ class Node0x02(BXmlNode):
     def __xml__(self):
         return ">"
 
-    def flags(self):
-        return self.token() >> 4
-    
     def tag_length(self):
         return 1
 
@@ -315,9 +349,6 @@ class Node0x04(BXmlNode):
     def __xml__(self):
         return ""
 
-    def flags(self):
-        return self.token() >> 4
-    
     def tag_length(self):
         return 1
 
@@ -332,13 +363,36 @@ class Node0x04(BXmlNode):
             self.opcode() & 0x0F == 0x04
 
 
+class VariantTypeNode(BXmlNode):
+    def __init__(self, buf, offset, chunk, parent):
+        debug("VariantTypeNode at %s." % (hex(offset)))
+        super(VariantTypeNode, self).__init__(buf, offset, chunk, parent)
+
+    def __repr__(self):
+        return "VariantTypeNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
+            (self._buf, self._offset, self._chunk, self._parent)
+
+    def __str__(self):
+        return "VariantTypeNode(offset=%s)" % (hex(self._offset))
+    
+    def __xml__(self):
+        raise NotImplementedError("__xml__ not implemented for VariantTypeNode")
+    
+    def tag_length(self):
+        raise NotImplementedError("tag_length not implemented for VariantTypeNode")
+
+
 class Node0x05(BXmlNode):
     """
     The binary XML node for the system token 0x05.
+
+    This is the "value" token.
     """
     def __init__(self, buf, offset, chunk, parent):
         debug("Node0x05 at %s." % (hex(offset)))
         super(Node0x05, self).__init__(buf, offset, chunk, parent)
+        self.declare_field("byte", "token", 0x0)
+        self.declare_field("byte", "type")
 
     def __repr__(self):
         return "Node0x05(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
@@ -348,10 +402,22 @@ class Node0x05(BXmlNode):
         return "Node0x05(offset=%s)" % (hex(self._offset))
     
     def __xml__(self):
-        raise NotImplementedError("__xml__ not implemented for Node0x05")
+        return "<<value %s>>" % (xml(self.children()[0]))
+
+    def value(self):
+        raise NotImplementedError("value not implemented for Node0x05")
     
     def tag_length(self):
-        raise NotImplementedError("tag_length not implemented for Node0x05")
+        return 2
+
+    def children(self):
+        pointer = VariantTypeNode(self._buf, self._offset + self.tag_length(),
+                                  self._chunk, self)
+        return [pointer]
+
+    def verify(self):
+        return self.flags() & 0x0B == 0 and \
+            self.token() & 0x0F == 0x05
 
 
 class Node0x06(BXmlNode):
@@ -365,10 +431,12 @@ class Node0x06(BXmlNode):
         super(Node0x06, self).__init__(buf, offset, chunk, parent)
         self.declare_field("byte", "token", 0x0)
         self.declare_field("dword", "string_offset")
+
+        global indent
         
         self._data_length = 0
         if self.string_offset() > self._offset - self._chunk._offset:
-            print "%r" % (self), "need new string", self.string_offset()
+            print indent, "%r" % (self), "need new string", self.string_offset()
             string_node = NameStringNode(self._buf, 
                                          self._chunk._offset + self.string_offset(),
                                          self._chunk,
@@ -376,7 +444,7 @@ class Node0x06(BXmlNode):
             self._chunk.add_string(self.string_offset(), string_node)
             self._data_length += string_node.tag_length()
 
-        debug("Attribute %s" % (self.attribute_name()))
+        print indent, "Attribute %s" % (self.attribute_name())
 
     def __repr__(self):
         return "Node0x06(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
@@ -390,9 +458,6 @@ class Node0x06(BXmlNode):
 
     def attribute_name(self):
         return xml(self._chunk.strings()[self.string_offset()])        
-    
-    def flags(self):
-        return self.token() >> 4
     
     def data_length(self):
         return self._data_length
@@ -547,24 +612,44 @@ class Node0x0C(BXmlNode):
 class Node0x0D(BXmlNode):
     """
     The binary XML node for the system token 0x0D.
+
+    This is a "normal substitution" token.
     """
     def __init__(self, buf, offset, chunk, parent):
         debug("Node0x0D at %s." % (hex(offset)))
         super(Node0x0D, self).__init__(buf, offset, chunk, parent)
+        self.declare_field("byte", "token", 0x0)
+        self.declare_field("word", "index")
+        self.declare_field("byte", "type")
+
+        global indent
+        print indent, "Substitution", self
+
 
     def __repr__(self):
         return "Node0x0D(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "Node0x0D(offset=%s)" % (hex(self._offset))
+        return "Node0x0D(offset=%s, index=%d, type=%d)" % \
+            (hex(self._offset), self.index(), self.type())
     
     def __xml__(self):
-        raise NotImplementedError("__xml__ not implemented for Node0x0D")
+        return "<<Substitution index=%d type=%d>>" % \
+            (self.index(), self.type())
     
     def tag_length(self):
-        raise NotImplementedError("tag_length not implemented for Node0x0D")
+        return 0x4
 
+    def length(self):
+        return self.tag_length()
+
+    def children(self):
+        return []
+
+    def verify(self):
+        return self.flags() == 0 and \
+            self.token() & 0x0F == 0x0D
 
 class Node0x0E(BXmlNode):
     """
@@ -612,9 +697,6 @@ class Node0x0F(BXmlNode):
         # TODO(wb): implement this really
         return "<<StartOfStream>>"
     
-    def flags(self):
-        return self.token >> 4
-
     def verify(self):
         return self.flags() == 0x0 and \
             self.token() & 0x0F == 0x0F and \
