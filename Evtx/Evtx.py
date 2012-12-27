@@ -224,6 +224,7 @@ def main():
     with open(sys.argv[1], 'r') as f:
         with contextlib.closing(mmap.mmap(f.fileno(), 0, 
                                           access=mmap.ACCESS_READ)) as buf:
+
             fh = FileHeader(buf, 0x0)
             print fh.verify()
             
@@ -246,6 +247,7 @@ def main():
             def printer(n, indent=""):
                 out = "..%s %s" % (indent, str(n))
                 print out
+
                 items.append(n)
                 for c in n.children():
                     printer(c, indent + "  ")
@@ -256,7 +258,8 @@ def main():
                 print str(item)
                 print hex_dump(item._buf[item._offset:item._offset + item.length()], start_addr=item._offset)
                 print "\n\n"
-                               
+
+            print xml(t)
             
 
 if __name__ == "__main__":
