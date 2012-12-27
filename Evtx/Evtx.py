@@ -110,6 +110,7 @@ class ChunkHeader(Block):
         debug("CHUNK HEADER at %s." % (hex(offset)))
         super(ChunkHeader, self).__init__(buf, offset)
         self._strings = None
+        self._templates = None
 
         self.declare_field("string", "magic", 0x0, length=8)
         self.declare_field("qword",  "log_first_record_number")
@@ -164,14 +165,12 @@ class ChunkHeader(Block):
             self.calculate_data_checksum() == self.data_checksum()
 
     def _load_strings(self):
-        if not self._strings:
+        if self._strings is None:
             self._strings = {}
         for i in xrange(64):
             ofs = self.unpack_dword(0x80 + (i * 4))
             while ofs > 0:
-                string_node = NameStringNode(self._buf, self._offset + ofs, 
-                                             self, self)
-                self._strings[ofs] = string_node
+                string_node = self.add_string(ofs)
                 ofs = string_node.next_offset()
 
     def strings(self):
@@ -180,24 +179,29 @@ class ChunkHeader(Block):
         """
         if not self._strings:
             self._load_strings()
-
         return self._strings
 
-    def add_string(self, offset, string_node):
+    def add_string(self, offset, parent=None):
         """
         @param offset An integer offset that is relative to the start of
           this chunk.
-        @param string_node An instance of a NameStringNode
+        @param parent (Optional) The parent of the newly created 
+           NameStringNode instance. (Default: this chunk).
         @return None
         """
-        if not self._strings:
+        if self._strings is None:
             self._load_strings()
-            
+        string_node = NameStringNode(self._buf, self._offset + offset, 
+                                     self, parent or self)
         self._strings[offset] = string_node
+        return string_node
 
-    @memoize
-    def templates(self):
-        ret = {}
+    def _load_templates(self):
+        """
+        @return None
+        """
+        if self._templates is None:
+            self._templates = {}
         for i in xrange(32):
             ofs = self.unpack_dword(0x180 + (i * 4))
             while ofs > 0:
@@ -209,17 +213,39 @@ class ChunkHeader(Block):
                     warning("Unexpected token encountered")
                     ofs = 0
                     continue
-                template = TemplateNode(self._buf, self._offset + ofs,
-                                        self, self)
-                ret[ofs] = template
+                template = self.add_template(ofs)
                 ofs = template.next_offset()
-        return ret
+
+    def add_template(self, offset, parent=None):
+        """
+        @param offset An integer which contains the chunk-relative offset
+           to a template to load into this Chunk.
+        @param parent (Optional) The parent of the newly created 
+           TemplateNode instance. (Default: this chunk).
+        @return Newly added TemplateNode instance.
+        """
+        if self._templates is None:
+            self._load_templates()
+            
+        template = TemplateNode(self._buf, self._offset + offset, 
+                                self, parent or self)
+        self._templates[offset] = template
+        return template
+
+    def templates(self):
+        """
+        @return A dict(offset --> TemplateNode) of all encountered 
+          templates in this Chunk.
+        """
+        if not self._templates:
+            self._load_templates()
+        return self._templates
                                          
 
 def main():
     import sys    
     import BinaryParser
-#    BinaryParser.verbose = True
+    BinaryParser.verbose = True
 
     with open(sys.argv[1], 'r') as f:
         with contextlib.closing(mmap.mmap(f.fileno(), 0, 
@@ -238,8 +264,8 @@ def main():
             #         for s in ch.templates().values():
             #             print xml(s)
             ch = fh.first_chunk()
-            t = ch.templates()[0x1c07]
-#            t = ch.templates()[0x0226]
+#            t = ch.templates()[0x1c07]
+            t = ch.templates()[0x0226]
             print "(((((((((())))))))))"
 
 
