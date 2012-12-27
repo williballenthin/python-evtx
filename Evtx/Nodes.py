@@ -141,7 +141,7 @@ class NameStringNode(BXmlNode):
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "NameStringNode(offset=%s)" % (hex(self._offset))
+        return "NameStringNode(offset=%s, length=%s)" % (hex(self._offset), hex(self.length()))
     
     def __xml__(self):
         return self.string()
@@ -164,8 +164,8 @@ class TemplateNode(BXmlNode):
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "TemplateNode(offset=%s, guid=%s)" % \
-            (hex(self._offset), self.guid())
+        return "TemplateNode(offset=%s, guid=%s, length=%s)" % \
+            (hex(self._offset), self.guid(), hex(self.length()))
     
     def __xml__(self):
         # TODO(wb): this.
@@ -176,7 +176,7 @@ class TemplateNode(BXmlNode):
         return self.guid()
     
     def tag_length(self):
-        return 24
+        return 0x18
 
     def length(self):
         return self.tag_length() + self.data_length()
@@ -197,7 +197,8 @@ class Node0x00(BXmlNode):
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "Node0x00(offset=%s)" % (hex(self._offset))
+        return "Node0x00(offset=%s, length=%s, token=%s)" % \
+            (hex(self._offset), hex(self.length()), 0x00)
     
     def __xml__(self):
         raise NotImplementedError("__xml__ not implemented for Node0x00")
@@ -249,8 +250,9 @@ class OpenStartElementNode(BXmlNode):
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "OpenStartElementNode(offset=%s, name=%s)" % \
-            (hex(self._offset), self.tag_name())
+        return "OpenStartElementNode(offset=%s, name=%s, length=%s, token=%s)" % \
+            (hex(self._offset), self.tag_name(), 
+             hex(self.length()), hex(self.token()))
     
     def __xml__(self):
         if len(self.children()) == 0:
@@ -288,7 +290,8 @@ class CloseStartElementNode(BXmlNode):
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "CloseStartElementNode(offset=%s)" % (hex(self._offset))
+        return "CloseStartElementNode(offset=%s, length=%s, token=%s)" % \
+            (hex(self._offset), hex(self.length()), hex(self.token()))
     
     def __xml__(self):
         return ">"
@@ -320,7 +323,8 @@ class Node0x03(BXmlNode):
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "Node0x03(offset=%s)" % (hex(self._offset))
+        return "Node0x03(offset=%s, length=%s, token=%s)" % \
+            (hex(self._offset), hex(self.length()), hex(0x03))
     
     def __xml__(self):
         raise NotImplementedError("__xml__ not implemented for Node0x03")
@@ -345,7 +349,8 @@ class CloseElementNode(BXmlNode):
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "CloseElementNode(offset=%s)" % (hex(self._offset))
+        return "CloseElementNode(offset=%s, length=%s, token=%s)" % \
+            (hex(self._offset), hex(self.length()), hex(self.token()))
 
     def __xml__(self):
         return ""
@@ -386,7 +391,8 @@ class ValueNode(BXmlNode):
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "ValueNode(offset=%s)" % (hex(self._offset))
+        return "ValueNode(offset=%s, length=%s, token=%s)" % \
+            (hex(self._offset), hex(self.length()), hex(self.token()))
     
     def __xml__(self):
         return "<<value %s>>" % (xml(self.children()[0]))
@@ -443,7 +449,8 @@ class AttributeNode(BXmlNode):
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "AttributeNode(offset=%s)" % (hex(self._offset))
+        return "AttributeNode(offset=%s, length=%s, token=%s)" % \
+            (hex(self._offset), hex(self.length()), hex(self.token()))
     
     def __xml__(self):
         return " %s" % (self.attribute_name())
@@ -478,7 +485,8 @@ class Node0x07(BXmlNode):
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "Node0x07(offset=%s)" % (hex(self._offset))
+        return "Node0x07(offset=%s, length=%s, token=%s)" % \
+            (hex(self._offset), hex(self.length()), 0x07)
     
     def __xml__(self):
         raise NotImplementedError("__xml__ not implemented for Node0x07")
@@ -500,7 +508,8 @@ class Node0x08(BXmlNode):
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "Node0x08(offset=%s)" % (hex(self._offset))
+        return "Node0x08(offset=%s, length=%s, token=%s)" % \
+            (hex(self._offset), hex(self.length()), hex(0x08))
     
     def __xml__(self):
         raise NotImplementedError("__xml__ not implemented for Node0x08")
@@ -526,7 +535,8 @@ class Node0x09(BXmlNode):
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "Node0x09(offset=%s)" % (hex(self._offset))
+        return "Node0x09(offset=%s, length=%s, token=%s)" % \
+            (hex(self._offset), hex(self.length()), hex(0x09))
     
     def __xml__(self):
         raise NotImplementedError("__xml__ not implemented for Node0x09")
@@ -548,7 +558,8 @@ class Node0x0A(BXmlNode):
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "Node0x0A(offset=%s)" % (hex(self._offset))
+        return "Node0x0A(offset=%s, length=%s, token=%s)" % \
+            (hex(self._offset), hex(self.length()), hex(0x0A))
     
     def __xml__(self):
         raise NotImplementedError("__xml__ not implemented for Node0x0A")
@@ -570,7 +581,8 @@ class Node0x0B(BXmlNode):
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "Node0x0B(offset=%s)" % (hex(self._offset))
+        return "Node0x0B(offset=%s, length=%s, token=%s)" % \
+            (hex(self._offset), hex(self.length()), hex(0x0B))
     
     def __xml__(self):
         raise NotImplementedError("__xml__ not implemented for Node0x0B")
@@ -592,7 +604,8 @@ class Node0x0C(BXmlNode):
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "Node0x0C(offset=%s)" % (hex(self._offset))
+        return "Node0x0C(offset=%s, length=%s, token=%s)" % \
+            (hex(self._offset), hex(self.length()), hex(0x0C))
     
     def __xml__(self):
         raise NotImplementedError("__xml__ not implemented for Node0x0C")
@@ -623,8 +636,9 @@ class NormalSubstitutionNode(BXmlNode):
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "NormalSubstitutionNode(offset=%s, index=%d, type=%d)" % \
-            (hex(self._offset), self.index(), self.type())
+        return "NormalSubstitutionNode(offset=%s, length=%s, token=%s, index=%d, type=%d)" % \
+            (hex(self._offset), hex(self.length()), hex(self.token()), 
+             self.index(), self.type())
     
     def __xml__(self):
         return "<<Substitution index=%d type=%d>>" % \
@@ -656,7 +670,8 @@ class Node0x0E(BXmlNode):
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "Node0x0E(offset=%s)" % (hex(self._offset))
+        return "Node0x0E(offset=%s, length=%s, token=%s)" % \
+            (hex(self._offset), hex(self.length()), hex(0x0E))
     
     def __xml__(self):
         raise NotImplementedError("__xml__ not implemented for Node0x0E")
@@ -683,7 +698,8 @@ class StreamStartNode(BXmlNode):
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "StreamStartNode(offset=%s)" % (hex(self._offset))
+        return "StreamStartNode(offset=%s, length=%s, token=%s)" % \
+            (hex(self._offset), hex(self.length()), hex(self.token()))
     
     def __xml__(self):
         # TODO(wb): implement this really
@@ -718,7 +734,7 @@ class VariantTypeNode(BXmlNode):
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "VariantTypeNode(offset=%s)" % (hex(self._offset))
+        return "VariantTypeNode(offset=%s, length=%s)" % (hex(self._offset), hex(self.length()))
     
     def __xml__(self):
         raise NotImplementedError("__xml__ not implemented for %r" % \
@@ -745,7 +761,7 @@ class NullTypeNode(VariantTypeNode):
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "NullTypeNode(offset=%s)" % (hex(self._offset))
+        return "NullTypeNode(offset=%s, length=%s)" % (hex(self._offset), hex(self.length()))
     
     def __xml__(self):
         return ""
@@ -761,20 +777,20 @@ class WstringTypeNode(VariantTypeNode):
     def __init__(self, buf, offset, chunk, parent):
         debug("WstringTypeNode at %s." % (hex(offset)))
         super(WstringTypeNode, self).__init__(buf, offset, chunk, parent)
-        self.declare_field("word",    "size", 0x0)
-        self.declare_field("wstring", "string", length=(self.size() / 2))
+        self.declare_field("word",    "string_length", 0x0)
+        self.declare_field("wstring", "string", length=(self.string_length()))
 
     def __repr__(self):
         return "WstringTypeNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "WstringTypeNode(offset=%s, string=%s)" % \
-            (hex(self._offset), self.string())
+        return "WstringTypeNode(offset=%s, length=%s, string=%s)" % \
+            (hex(self._offset), hex(self.length()), self.string())
     
     def __xml__(self):
         return self.string()
 
     def tag_length(self):
-        return 2 + self.size()
+        return 2 + (self.string_length() * 2)
 

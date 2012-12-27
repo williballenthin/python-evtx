@@ -190,7 +190,7 @@ class ChunkHeader(Block):
         @param string_node An instance of a NameStringNode
         @return None
         """
-        if not self._strings():
+        if not self._strings:
             self._load_strings()
             
         self._strings[offset] = string_node
@@ -219,7 +219,7 @@ class ChunkHeader(Block):
 def main():
     import sys    
     import BinaryParser
-    BinaryParser.verbose = True
+#    BinaryParser.verbose = True
 
     with open(sys.argv[1], 'r') as f:
         with contextlib.closing(mmap.mmap(f.fileno(), 0, 
@@ -238,16 +238,26 @@ def main():
             #             print xml(s)
             ch = fh.first_chunk()
             t = ch.templates()[0x1c07]
+#            t = ch.templates()[0x0226]
             print "(((((((((())))))))))"
 
 
+            items = []
             def printer(n, indent=""):
-                print "..", indent, n
+                out = "..%s %s" % (indent, str(n))
+                print out
+                items.append(n)
                 for c in n.children():
                     printer(c, indent + "  ")
-            
             printer(t)
 
+            print "*******************"
+            for item in items:
+                print str(item)
+                print hex_dump(item._buf[item._offset:item._offset + item.length()], start_addr=item._offset)
+                print "\n\n"
+                               
+            
 
 if __name__ == "__main__":
     main()
