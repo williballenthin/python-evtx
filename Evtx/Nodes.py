@@ -175,7 +175,7 @@ class NameStringNode(BXmlNode):
         return "NameStringNode(offset=%s, length=%s)" % (hex(self._offset), hex(self.length()))
     
     def __xml__(self):
-        return self.string()
+        return str(self.string())
     
     def tag_length(self):
         return (self.string_length() * 2) + 8
@@ -486,13 +486,23 @@ class AttributeNode(BXmlNode):
              self.attribute_name(), self.attribute_value())
     
     def __xml__(self):
-        return " %s=\"%s\"" % (self.attribute_name(), self.attribute_value())
+        print "ABC"
+        import binascii
+        print binascii.hexlify(self.attribute_name())
+        print "A", hex_dump(self.attribute_name())
+        print "B", self.attribute_value(), type(self.attribute_value()), hex_dump(self.attribute_value())
+        ret =  " %s=[%s]" % (self.attribute_name(), self.attribute_value())
+        print "C", hex_dump(ret)
+        return ret
 
     def attribute_name(self):
         return xml(self._chunk.strings()[self.string_offset()])        
     
     def attribute_value(self):
-        return xml(self.children()[0])
+        for child in self.children():
+            print "D", child, type(child)
+            if type(child) != EndOfStreamNode:
+                return xml(child)
 
     def data_length(self):
         return self._data_length
@@ -510,21 +520,21 @@ class AttributeNode(BXmlNode):
         return self.flags() & 0x0B == 0 and \
             self.opcode() & 0x0F == 0x06
 
-    def children(self):
-        ofs = self.tag_length()
-        token = self.unpack_byte(ofs) & 0x0F
-        print ".,", indent, "token", hex(token), \
-            "(%s)" % self._readable_tokens[token], \
-            "@", hex(self._offset + ofs)
-        try:
-            HandlerNodeClass = self._dispatch_table[token]
-            child = HandlerNodeClass(self._buf, self._offset + ofs, 
-                                     self._chunk, self)
-            return [child]
-        except IndexError:
-            raise ParseException("Unexpected token %02X at %s" % \
-                                     (token, 
-                                      self.absolute_offset(0x0) + ofs))
+    # def children(self):
+    #     ofs = self.tag_length()
+    #     token = self.unpack_byte(ofs) & 0x0F
+    #     print ".,", indent, "token", hex(token), \
+    #         "(%s)" % self._readable_tokens[token], \
+    #         "@", hex(self._offset + ofs)
+    #     try:
+    #         HandlerNodeClass = self._dispatch_table[token]
+    #         child = HandlerNodeClass(self._buf, self._offset + ofs, 
+    #                                  self._chunk, self)
+    #         return [child]
+    #     except IndexError:
+    #         raise ParseException("Unexpected token %02X at %s" % \
+    #                                  (token, 
+    #                                   self.absolute_offset(0x0) + ofs))
 
 
 class Node0x07(BXmlNode):
@@ -878,7 +888,8 @@ class WstringTypeNode(VariantTypeNode):
             (hex(self._offset), hex(self.length()), self.string())
     
     def __xml__(self):
-        return self.string()
+        # ensure this is a str, not unicode
+        return str(self.string())
 
     def tag_length(self):
         return 2 + (self.string_length() * 2)
