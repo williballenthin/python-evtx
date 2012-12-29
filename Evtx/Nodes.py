@@ -42,7 +42,7 @@ class BXmlNode(Block):
             CloseElementNode,
             ValueNode,
             AttributeNode,
-            Node0x07,
+            CDataSectionNode,
             Node0x08,
             Node0x09,
             Node0x0A,
@@ -539,27 +539,42 @@ class AttributeNode(BXmlNode):
         return self._children(max_children=1)
 
 
-class Node0x07(BXmlNode):
+class CDataSectionNode(BXmlNode):
     """
     The binary XML node for the system token 0x07.
+
+    This is the "CDATA section" system token.
     """
     def __init__(self, buf, offset, chunk, parent):
-        debug("Node0x07 at %s." % (hex(offset)))
-        super(Node0x07, self).__init__(buf, offset, chunk, parent)
+        debug("CDataSectionNode at %s." % (hex(offset)))
+        super(CDataSectionNode, self).__init__(buf, offset, chunk, parent)
+        self.declare_field("byte", "token", 0x0)
+        self.declare_field("word", "string_length")
+        self.declare_field("wstring", "cdata", length=self.string_length() - 2)
 
     def __repr__(self):
-        return "Node0x07(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
+        return "CDataSectionNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "Node0x07(offset=%s, length=%s, token=%s)" % \
+        return "CDataSectionNode(offset=%s, length=%s, token=%s)" % \
             (hex(self._offset), hex(self.length()), 0x07)
     
     def __xml__(self):
-        raise NotImplementedError("__xml__ not implemented for Node0x07")
+        return "<![CDATA[%s]]>" % (self.cdata())
     
     def tag_length(self):
-        raise NotImplementedError("tag_length not implemented for Node0x07")
+        return 0x3 + self.string_length()
+
+    def length(self):
+        return self.tag_length()
+
+    def children(self):
+        return []
+
+    def verify(self):
+        return self.flags() == 0x0 and \
+            self.token() & 0x0F == 0x0
 
 
 class Node0x08(BXmlNode):
