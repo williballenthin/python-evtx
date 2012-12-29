@@ -577,33 +577,6 @@ class CDataSectionNode(BXmlNode):
             self.token() & 0x0F == 0x0
 
 
-class Node0x08(BXmlNode):
-    """
-    The binary XML node for the system token 0x08.
-    """
-    def __init__(self, buf, offset, chunk, parent):
-        debug("Node0x08 at %s." % (hex(offset)))
-        super(Node0x08, self).__init__(buf, offset, chunk, parent)
-
-    def __repr__(self):
-        return "Node0x08(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
-            (self._buf, self._offset, self._chunk, self._parent)
-
-    def __str__(self):
-        return "Node0x08(offset=%s, length=%s, token=%s)" % \
-            (hex(self._offset), hex(self.length()), hex(0x08))
-    
-    def __xml__(self):
-        raise NotImplementedError("__xml__ not implemented for Node0x08")
-    
-    def tag_length(self):
-        raise NotImplementedError("tag_length not implemented for Node0x08")
-
-    def length(self):
-        raise NotImplementedError("length not implemented for %r") % \
-            (self)
-
-
 class Node0x09(BXmlNode):
     """
     The binary XML node for the system token 0x09.
