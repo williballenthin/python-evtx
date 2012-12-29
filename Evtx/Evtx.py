@@ -245,7 +245,7 @@ class ChunkHeader(Block):
 def main():
     import sys    
     import BinaryParser
-    BinaryParser.verbose = True
+
 
     with open(sys.argv[1], 'r') as f:
         with contextlib.closing(mmap.mmap(f.fileno(), 0, 
@@ -265,7 +265,12 @@ def main():
             #             print xml(s)
             ch = fh.first_chunk()
 #            t = ch.templates()[0x1c07]
-            t = ch.templates()[0x0814]
+#            t = ch.templates()[0x0814]
+            ch._load_strings()
+            ch._load_templates()
+
+            BinaryParser.verbose = True
+            t = ch.templates()[0x0b7f]
             print "(((((((((())))))))))"
 
 
