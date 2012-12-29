@@ -269,8 +269,10 @@ def main():
 
             BinaryParser.verbose = True
 #            t = ch.templates()[0x1c07]
-            t = ch.templates()[0x0814]
+#            t = ch.templates()[0x0814]
 #            t = ch.templates()[0x0b7f]
+#            t = ch.templates()[0x1027]
+            t = ch.templates()[0x0226]
 
             print "(((((((((())))))))))"
 

@@ -56,7 +56,7 @@ class BXmlNode(Block):
             "EndItem",
             "Open Start Element",
             "Close Start Element",
-            "unknown",
+            "Close Empty Element",
             "Close Element",
             "Value",
             "Attribute",
@@ -294,11 +294,17 @@ class OpenStartElementNode(BXmlNode):
              hex(self._offset + self.tag_length()))
     
     def __xml__(self):
-        if len(self.children()) == 0:
-            return "\n<%s />" % (self.tag_name())
-        else:
-            cxml = "".join(xml(c) for c in self.children())
-            return "\n<%s %s</%s>" % (self.tag_name(), cxml, self.tag_name())
+        cxml = "".join(xml(c) for c in self.children())
+        ret = "\n<%s%s" % (self.tag_name(), cxml)
+        if not self.is_empty_node():
+            ret += "</%s>" % (self.tag_name())
+        return ret
+
+    def is_empty_node(self):
+        for child in self.children():
+            if type(child) is CloseEmptyElementNode:
+                return True
+        return False
 
     def tag_name(self):
         return xml(self._chunk.strings()[self.string_offset()])
@@ -314,7 +320,8 @@ class OpenStartElementNode(BXmlNode):
             self.opcode() & 0x0F == 0x01
 
     def children(self):
-        return self._children(end_tokens=[SYSTEM_TOKENS.CloseElementToken])
+        return self._children(end_tokens=[SYSTEM_TOKENS.CloseElementToken,
+                                          SYSTEM_TOKENS.CloseEmptyElementToken])
     
 
 class CloseStartElementNode(BXmlNode):
@@ -371,7 +378,7 @@ class CloseEmptyElementNode(BXmlNode):
             (hex(self._offset), hex(self.length()), hex(0x03))
     
     def __xml__(self):
-        return ""
+        return " />"
     
     def tag_length(self):
         return 1
@@ -482,14 +489,16 @@ class AttributeNode(BXmlNode):
 
         global indent
         
-        self._data_length = 0
+        self._name_string_length = 0
         if self.string_offset() > self._offset - self._chunk._offset:
             print ".,", indent, "%r" % (self), "need new string", self.string_offset()
             new_string = self._chunk.add_string(self.string_offset(), 
                                                 parent=self)
-            self._data_length += new_string.length()
+            self._name_string_length += new_string.length()
 
-        print ".,", indent, "Attribute %s" % (self.attribute_name())
+        print ".,", indent, "Attribute name %s" % (xml(self.attribute_name()))
+        print hex(self._offset), hex(self.tag_length()), hex(self._offset + self.tag_length()), hex(self.length()), hex(self._offset + self.length())
+        print ".;", indent, "Attribute value %s" % (self.children())
 
         debug("Again %s" % (self))
 
@@ -514,15 +523,13 @@ class AttributeNode(BXmlNode):
     
     def attribute_value(self):
         """
-        @return A VariantType instance that contains the attribute value.
+        @return A BXmlNode instance that is one of (ValueNode,
+          ConditionalSubstitutionNode, NormalSubstitutionNode).
         """
-        return self.children()[0].value()
-
-    def data_length(self):
-        return self._data_length
+        return self.children()[0]
 
     def tag_length(self):
-        return 5
+        return 5 + self._name_string_length
 
     def verify(self):
         return self.flags() & 0x0B == 0 and \
