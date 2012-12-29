@@ -146,7 +146,7 @@ class BXmlNode(Block):
     def children(self):
         return self._children()
 
-    #@memoize
+    @memoize
     def length(self):
         """
         @return An integer specifying the length of this tag and all
@@ -306,8 +306,8 @@ class OpenStartElementNode(BXmlNode):
     def tag_length(self):
         return self._tag_length
 
-    def length(self):
-        return self.size() - 0x6
+#    def length(self):
+#        return self.size() + 0x6
 
     def verify(self):
         return self.flags() & 0x0b == 0 and \

@@ -264,13 +264,14 @@ def main():
             #         for s in ch.templates().values():
             #             print xml(s)
             ch = fh.first_chunk()
-#            t = ch.templates()[0x1c07]
-#            t = ch.templates()[0x0814]
             ch._load_strings()
             ch._load_templates()
 
             BinaryParser.verbose = True
-            t = ch.templates()[0x0b7f]
+#            t = ch.templates()[0x1c07]
+            t = ch.templates()[0x0814]
+#            t = ch.templates()[0x0b7f]
+
             print "(((((((((())))))))))"
 
 
