@@ -574,7 +574,7 @@ class CDataSectionNode(BXmlNode):
 
     def verify(self):
         return self.flags() == 0x0 and \
-            self.token() & 0x0F == 0x0
+            self.token() & 0x0F == SYSTEM_TOKENS.CDataSectionToken
 
 
 class Node0x09(BXmlNode):
