@@ -174,7 +174,7 @@ def dosdate(dosdate, dostime):
         return datetime.datetime.min
 
 
-def parse_windows_timestamp(qword):
+def parse_filetime(qword):
     # see http://integriography.wordpress.com/2010/01/16/using-phython-to-parse-and-present-windows-64-bit-timestamps/
     return datetime.utcfromtimestamp(float(qword) * 1e-7 - 11644473600)
 
@@ -303,7 +303,7 @@ class Block(object):
             self._implicit_offset = offset + 4
         elif type == "dosdate":
             self._implicit_offset = offset + 4
-        elif type == "windows_timestamp":
+        elif type == "filetime":
             self._implicit_offset = offset + 8
         elif type == "guid":
             self._implicit_offset = offset + 16
@@ -463,7 +463,7 @@ class Block(object):
         except struct.error:
             raise OverrunBufferException(o, len(self._buf))
 
-    def unpack_windows_timestamp(self, offset):
+    def unpack_filetime(self, offset):
         """
         Returns a datetime from the QWORD Windows timestamp starting at
         the relative offset.
@@ -472,7 +472,7 @@ class Block(object):
         Throws:
         - `OverrunBufferException`
         """
-        return parse_windows_timestamp(self.unpack_qword(offset))
+        return parse_filetime(self.unpack_qword(offset))
 
     def unpack_guid(self, offset):
         """
