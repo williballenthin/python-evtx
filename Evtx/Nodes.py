@@ -43,7 +43,7 @@ class BXmlNode(Block):
             ValueNode,
             AttributeNode,
             CDataSectionNode,
-            Node0x08,
+            None,
             Node0x09,
             Node0x0A,
             Node0x0B,
@@ -65,7 +65,7 @@ class BXmlNode(Block):
             "unknown",
             "unknown",
             "unknown",
-            "unknown",
+            "TemplateInstanceNode",
             "Normal Substitution",
             "Conditional Substitution",
             "Start of Stream",            
@@ -655,8 +655,8 @@ class TemplateInstanceNode(BXmlNode):
         super(TemplateInstanceNode, self).__init__(buf, offset, chunk, parent)
         self.declare_field("byte", "token", 0x0)
         self.declare_field("byte", "unknown0")
+        self.declare_field("dword", "template_id")
         self.declare_field("dword", "template_offset")
-        self.declare_field("dword", "pointer")
 
         self._data_length = 0
 
@@ -664,7 +664,7 @@ class TemplateInstanceNode(BXmlNode):
             print ".,", indent, "%r" % (self), "need new template", self.template_offset()
             new_template = self._chunk.add_template(self.template_offset(), 
                                                     parent=self)
-            self._data_length += new_string.length()
+            self._data_length += new_template.length()
 
     def __repr__(self):
         return "TemplateInstanceNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
@@ -682,7 +682,6 @@ class TemplateInstanceNode(BXmlNode):
 
     def length(self):
         return self.tag_length() + self._data_length
-
 
 
 class NormalSubstitutionNode(BXmlNode):
@@ -808,6 +807,62 @@ class StreamStartNode(BXmlNode):
 
     def children(self):
         return []
+
+
+class RootNode(BXmlNode):
+    """
+    The binary XML node for the Root node.
+    """
+    def __init__(self, buf, offset, chunk, parent):
+        debug("RootNode at %s." % (hex(offset)))
+        super(RootNode, self).__init__(buf, offset, chunk, parent)
+
+    def __repr__(self):
+        return "RootNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
+            (self._buf, self._offset, self._chunk, self._parent)
+
+    def __str__(self):
+        return "RootNode(offset=%s, length=%s)" % \
+            (hex(self._offset), hex(self.length()))
+    
+    def __xml__(self):
+        return "RootNode"
+
+    def tag_length(self):
+        return 0
+
+    def children(self):
+        """
+        @return The template instances which make up this node.
+        """
+        return self._children(end_tokens=[SYSTEM_TOKENS.EndOfStreamToken])
+
+    def substitutions(self):
+        """
+        @return A list of VariantTypeNode subclass instances that contain the 
+          substitions for this root node.
+        """
+        sub_decl = []
+        sub_def = []
+        ofs = 0
+        for child in self.children():
+            ofs += child.length()
+        sub_count = self.unpack_dword(ofs)
+        for _ in xrange(sub_count):
+            size = self.unpack_word(ofs)
+            type_ = self.unpack_byte(ofs + 0x2)
+            sub_decl.append((size, type_))
+            ofs += 4
+        for (size, type_) in sub_decl:
+            # TODO(wb): VariantTypeNode is not meant to be instantiated.
+            #  switch on type and create objects of value types
+            val = VariantTypeNode(self._buf, self._offset + ofs, 
+                                  self._chunk, self)
+            if size != val.length():
+                raise ParseException("Invalid substitution value size")
+            sub_def.append(val)
+            ofs += size
+        return sub_def
 
 
 class VariantTypeNode(BXmlNode):

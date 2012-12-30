@@ -240,6 +240,38 @@ class ChunkHeader(Block):
         if not self._templates:
             self._load_templates()
         return self._templates
+
+    def first_record(self):
+        return Record(self._buf, self._offset + 0x200, self)
+
+    def records(self):
+        record = self.first_record()
+        while record._offset < self.next_record_offset():
+            yield record
+            record = Record(self._buf, record._offset + record.length(), self)
+
+
+class Record(Block):
+    def __init__(self, buf, offset, chunk):
+        debug("Record at %s." % (hex(offset)))
+        super(Record, self).__init__(buf, offset)
+        self._chunk = chunk
+        
+        self.declare_field("dword", "magic", 0x0)  # 0x00002a2a
+        self.declare_field("dword", "size")
+        self.declare_field("qword", "record_num")
+        self.declare_field("filetime", "timestamp")
+
+        self.declare_field("dword", "size2", self.size() - 4)
+
+    def root(self):
+        return RootNode(self._buf, self._offset + 0x18, self._chunk, self)
+
+    def length(self):
+        return self.size()
+
+    def verify(self):
+        return self.size() == self.size2()
                                          
 
 def main():
