@@ -1,4 +1,5 @@
 import itertools
+import base64
 
 from BinaryParser import *
 
@@ -440,8 +441,19 @@ def get_variant_value(buf, offset, chunk, parent, type_):
       buffer and offset.
     """
     types = [
-        NullTypeNode,
-        WstringTypeNode,
+        NullTypeNode,          # 0x00
+        WstringTypeNode,       # 0x01
+        StringTypeNode,        # 0x02
+        SignedByteTypeNode,    # 0x03
+        UnsignedByteTypeNode,  # 0x04
+        SignedWordTypeNode,    # 0x05
+        UnsignedWordTypeNode,  # 0x06
+        SignedDwordTypeNode,   # 0x07
+        UnsignedDwordTypeNode, # 0x08
+        SignedQwordTypeNode,   # 0x09
+        UnsignedQwordTypeNode, # 0x0A
+        FloatTypeNode,         # 0x0B
+        DoubleTypeNode,        # 0x0C
         ]
     try:
         TypeClass = types[type_]
@@ -797,7 +809,6 @@ class ConditionalSubstitutionNode(BXmlNode):
             self.token() & 0x0F == SYSTEM_TOKENS.ConditionalSubstitutionToken
 
 
-
 class StreamStartNode(BXmlNode):
     """
     The binary XML node for the system token 0x0F.
@@ -875,22 +886,16 @@ class RootNode(BXmlNode):
         """
         sub_decl = []
         sub_def = []
-        ofs = 0
-        debug("init offset %s" % (hex(self._offset)))
-        for child in self.children():
-            ofs += child.length()
-            debug("+= child length %s --> %s" % \
-                      (hex(child.length()), hex(self._offset + ofs)))
-        eos = self.find_end_of_stream()
-        debug("eos: %s" % (hex(eos._offset)))
-
+        ofs = self.find_end_of_stream()._offset - self._offset + 1
         sub_count = self.unpack_dword(ofs)
         debug("count: %s" % (sub_count))
+        ofs += 4
         for _ in xrange(sub_count):
             size = self.unpack_word(ofs)
             type_ = self.unpack_byte(ofs + 0x2)
             sub_decl.append((size, type_))
             ofs += 4
+        debug(sub_decl)
         for (size, type_) in sub_decl:
             val = get_variant_value(self._buf, self._offset + ofs, 
                                   self._chunk, self, type_)
@@ -910,11 +915,14 @@ class VariantTypeNode(BXmlNode):
         super(VariantTypeNode, self).__init__(buf, offset, chunk, parent)
 
     def __repr__(self):
-        return "VariantTypeNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
-            (self._buf, self._offset, self._chunk, self._parent)
+        return "%s(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
+            (self.__class__.__name___, self._buf, self._offset, 
+             self._chunk, self._parent)
 
     def __str__(self):
-        return "VariantTypeNode(offset=%s, length=%s)" % (hex(self._offset), hex(self.length()))
+        return "%s(offset=%s, length=%s, string=%s)" % \
+            (self.__class__.__name___, hex(self._offset), 
+             hex(self.length()), self.string())
     
     def __xml__(self):
         raise NotImplementedError("__xml__ not implemented for %r" % \
@@ -929,22 +937,25 @@ class VariantTypeNode(BXmlNode):
     
     def children(self):
         return []
+    
+    def string(self):
+        raise NotImplementedError("string not implemented for %r" % \
+                                      (self))
 
 
 class NullTypeNode(VariantTypeNode):
+    """
+    Variant type 0x00.
+    """
     def __init__(self, buf, offset, chunk, parent):
-        debug("NullTypeNode at %s." % (hex(offset)))
+        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(NullTypeNode, self).__init__(buf, offset, chunk, parent)
 
-    def __repr__(self):
-        return "NullTypeNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
-            (self._buf, self._offset, self._chunk, self._parent)
-
-    def __str__(self):
-        return "NullTypeNode(offset=%s, length=%s)" % (hex(self._offset), hex(self.length()))
-    
     def __xml__(self):
         return ""
+
+    def string(self):
+        return "NULL"
 
     def tag_length(self):
         return 0
@@ -952,26 +963,357 @@ class NullTypeNode(VariantTypeNode):
 
 class WstringTypeNode(VariantTypeNode):
     """
-
+    Variant ttype 0x01.
     """
     def __init__(self, buf, offset, chunk, parent):
-        debug("WstringTypeNode at %s." % (hex(offset)))
+        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(WstringTypeNode, self).__init__(buf, offset, chunk, parent)
         self.declare_field("word",    "string_length", 0x0)
         self.declare_field("wstring", "string", length=(self.string_length()))
 
-    def __repr__(self):
-        return "WstringTypeNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
-            (self._buf, self._offset, self._chunk, self._parent)
-
-    def __str__(self):
-        return "WstringTypeNode(offset=%s, length=%s, string=%s)" % \
-            (hex(self._offset), hex(self.length()), self.string())
-    
     def __xml__(self):
         # ensure this is a str, not unicode
         return str(self.string())
 
     def tag_length(self):
         return 2 + (self.string_length() * 2)
+
+
+class StringTypeNode(VariantTypeNode):
+    """
+    Variant ttype 0x02.
+    """
+    def __init__(self, buf, offset, chunk, parent):
+        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
+        super(StringTypeNode, self).__init__(buf, offset, chunk, parent)
+        self.declare_field("word",   "string_length", 0x0)
+        self.declare_field("string", "string", length=(self.string_length()))
+
+    def __xml__(self):
+        return str(self.string())
+
+    def tag_length(self):
+        return 2 + (self.string_length())
+
+
+class SignedByteTypeNode(VariantTypeNode):
+    """
+    Variant type 0x03.
+    """
+    def __init__(self, buf, offset, chunk, parent):
+        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
+        super(SignedByteTypeNode, self).__init__(buf, offset, chunk, parent)
+        self.declare_field("int8", "byte", 0x0)
+
+    def __xml__(self):
+        return self.string()
+
+    def tag_length(self):
+        return 1
+
+    def string(self):
+        return str(self.byte())
+
+
+class UnsignedByteTypeNode(VariantTypeNode):
+    """
+    Variant type 0x04.
+    """
+    def __init__(self, buf, offset, chunk, parent):
+        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
+        super(UnsignedByteTypeNode, self).__init__(buf, offset, 
+                                                   chunk, parent)
+        self.declare_field("byte", "byte", 0x0)
+
+    def __xml__(self):
+        return self.string()
+
+    def tag_length(self):
+        return 1
+
+    def string(self):
+        return str(self.byte())
+
+
+class SignedWordTypeNode(VariantTypeNode):
+    """
+    Variant type 0x05.
+    """
+    def __init__(self, buf, offset, chunk, parent):
+        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
+        super(SignedWordTypeNode, self).__init__(buf, offset, chunk, parent)
+        self.declare_field("int16", "word", 0x0)
+
+    def __xml__(self):
+        return self.string()
+
+    def tag_length(self):
+        return 2
+
+    def string(self):
+        return str(self.word())
+
+
+class UnsignedWordTypeNode(VariantTypeNode):
+    """
+    Variant type 0x06.
+    """
+    def __init__(self, buf, offset, chunk, parent):
+        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
+        super(UnsignedWordTypeNode, self).__init__(buf, offset, 
+                                                   chunk, parent)
+        self.declare_field("word", "word", 0x0)
+
+    def __xml__(self):
+        return self.string()
+
+    def tag_length(self):
+        return 2
+
+    def string(self):
+        return str(self.word())
+
+
+class SignedDwordTypeNode(VariantTypeNode):
+    """
+    Variant type 0x07.
+    """
+    def __init__(self, buf, offset, chunk, parent):
+        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
+        super(SignedDwordTypeNode, self).__init__(buf, offset, chunk, parent)
+        self.declare_field("int32", "dword", 0x0)
+
+    def __xml__(self):
+        return self.string()
+
+    def tag_length(self):
+        return 4
+
+    def string(self):
+        return str(self.dword())
+
+
+class UnsignedDwordTypeNode(VariantTypeNode):
+    """
+    Variant type 0x08.
+    """
+    def __init__(self, buf, offset, chunk, parent):
+        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
+        super(UnsignedDwordTypeNode, self).__init__(buf, offset, 
+                                                   chunk, parent)
+        self.declare_field("dword", "dword", 0x0)
+
+    def __xml__(self):
+        return self.string()
+
+    def tag_length(self):
+        return 4
+
+    def string(self):
+        return str(self.dword())
+
+
+class SignedQwordTypeNode(VariantTypeNode):
+    """
+    Variant type 0x09.
+    """
+    def __init__(self, buf, offset, chunk, parent):
+        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
+        super(SignedQwordTypeNode, self).__init__(buf, offset, chunk, parent)
+        self.declare_field("int64", "qword", 0x0)
+
+    def __xml__(self):
+        return self.string()
+
+    def tag_length(self):
+        return 8
+
+    def string(self):
+        return str(self.qword())
+
+
+class UnsignedQwordTypeNode(VariantTypeNode):
+    """
+    Variant type 0x0A.
+    """
+    def __init__(self, buf, offset, chunk, parent):
+        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
+        super(UnsignedQwordTypeNode, self).__init__(buf, offset, 
+                                                   chunk, parent)
+        self.declare_field("qword", "qword", 0x0)
+
+    def __xml__(self):
+        return self.string()
+
+    def tag_length(self):
+        return 8
+
+    def string(self):
+        return str(self.qword())
+
+
+class FloatTypeNode(VariantTypeNode):
+    """
+    Variant type 0x0B.
+    """
+    def __init__(self, buf, offset, chunk, parent):
+        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
+        super(FloatTypeNode, self).__init__(buf, offset, chunk, parent)
+        self.declare_field("float", "float", 0x0)
+
+    def __xml__(self):
+        return self.string()
+
+    def tag_length(self):
+        return 4
+
+    def string(self):
+        return str(self.float())
+
+
+class DoubleTypeNode(VariantTypeNode):
+    """
+    Variant type 0x0C.
+    """
+    def __init__(self, buf, offset, chunk, parent):
+        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
+        super(DoubleTypeNode, self).__init__(buf, offset, 
+                                                   chunk, parent)
+        self.declare_field("double", "double", 0x0)
+
+    def __xml__(self):
+        return self.string()
+
+    def tag_length(self):
+        return 8
+
+    def string(self):
+        return str(self.double())
+
+
+class BooleanTypeNode(VariantTypeNode):
+    """
+    Variant type 0x0D.
+    """
+    def __init__(self, buf, offset, chunk, parent):
+        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
+        super(BooleanTypeNode, self).__init__(buf, offset, 
+                                                   chunk, parent)
+        self.declare_field("int32", "int32", 0x0)
+
+    def __xml__(self):
+        return self.string()
+
+    def tag_length(self):
+        return 4
+
+    def string(self):
+        if self.int32 > 0:
+            return "True"
+        return "False"
+
+
+class BinaryTypeNode(VariantTypeNode):
+    """
+    Variant type 0x0E.
+
+    String/XML representation is Base64 encoded.
+    """
+    def __init__(self, buf, offset, chunk, parent):
+        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
+        super(BinaryTypeNode, self).__init__(buf, offset, 
+                                                   chunk, parent)
+        self.declare_field("dword", "size", 0x0)
+        self.declare_field("binary", "binary", length=self.size())
+
+    def __xml__(self):
+        return self.string()
+
+    def tag_length(self):
+        return 4 + self.size()
+
+    def string(self):
+        return base64.b64encode(self.binary())
+
+
+class GuidTypeNode(VariantTypeNode):
+    """
+    Variant type 0x0F.
+    """
+    def __init__(self, buf, offset, chunk, parent):
+        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
+        super(GuidTypeNode, self).__init__(buf, offset, 
+                                                   chunk, parent)
+        self.declare_field("guid", "guid", 0x0)
+
+    def __xml__(self):
+        return self.string()
+
+    def tag_length(self):
+        return 16
+
+    def string(self):
+        return self.guid()
+
+
+class SizeTypeNode(VariantTypeNode):
+    """
+    Variant type 0x10.
+
+    Note: Assuming sizeof(size_t) == 0x8.
+    """
+    def __init__(self, buf, offset, chunk, parent):
+        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
+        super(SizeTypeNode, self).__init__(buf, offset, 
+                                           chunk, parent)
+        self.declare_field("qword", "qword", 0x0)
+
+    def __xml__(self):
+        return self.string()
+
+    def tag_length(self):
+        return 8
+
+    def string(self):
+        return str(self.qword())
+
+
+class FiletimeTypeNode(VariantTypeNode):
+    """
+    Variant type 0x11.
+    """
+    def __init__(self, buf, offset, chunk, parent):
+        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
+        super(FiletimeTypeNode, self).__init__(buf, offset, 
+                                           chunk, parent)
+        self.declare_field("filetime", "filetime", 0x0)
+
+    def __xml__(self):
+        return self.string()
+
+    def tag_length(self):
+        return 8
+
+    def string(self):
+        return self.filetime().isoformat("T") + "Z"
+
+
+class SystemtimeTypeNode(VariantTypeNode):
+    """
+    Variant type 0x12.
+    """
+    def __init__(self, buf, offset, chunk, parent):
+        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
+        super(SystemtimeTypeNode, self).__init__(buf, offset, 
+                                           chunk, parent)
+        self.declare_field("systemtime", "systemtime", 0x0)
+
+    def __xml__(self):
+        return self.string()
+
+    def tag_length(self):
+        return 16
+
+    def string(self):
+        return self.systemtime().isoformat("T") + "Z"
 
