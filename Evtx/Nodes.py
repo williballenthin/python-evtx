@@ -4,7 +4,6 @@ import base64
 from BinaryParser import *
 
 
-
 def xml(item):
     return item.__xml__()
 
@@ -1316,4 +1315,41 @@ class SystemtimeTypeNode(VariantTypeNode):
 
     def string(self):
         return self.systemtime().isoformat("T") + "Z"
+
+
+class SIDTypeNode(VariantTypeNode):
+    """
+    Variant type 0x13.
+    """
+    def __init__(self, buf, offset, chunk, parent):
+        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
+        super(SIDTypeNode, self).__init__(buf, offset, 
+                                           chunk, parent)
+        self.declare_field("byte",  "version", 0x0)
+        self.declare_field("byte",  "num_elements")
+        self.declare_field("dword", "id_high")
+        self.declare_field("word",  "id_low")
+
+    @memoize
+    def elements(self):
+        ret = []
+        for i in xrange(self.num_elements()):
+            elem = self.unpack_dword(self.current_field_offset() + 4 * i)
+        return ret
+
+    @memoize
+    def id(self):
+        ret = "S-%d-%d" % (self.version(), (id_high << 16) & id_low)
+        for elem in self.elements():
+            ret += "-%d" + str(elem)
+        return ret
+
+    def __xml__(self):
+        return self.string()
+
+    def tag_length(self):
+        return 8 + 4 * self.num_elements()
+
+    def string(self):
+        return self.id()
 
