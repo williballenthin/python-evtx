@@ -53,7 +53,7 @@ class BXmlNode(Block):
             StreamStartNode,
             ]
         self._readable_tokens = [
-            "EndItem",
+            "End of Stream",
             "Open Start Element",
             "Close Start Element",
             "Close Empty Element",
@@ -156,6 +156,15 @@ class BXmlNode(Block):
         for child in self.children():
             ret += child.length()
         return ret
+
+    def find_end_of_stream(self):
+        for child in self.children():
+            if type(child) == EndOfStreamNode:
+                return child
+            ret = child.find_end_of_stream()
+            if ret:
+                return ret
+        return None
 
 
 class NameStringNode(BXmlNode):
@@ -425,6 +434,22 @@ class CloseElementNode(BXmlNode):
             self.opcode() & 0x0F == 0x04
 
 
+def get_variant_value(buf, offset, chunk, parent, type_):
+    """
+    @return A VariantType subclass instance found in the given 
+      buffer and offset.
+    """
+    types = [
+        NullTypeNode,
+        WstringTypeNode,
+        ]
+    try:
+        TypeClass = types[type_]
+    except IndexError:
+        raise NotImplementedError("Type %s not implemented" % (type_))
+    return TypeClass(buf, offset, chunk, parent)
+
+
 class ValueNode(BXmlNode):
     """
     The binary XML node for the system token 0x05.
@@ -436,11 +461,6 @@ class ValueNode(BXmlNode):
         super(ValueNode, self).__init__(buf, offset, chunk, parent)
         self.declare_field("byte", "token", 0x0)
         self.declare_field("byte", "type")
-        
-        self._types = [
-            NullTypeNode,
-            WstringTypeNode,
-            ]
 
     def __repr__(self):
         return "ValueNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
@@ -461,15 +481,11 @@ class ValueNode(BXmlNode):
         return 2
 
     def children(self):
-        try:
-            TypeClass = self._types[self.type()]
-        except IndexError:
-            raise NotImplementedError("Type %s not implemented" % \
-                                          (self.type()))
-        child = TypeClass(self._buf, self._offset + self.tag_length(),
-                          self._chunk, self)
+        child = get_variant_value(self._buf, 
+                                  self._offset + self.tag_length(),
+                                  self._chunk, self, self.type())
         return [child]
-
+    
     def verify(self):
         return self.flags() & 0x0B == 0 and \
             self.token() & 0x0F == SYSTEM_TOKENS.ValueToken
@@ -660,7 +676,7 @@ class TemplateInstanceNode(BXmlNode):
 
         self._data_length = 0
 
-        if self.template_offset() > self._offset - self._chunk._offset:
+        if self.is_resident_template():
             print ".,", indent, "%r" % (self), "need new template", self.template_offset()
             new_template = self._chunk.add_template(self.template_offset(), 
                                                     parent=self)
@@ -676,12 +692,26 @@ class TemplateInstanceNode(BXmlNode):
     
     def __xml__(self):
         return xml(self._chunk.templates()[self.template_offset()])
-    
+
+    def is_resident_template(self):
+        return self.template_offset() > self._offset - self._chunk._offset
+
     def tag_length(self):
         return 10
 
     def length(self):
         return self.tag_length() + self._data_length
+
+    def template(self):
+        return self._chunk.templates()[self.template_offset()]
+
+    def children(self):
+        return []
+
+    def find_end_of_stream(self):
+        if self.is_resident_template():
+            return self.template().find_end_of_stream()
+        return None
 
 
 class NormalSubstitutionNode(BXmlNode):
@@ -699,7 +729,6 @@ class NormalSubstitutionNode(BXmlNode):
 
         global indent
         print ".,", indent, "Normal Substitution", self
-
 
     def __repr__(self):
         return "NormalSubstitutionNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
@@ -835,6 +864,8 @@ class RootNode(BXmlNode):
         """
         @return The template instances which make up this node.
         """
+        # TODO(wb): I really don't know if this is correct.
+        # TODO(wb): Can we have more than one TemplateInstance here?
         return self._children(end_tokens=[SYSTEM_TOKENS.EndOfStreamToken])
 
     def substitutions(self):
@@ -845,19 +876,24 @@ class RootNode(BXmlNode):
         sub_decl = []
         sub_def = []
         ofs = 0
+        debug("init offset %s" % (hex(self._offset)))
         for child in self.children():
             ofs += child.length()
+            debug("+= child length %s --> %s" % \
+                      (hex(child.length()), hex(self._offset + ofs)))
+        eos = self.find_end_of_stream()
+        debug("eos: %s" % (hex(eos._offset)))
+
         sub_count = self.unpack_dword(ofs)
+        debug("count: %s" % (sub_count))
         for _ in xrange(sub_count):
             size = self.unpack_word(ofs)
             type_ = self.unpack_byte(ofs + 0x2)
             sub_decl.append((size, type_))
             ofs += 4
         for (size, type_) in sub_decl:
-            # TODO(wb): VariantTypeNode is not meant to be instantiated.
-            #  switch on type and create objects of value types
-            val = VariantTypeNode(self._buf, self._offset + ofs, 
-                                  self._chunk, self)
+            val = get_variant_value(self._buf, self._offset + ofs, 
+                                  self._chunk, self, type_)
             if size != val.length():
                 raise ParseException("Invalid substitution value size")
             sub_def.append(val)
