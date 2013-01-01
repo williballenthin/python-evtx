@@ -436,6 +436,12 @@ class CloseElementNode(BXmlNode):
 
 def get_variant_value(buf, offset, chunk, parent, type_):
     """
+    Note: Not all uses of variant types have a 'length' field, such as
+      in a ValueNode.  So, we could provide an optional 'length' 
+      keyword parameter, but it doesn't seem very clean since its
+      inconsistent.  If we require a 'length' field, then we will
+      also for ValueNodes, and therefore, all the other nodes too.
+
     @return A VariantType subclass instance found in the given 
       buffer and offset.
     """
@@ -453,6 +459,27 @@ def get_variant_value(buf, offset, chunk, parent, type_):
         UnsignedQwordTypeNode, # 0x0A
         FloatTypeNode,         # 0x0B
         DoubleTypeNode,        # 0x0C
+        BooleanTypeNode,       # 0x0D
+        BinaryTypeNode,        # 0x0E
+        GuidTypeNode,          # 0x0F
+        SizeTypeNode,          # 0x10
+        FiletimeTypeNode,      # 0x11
+        SystemtimeTypeNode,    # 0x12
+        SIDTypeNode,           # 0x13
+        Hex32TypeNode,         # 0x14
+        Hex64TypeNode,         # 0x15
+        None,                  # 0x16
+        None,                  # 0x17
+        None,                  # 0x18
+        None,                  # 0x19
+        None,                  # 0x1A
+        None,                  # 0x1B
+        None,                  # 0x1C
+        None,                  # 0x1D
+        None,                  # 0x1E
+        None,                  # 0x1F
+        None,                  # 0x20
+        BXmlTypeNode,          # 0x21
         ]
     try:
         TypeClass = types[type_]
@@ -880,12 +907,13 @@ class RootNode(BXmlNode):
 
     def substitutions(self):
         """
-        @return A list of VariantTypeNode subclass instances that contain the 
-          substitions for this root node.
+        @return A list of VariantTypeNode subclass instances that
+          contain the substitions for this root node.
         """
         sub_decl = []
         sub_def = []
         ofs = self.find_end_of_stream()._offset - self._offset + 1
+        debug("subs begin at %s" % (hex(self._offset + ofs)))
         sub_count = self.unpack_dword(ofs)
         debug("count: %s" % (sub_count))
         ofs += 4
@@ -898,11 +926,35 @@ class RootNode(BXmlNode):
         for (size, type_) in sub_decl:
             val = get_variant_value(self._buf, self._offset + ofs, 
                                   self._chunk, self, type_)
-            if size != val.length():
+            if abs(size - val.length()) > 4:
+                # TODO(wb): This is a hack, so I'm sorry.
+                #   But, we are not passing around a 'length' field,
+                #   so we have to depend on the structure of each 
+                #   variant type.  It seems some BXmlTypeNode sizes
+                #   are not exact.  Hopefully, this is just alignment.
+                #   So, that's what we compensate for here.
                 raise ParseException("Invalid substitution value size")
             sub_def.append(val)
             ofs += size
+        debug("subs end at %s" % (hex(self._offset + ofs)))
         return sub_def
+
+    def length(self):
+        ret = 0
+        ofs = self.find_end_of_stream()._offset - self._offset + 1
+        debug("subs begin at %s" % (hex(self._offset + ofs)))
+        sub_count = self.unpack_dword(ofs)
+        debug("count: %s" % (sub_count))
+        ofs += 4
+        ret = ofs
+        for _ in xrange(sub_count):
+            size = self.unpack_word(ofs)
+            ret += size + 4
+            ofs += 4
+        debug("subs decl end at %s" % (hex(self._offset + ofs)))
+        debug("root end at %s"  % (hex(self._offset + ret)))
+        return ret
+        
 
 
 class VariantTypeNode(BXmlNode):
@@ -915,12 +967,12 @@ class VariantTypeNode(BXmlNode):
 
     def __repr__(self):
         return "%s(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
-            (self.__class__.__name___, self._buf, self._offset, 
+            (self.__class__.__name__, self._buf, self._offset, 
              self._chunk, self._parent)
 
     def __str__(self):
         return "%s(offset=%s, length=%s, string=%s)" % \
-            (self.__class__.__name___, hex(self._offset), 
+            (self.__class__.__name__, hex(self._offset), 
              hex(self.length()), self.string())
     
     def __xml__(self):
@@ -1401,7 +1453,7 @@ class BXmlTypeNode(VariantTypeNode):
         debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(BXmlTypeNode, self).__init__(buf, offset, 
                                            chunk, parent)
-        self._root = RootNote(buf, offset, chunk, self)
+        self._root = RootNode(buf, offset, chunk, self)
 
     def __xml__(self):
         return xml(self._root)
@@ -1410,4 +1462,4 @@ class BXmlTypeNode(VariantTypeNode):
         return self._root.length()
 
     def string(self):
-        return str(self._root())
+        return str(self._root)
