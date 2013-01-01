@@ -1353,3 +1353,42 @@ class SIDTypeNode(VariantTypeNode):
     def string(self):
         return self.id()
 
+
+class Hex32TypeNode(VariantTypeNode):
+    """
+    Variant type 0x14.
+    """
+    def __init__(self, buf, offset, chunk, parent):
+        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
+        super(Hex32TypeNode, self).__init__(buf, offset, 
+                                           chunk, parent)
+        self.declare_field("binary", "hex", 0x0, length=0x4)
+
+    def __xml__(self):
+        return self.string()
+
+    def tag_length(self):
+        return 4
+
+    def string(self):
+        return "0x" + self.hex()[::-1]
+
+class Hex64TypeNode(VariantTypeNode):
+    """
+    Variant type 0x15.
+    """
+    def __init__(self, buf, offset, chunk, parent):
+        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
+        super(Hex64TypeNode, self).__init__(buf, offset, 
+                                           chunk, parent)
+        self.declare_field("binary", "hex", 0x0, length=0x8)
+
+    def __xml__(self):
+        return self.string()
+
+    def tag_length(self):
+        return 8
+
+    def string(self):
+        return "0x" + self.hex()[::-1]
+
