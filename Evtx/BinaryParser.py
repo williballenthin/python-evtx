@@ -363,7 +363,7 @@ class Block(object):
 
     def unpack_word(self, offset):
         """
-        Returns a little-endian signed WORD (2 bytes) from the 
+        Returns a little-endian unsigned WORD (2 bytes) from the 
           relative offset.
         Arguments:
         - `offset`: The relative offset from the start of the block.
