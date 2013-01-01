@@ -1392,3 +1392,22 @@ class Hex64TypeNode(VariantTypeNode):
     def string(self):
         return "0x" + self.hex()[::-1]
 
+
+class BXmlTypeNode(VariantTypeNode):
+    """
+    Variant type 0x21.
+    """
+    def __init__(self, buf, offset, chunk, parent):
+        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
+        super(BXmlTypeNode, self).__init__(buf, offset, 
+                                           chunk, parent)
+        self._root = RootNote(buf, offset, chunk, self)
+
+    def __xml__(self):
+        return xml(self._root)
+
+    def tag_length(self):
+        return self._root.length()
+
+    def string(self):
+        return str(self._root())
