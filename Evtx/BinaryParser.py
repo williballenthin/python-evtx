@@ -27,10 +27,10 @@ import types
 verbose = False
 
 
-def debug(message):
+def debug(*message):
     global verbose
     if verbose:
-        print "# [d] %s" % (message)
+        print "# [d] %s" % (", ".join(map(str, message)))
 
 
 def warning(message):
