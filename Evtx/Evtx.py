@@ -247,6 +247,7 @@ class ChunkHeader(Block):
     def records(self):
         record = self.first_record()
         while record._offset < self.next_record_offset():
+            print "RECORD... %s" % (hex(record._offset))
             yield record
             record = Record(self._buf, record._offset + record.length(), self)
 

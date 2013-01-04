@@ -150,11 +150,13 @@ class BXmlNode(Block):
             ofs += child.length()
             if token in end_tokens:
                 break
+            if child.find_end_of_stream():
+                break
         indent = indent[:-2]
 
         return ret
 
-    #@memoize
+    @memoize
     def children(self):
         return self._children()
 
@@ -169,9 +171,10 @@ class BXmlNode(Block):
             ret += child.length()
         return ret
 
+    @memoize
     def find_end_of_stream(self):
         for child in self.children():
-            if type(child) == EndOfStreamNode:
+            if isinstance(child, EndOfStreamNode):
                 return child
             ret = child.find_end_of_stream()
             if ret:
@@ -360,12 +363,14 @@ class OpenStartElementNode(BXmlNode):
             cxml = "".join(c.xml(substitutions) for c in self.children())
             return "\n<%s%s</%s>" % (self.tag_name(), cxml, self.tag_name())
 
+    @memoize
     def is_empty_node(self):
         for child in self.children():
             if type(child) is CloseEmptyElementNode:
                 return True
         return False
 
+    @memoize
     def tag_name(self):
         return self._chunk.strings()[self.string_offset()].string()
 
@@ -379,6 +384,7 @@ class OpenStartElementNode(BXmlNode):
         return self.flags() & 0x0b == 0 and \
             self.opcode() & 0x0F == 0x01
 
+    @memoize
     def children(self):
         return self._children(end_tokens=[SYSTEM_TOKENS.CloseElementToken,
                                           SYSTEM_TOKENS.CloseEmptyElementToken])
@@ -449,6 +455,7 @@ class CloseEmptyElementNode(BXmlNode):
     def children(self):
         return []
 
+
 class CloseElementNode(BXmlNode):
     """
     The binary XML node for the system token 0x04.
@@ -483,7 +490,7 @@ class CloseElementNode(BXmlNode):
     def verify(self):
         return self.flags() & 0x0F == 0 and \
             self.opcode() & 0x0F == 0x04
-
+ 
 
 def get_variant_value(buf, offset, chunk, parent, type_, length=None):
     """
@@ -526,6 +533,12 @@ def get_variant_value(buf, offset, chunk, parent, type_, length=None):
         None,                  # 0x20
         BXmlTypeNode,          # 0x21
         ]
+    for _ in xrange(0x5F):
+        types.append(None)
+        
+    types.extend([
+        WstringArrayTypeNode, # 0x81    
+        ])
     try:
         TypeClass = types[type_]
     except IndexError:
@@ -645,6 +658,7 @@ class AttributeNode(BXmlNode):
         return self.flags() & 0x0B == 0 and \
             self.opcode() & 0x0F == 0x06
 
+    @memoize
     def children(self):
         return self._children(max_children=1)
 
@@ -771,7 +785,8 @@ class TemplateInstanceNode(BXmlNode):
         self._data_length = 0
 
         if self.is_resident_template():
-            debug(".,", indent, "%r" % (self), "need new template", self.template_offset())
+            debug(".,", indent, "%r" % (self), \
+                      "need new template", self.template_offset())
             new_template = self._chunk.add_template(self.template_offset(), 
                                                     parent=self)
             self._data_length += new_template.length()
@@ -803,10 +818,9 @@ class TemplateInstanceNode(BXmlNode):
     def children(self):
         return []
 
+    @memoize
     def find_end_of_stream(self):
-        if self.is_resident_template():
-            return self.template().find_end_of_stream()
-        return None
+        return self.template().find_end_of_stream()
 
 
 class NormalSubstitutionNode(BXmlNode):
@@ -972,6 +986,7 @@ class RootNode(BXmlNode):
     def tag_length(self):
         return 0
 
+    @memoize
     def children(self):
         """
         @return The template instances which make up this node.
@@ -980,6 +995,7 @@ class RootNode(BXmlNode):
         # TODO(wb): Can we have more than one TemplateInstance here?
         return self._children(end_tokens=[SYSTEM_TOKENS.EndOfStreamToken])
 
+    @memoize
     def substitutions(self):
         """
         @return A list of VariantTypeNode subclass instances that
@@ -1015,6 +1031,7 @@ class RootNode(BXmlNode):
         debug("subs end at %s" % (hex(self._offset + ofs)))
         return sub_def
 
+    @memoize
     def length(self):
         ret = 0
         ofs = self.find_end_of_stream()._offset - self._offset + 1
@@ -1575,3 +1592,37 @@ class BXmlTypeNode(VariantTypeNode):
 
     def string(self):
         return str(self._root)
+
+
+class WstringArrayTypeNode(VariantTypeNode):
+    """
+    Variant ttype 0x81.
+    """
+    def __init__(self, buf, offset, chunk, parent, length=None):
+        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
+        super(WstringArrayTypeNode, self).__init__(buf, offset, chunk, 
+                                              parent, length=length)
+        if not self._length:
+            self.declare_field("word",   "binary_length", 0x0)
+            self.declare_field("binary", "binary", 
+                               length=(self.binary_length()))
+        else:
+            self.declare_field("binary", "binary", 0x0, 
+                               length=(self._length))
+
+    def xml(self):
+        ret = ""
+        bin = self.binary()
+        strings = []
+        for apart in bin.split("\x00\x00\x00"):
+            for bpart in apart.split("\x00\x00"):
+                if len(bpart) % 2 == 1:
+                    strings.append(bpart + "\x00")
+                else:
+                    strings.append(bpart)
+        for string in strings:
+            ret += string.decode("utf-16") + "\n"
+        return ret
+
+    def tag_length(self):
+        return self._length or (2 + self.binary_length())
