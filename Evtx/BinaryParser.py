@@ -297,9 +297,13 @@ class Block(object):
             self._implicit_offset = offset + 1
         elif type == "word":
             self._implicit_offset = offset + 2
+        elif type == "word_be":
+            self._implicit_offset = offset + 2
         elif type == "int16":
             self._implicit_offset = offset + 2
         elif type == "dword":
+            self._implicit_offset = offset + 4
+        elif type == "dword_be":
             self._implicit_offset = offset + 4
         elif type == "int32":
             self._implicit_offset = offset + 4
@@ -376,6 +380,21 @@ class Block(object):
         except struct.error:
             raise OverrunBufferException(o, len(self._buf))
 
+    def unpack_word_be(self, offset):
+        """
+        Returns a big-endian unsigned WORD (2 bytes) from the 
+          relative offset.
+        Arguments:
+        - `offset`: The relative offset from the start of the block.
+        Throws:
+        - `OverrunBufferException`
+        """
+        o = self._offset + offset
+        try:
+            return struct.unpack_from(">H", self._buf, o)[0]
+        except struct.error:
+            raise OverrunBufferException(o, len(self._buf))
+
     def unpack_int16(self, offset):
         """
         Returns a little-endian signed WORD (2 bytes) from the 
@@ -412,6 +431,20 @@ class Block(object):
         o = self._offset + offset
         try:
             return struct.unpack_from("<I", self._buf, o)[0]
+        except struct.error:
+            raise OverrunBufferException(o, len(self._buf))
+
+    def unpack_dword_be(self, offset):
+        """
+        Returns a big-endian DWORD (4 bytes) from the relative offset.
+        Arguments:
+        - `offset`: The relative offset from the start of the block.
+        Throws:
+        - `OverrunBufferException`
+        """
+        o = self._offset + offset
+        try:
+            return struct.unpack_from(">I", self._buf, o)[0]
         except struct.error:
             raise OverrunBufferException(o, len(self._buf))
 

@@ -1439,16 +1439,23 @@ class SizeTypeNode(VariantTypeNode):
         debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(SizeTypeNode, self).__init__(buf, offset, chunk,
                                            parent, length=length)
-        self.declare_field("qword", "qword", 0x0)
+        if self._length == 0x4:
+            self.declare_field("dword", "num", 0x0)
+        elif self._length == 0x8:
+            self.declare_field("qword", "num", 0x0)
+        else:
+            self.declare_field("qword", "num", 0x0)
 
     def xml(self):
         return self.string()
 
     def tag_length(self):
-        return 8
+        if self._length is None:
+            return 8
+        return self._length
 
     def string(self):
-        return str(self.qword())
+        return str(self.num())
 
 
 class FiletimeTypeNode(VariantTypeNode):
@@ -1501,8 +1508,8 @@ class SIDTypeNode(VariantTypeNode):
                                           parent, length=length)
         self.declare_field("byte",  "version", 0x0)
         self.declare_field("byte",  "num_elements")
-        self.declare_field("dword", "id_high")
-        self.declare_field("word",  "id_low")
+        self.declare_field("dword_be", "id_high")
+        self.declare_field("word_be",  "id_low")
 
     @memoize
     def elements(self):
@@ -1513,9 +1520,8 @@ class SIDTypeNode(VariantTypeNode):
 
     @memoize
     def id(self):
-        # TODO(wb): bug here.
         ret = "S-%d-%d" % \
-            (self.version(), (self.id_high() << 16) & self.id_low())
+            (self.version(), (self.id_high() << 16) ^ self.id_low())
         for elem in self.elements():
             ret += "-%d" % (elem)
         return ret
