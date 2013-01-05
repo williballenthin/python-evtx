@@ -1109,7 +1109,7 @@ class WstringTypeNode(VariantTypeNode):
         debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(WstringTypeNode, self).__init__(buf, offset, chunk,
                                               parent, length=length)
-        if not self._length:
+        if self._length is None:
             self.declare_field("word",    "string_length", 0x0)
             self.declare_field("wstring", "string",
                                length=(self.string_length()))
@@ -1126,7 +1126,9 @@ class WstringTypeNode(VariantTypeNode):
             return str(self.string())
 
     def tag_length(self):
-        return self._length or (2 + (self.string_length() * 2))
+        if self._length is None:
+            return (2 + (self.string_length() * 2))
+        return self._length
 
 
 class StringTypeNode(VariantTypeNode):
@@ -1137,7 +1139,7 @@ class StringTypeNode(VariantTypeNode):
         debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(StringTypeNode, self).__init__(buf, offset, chunk,
                                              parent, length=length)
-        if not self._length:
+        if self._length is None:
             self.declare_field("word",   "string_length", 0x0)
             self.declare_field("string", "string",
                                length=(self.string_length()))
@@ -1148,7 +1150,9 @@ class StringTypeNode(VariantTypeNode):
         return str(self.string())
 
     def tag_length(self):
-        return self._length or (2 + (self.string_length()))
+        if self._length is None:
+            return (2 + (self.string_length()))
+        return self._length
 
 
 class SignedByteTypeNode(VariantTypeNode):
@@ -1387,7 +1391,7 @@ class BinaryTypeNode(VariantTypeNode):
         debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(BinaryTypeNode, self).__init__(buf, offset, chunk,
                                              parent, length=length)
-        if not self._length:
+        if self._length is None:
             self.declare_field("dword", "size", 0x0)
             self.declare_field("binary", "binary", length=self.size())
         else:
@@ -1397,7 +1401,9 @@ class BinaryTypeNode(VariantTypeNode):
         return self.string()
 
     def tag_length(self):
-        return self._length or (4 + self.size())
+        if self._length is None:
+            return (4 + self.size())
+        return self._length
 
     def string(self):
         return base64.b64encode(self.binary())
@@ -1597,7 +1603,7 @@ class WstringArrayTypeNode(VariantTypeNode):
         debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(WstringArrayTypeNode, self).__init__(buf, offset, chunk,
                                               parent, length=length)
-        if not self._length:
+        if self._length is None:
             self.declare_field("word",   "binary_length", 0x0)
             self.declare_field("binary", "binary",
                                length=(self.binary_length()))
@@ -1620,4 +1626,6 @@ class WstringArrayTypeNode(VariantTypeNode):
         return ret
 
     def tag_length(self):
-        return self._length or (2 + self.binary_length())
+        if self._length is None:
+            return (2 + self.binary_length())
+        return self._length
