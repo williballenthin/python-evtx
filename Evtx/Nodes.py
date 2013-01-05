@@ -377,9 +377,6 @@ class OpenStartElementNode(BXmlNode):
     def tag_length(self):
         return self._tag_length
 
-#    def length(self):
-#        return self.size() + 0x6
-
     def verify(self):
         return self.flags() & 0x0b == 0 and \
             self.opcode() & 0x0F == 0x01
@@ -979,6 +976,19 @@ class RootNode(BXmlNode):
         # TODO(wb): Can we have more than one TemplateInstance here?
         return self._children(end_tokens=[SYSTEM_TOKENS.EndOfStreamToken])
 
+    def tag_and_children_length(self):
+        """
+        @return The length of the tag of this element, and the children.
+          This does not take into account the substitutions that may be
+          at the end of this element.
+        """
+        children_length = 0
+
+        for child in self.children():
+            children_length += child.length()
+
+        return self.tag_length() + children_length
+
     @memoize
     def substitutions(self):
         """
@@ -987,7 +997,7 @@ class RootNode(BXmlNode):
         """
         sub_decl = []
         sub_def = []
-        ofs = self.find_end_of_stream()._offset - self._offset + 1
+        ofs = self.tag_and_children_length()
         debug("subs begin at %s" % (hex(self._offset + ofs)))
         sub_count = self.unpack_dword(ofs)
         debug("count: %s" % (sub_count))
@@ -1018,7 +1028,8 @@ class RootNode(BXmlNode):
     @memoize
     def length(self):
         ret = 0
-        ofs = self.find_end_of_stream()._offset - self._offset + 1
+        ofs = self.tag_and_children_length()
+#        ofs = self.find_end_of_stream()._offset - self._offset + 1
         debug("subs begin at %s" % (hex(self._offset + ofs)))
         sub_count = self.unpack_dword(ofs)
         debug("count: %s" % (sub_count))
