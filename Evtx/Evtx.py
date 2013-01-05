@@ -7,6 +7,11 @@ from BinaryParser import *
 from Nodes import *
 
 
+class InvalidRecordException(ParseException):
+    def __init__(self):
+        super(InvalidRecordException, self).__init__("Invalid record structure")
+
+
 class FileHeader(Block):
     def __init__(self, buf, offset):
         debug("FILE HEADER at %s." % (hex(offset)))
@@ -248,7 +253,12 @@ class ChunkHeader(Block):
         record = self.first_record()
         while record._offset < self._offset + self.next_record_offset():
             yield record
-            record = Record(self._buf, record._offset + record.length(), self)
+            try:
+                record = Record(self._buf, 
+                                record._offset + record.length(), 
+                                self)
+            except InvalidRecordException:
+                return
 
 
 class Record(Block):
@@ -261,6 +271,9 @@ class Record(Block):
         self.declare_field("dword", "size")
         self.declare_field("qword", "record_num")
         self.declare_field("filetime", "timestamp")
+
+        if self.size() > 0x10000:
+            raise InvalidRecordException()
 
         self.declare_field("dword", "size2", self.size() - 4)
 

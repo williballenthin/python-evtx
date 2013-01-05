@@ -189,7 +189,7 @@ class NameStringNode(BXmlNode):
         self.declare_field("dword", "next_offset", 0x0)
         self.declare_field("word", "hash")
         self.declare_field("word", "string_length")
-        self.declare_field("wstring", "_string", length=self.string_length())
+        self.declare_field("wstring", "string", length=self.string_length())
 
         debug("Same %s" % (self))
 
@@ -1122,8 +1122,11 @@ class WstringTypeNode(VariantTypeNode):
         try:
             return str(self.string())
         except UnicodeEncodeError:
-            debug("E", "%r" % (self))
-            return str(self.string())
+            try:
+                return self.string().encode("ascii", "xmlcharrefreplace")
+            except (UnicodeEncodeError, UnicodeDecodeError) as e:
+                debug("E", "%r" % (self), e)
+                return str(self.string())
 
     def tag_length(self):
         if self._length is None:
@@ -1628,8 +1631,10 @@ class WstringArrayTypeNode(VariantTypeNode):
                     strings.append(bpart + "\x00")
                 else:
                     strings.append(bpart)
-        for string in strings:
-            ret += string.decode("utf-16") + "\n"
+        if strings[-1].strip("\x00") == "":
+            strings = strings[:-1]
+        for (i, string) in enumerate(strings):
+            ret += "[%d] %s\n" % (i, string.decode("utf-16"))
         return ret
 
     def tag_length(self):
