@@ -101,7 +101,6 @@ class FileHeader(Block):
         """
         ofs = self._offset + self.header_chunk_size()
         while ofs + 0x10000 < len(self._buf):
-            print "CHUNK... %s" % (hex(ofs))
             yield ChunkHeader(self._buf, ofs)
             ofs += 0x10000
 
@@ -248,7 +247,6 @@ class ChunkHeader(Block):
     def records(self):
         record = self.first_record()
         while record._offset < self._offset + self.next_record_offset():
-            print "RECORD... %s" % (hex(record._offset))
             yield record
             record = Record(self._buf, record._offset + record.length(), self)
 

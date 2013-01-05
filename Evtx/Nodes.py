@@ -1426,7 +1426,7 @@ class GuidTypeNode(VariantTypeNode):
         return 16
 
     def string(self):
-        return self.guid()
+        return "{%s}" % (self.guid())
 
 
 class SizeTypeNode(VariantTypeNode):
@@ -1513,6 +1513,7 @@ class SIDTypeNode(VariantTypeNode):
 
     @memoize
     def id(self):
+        # TODO(wb): bug here.
         ret = "S-%d-%d" % \
             (self.version(), (self.id_high() << 16) & self.id_low())
         for elem in self.elements():
