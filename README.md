@@ -4,7 +4,7 @@ python-evtx
 Introduction
 ------------
 
-python-evtx is a pure Python parser for recent Windows Event Log files (those with the file extension ".evtx").  The module provides programmatic access to the File and Chunk headers, record templates, and event entries.  The structure definitions and parsing strategies were heavily inspired by the work of Andreas Schuster and his Perl implementation "Parse-Evtx".
+python-evtx is a pure Python parser for recent Windows Event Log files (those with the file extension ".evtx").  The module provides programmatic access to the File and Chunk headers, record templates, and event entries.  For example, you can use python-evtx to review the event logs of Windows 7 systems from a Mac or Linux workstation. The structure definitions and parsing strategies were heavily inspired by the work of Andreas Schuster and his Perl implementation "Parse-Evtx".
 
 Background
 ----------
@@ -18,11 +18,20 @@ Joachim Metz also released a cross-platform, LGPL licensed C++ based parser in 2
 
 Dependencies
 ------------
+python-evtx was developed using the 2.7 tag of the Python programming language. As it is purely Python, the module works equally well across platforms.  The code does not depend on any modules that require separate compilation.
+
+python-evtx is not yet Python 3 compatible; however, I do not expect a port to be particularly painful.
+
+python-evtx operates on event log files from Windows operating systems newer than Windows Vista.  These files typically have the file extension .evtx.  Version 5.09 of the `file` utility identifies such a file as "MS Vista Windows Event Log".  To manual confirm the file type, look for the ASCII string "ElfFile" in the first seven bytes:
+
+    willi/evtx  » xxd -l 32 Security.evtx 
+    0000000: 456c 6646 696c 6500 0000 0000 0000 0000  ElfFile.........
+    0000010: d300 0000 0000 0000 375e 0000 0000 0000  ........7^......
 
 
 Examples
 --------
-
+Provided with the parsing module `Evtx` are three scripts that mimic the tools distributed with Parse-Evtx.  `evtxinfo.py` prints metadata about the event log and verifies the checksums of each chunk.  `evtxtemplates.py` builds and prints the templates used throughout the event log.  Finally, `evtxdump.py` parses the event log and transforms the binary XML into a human readable ASCII XML format.
 
 Installation
 ------------
