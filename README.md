@@ -33,9 +33,25 @@ Examples
 --------
 Provided with the parsing module `Evtx` are three scripts that mimic the tools distributed with Parse-Evtx.  `evtxinfo.py` prints metadata about the event log and verifies the checksums of each chunk.  `evtxtemplates.py` builds and prints the templates used throughout the event log.  Finally, `evtxdump.py` parses the event log and transforms the binary XML into a human readable ASCII XML format.
 
+Note the length of the `evtxdump.py` script: its only 20 lines.  Now, review the contents and notice the complete implementation of the logic:
+
+    print "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>"
+    print "<Events>"
+    for chunk in fh.chunks():
+        for record in chunk.records():
+            print record.root().xml([])
+    print "</Events>"            
+
+Working with python-evtx is really easy!
+
+
 Installation
 ------------
+Updates to python-evtx are pushed to PyPi, so you can install the module using either `easy_install` or `pip`.  For example, you can use `pip` like so:
 
+    pip install python-evtx
+
+The source code for python-evtx is hosted on Github, and you may download, fork, and review it from this repository (http://www.github.com/williballenthin/python-evtx).
 
 Hacking
 -------
