@@ -1,8 +1,7 @@
 #!/bin/python
-
 #    This file is part of python-evtx.
 #
-#   Copyright 2012, 2013 Will Ballenthin <william.ballenthin@mandiant.com>
+#   Copyright 2012, 2013 Willi Ballenthin <william.ballenthin@mandiant.com>
 #                    while at Mandiant <http://www.mandiant.com>
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +16,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 #
-#   Version v.0.0.1
+#   Version v.0.1
 
 
 import sys
