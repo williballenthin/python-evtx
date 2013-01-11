@@ -114,6 +114,9 @@ class BXmlNode(Block):
     def xml(self, substitutions):
         raise NotImplementedError("xml() not implemented for %r") % (self)
 
+    def template_format(self):
+        raise NotImplementedError("template_format() not implemented for %r") % (self)
+
     def dump(self):
         return hex_dump(self._buf[self._offset:self._offset + self.length()],
                         start_addr=self._offset)
@@ -228,6 +231,9 @@ class NameStringNode(BXmlNode):
     def xml(self, substitutions):
         return self.string()
 
+    def template_format(self):
+        return self.xml([])
+
     def tag_length(self):
         return (self.string_length() * 2) + 8
 
@@ -259,6 +265,12 @@ class TemplateNode(BXmlNode):
             ret += child.xml(substitutions)
         return ret
 
+    def template_format(self):
+        ret = ""
+        for child in self.children():
+            ret += child.template_format()
+        return ret
+
     def tag_length(self):
         return 0x18
 
@@ -286,6 +298,9 @@ class EndOfStreamNode(BXmlNode):
 
     def xml(self, substitutions):
         return ""
+
+    def template_format(self):
+        return self.xml([])
 
     def tag_length(self):
         return 1
@@ -383,6 +398,16 @@ class OpenStartElementNode(BXmlNode):
             cxml = "".join(c.xml(substitutions) for c in self.children())
             return "\n<%s%s</%s>" % (self.tag_name(), cxml, self.tag_name())
 
+    def template_format(self):
+        children_string = ""
+        for child in self.children():
+            children_string += child.template_format()
+        if self.is_empty_node():
+            return "\n<%s%s />" % (self.tag_name(), children_string)
+        else:
+            return "\n<%s%s</%s>" % (self.tag_name(), children_string, 
+                                     self.tag_name())
+
     @memoize
     def is_empty_node(self):
         for child in self.children():
@@ -429,6 +454,9 @@ class CloseStartElementNode(BXmlNode):
     def xml(self, substitutions):
         return ">"
 
+    def template_format(self):
+        return self.xml([])
+
     def tag_length(self):
         return 1
 
@@ -461,7 +489,10 @@ class CloseEmptyElementNode(BXmlNode):
             (hex(self._offset), hex(self.length()), hex(0x03))
 
     def xml(self, substitutions):
-        return " />"
+        return ""
+
+    def template_format(self):
+        return self.xml([])
 
     def tag_length(self):
         return 1
@@ -494,6 +525,9 @@ class CloseElementNode(BXmlNode):
 
     def xml(self, substitutions):
         return ""
+
+    def template_format(self):
+        return self.xml([])
 
     def tag_length(self):
         return 1
@@ -571,6 +605,9 @@ class ValueNode(BXmlNode):
     def xml(self, substitutions):
         return self.children()[0].xml()
 
+    def template_format(self):
+        return self.xml([])
+
     def value(self):
         return self.children()[0]
 
@@ -639,6 +676,11 @@ class AttributeNode(BXmlNode):
             return ""
         return " %s=\"%s\"" % (name, val.xml(substitutions))
 
+    def template_format(self):
+        name = self.attribute_name().template_format()
+        val = self.attribute_value().template_format()
+        return " %s=\"%s\"" % (name, val)
+
     def attribute_name(self):
         """
         @return A NameNode instance that contains the attribute name.
@@ -688,6 +730,9 @@ class CDataSectionNode(BXmlNode):
     def xml(self, substitutions):
         return "<![CDATA[%s]]>" % (self.cdata())
 
+    def template_format(self):
+        return self.xml([])
+
     def tag_length(self):
         return 0x3 + self.string_length()
 
@@ -721,6 +766,9 @@ class Node0x09(BXmlNode):
     def xml(self, substitutions):
         raise NotImplementedError("__xml__ not implemented for Node0x09")
 
+    def template_format(self):
+        raise NotImplementedError("template_format() not implemented for Node0x09")
+
     def tag_length(self):
         raise NotImplementedError("tag_length not implemented for Node0x09")
 
@@ -744,6 +792,9 @@ class Node0x0A(BXmlNode):
     def xml(self, substitutions):
         raise NotImplementedError("__xml__ not implemented for Node0x0A")
 
+    def template_format(self):
+        raise NotImplementedError("template_format() not implemented for Node0x0A")
+
     def tag_length(self):
         raise NotImplementedError("tag_length not implemented for Node0x0A")
 
@@ -766,6 +817,9 @@ class Node0x0B(BXmlNode):
 
     def xml(self, substitutions):
         raise NotImplementedError("__xml__ not implemented for Node0x0B")
+
+    def template_format(self):
+        raise NotImplementedError("template_format() not implemented for Node0x0B")
 
     def tag_length(self):
         raise NotImplementedError("tag_length not implemented for Node0x0B")
@@ -853,6 +907,10 @@ class NormalSubstitutionNode(BXmlNode):
         # TODO(wb): verify type
         return substitutions[self.index()].xml()
 
+    def template_format(self):
+        return "[Normal Substitution(index=%s, type=%s)]" % \
+            (self.index(), self.type())
+
     def tag_length(self):
         return 0x4
 
@@ -900,6 +958,10 @@ class ConditionalSubstitutionNode(BXmlNode):
             return "WARNING: THIS ELEMENT SHOULD BE SUPPRESSED"
         return substitutions[self.index()].xml()
 
+    def template_format(self):
+        return "[Conditional Substitution(index=%s, type=%s)]" % \
+            (self.index(), self.type())
+
     def tag_length(self):
         return 0x4
 
@@ -937,6 +999,9 @@ class StreamStartNode(BXmlNode):
 
     def xml(self, substitutions):
         return ""
+
+    def template_format(self):
+        return self.xml([])
 
     def verify(self):
         return self.flags() == 0x0 and \
@@ -1049,7 +1114,6 @@ class RootNode(BXmlNode):
     def length(self):
         ret = 0
         ofs = self.tag_and_children_length()
-#        ofs = self.find_end_of_stream()._offset - self._offset + 1
         debug("subs begin at %s" % (hex(self._offset + ofs)))
         sub_count = self.unpack_dword(ofs)
         debug("count: %s" % (sub_count))
@@ -1114,6 +1178,9 @@ class NullTypeNode(VariantTypeNode):
     def xml(self):
         return ""
 
+    def template_format(self):
+        return self.xml([])
+
     def string(self):
         return "NULL"
 
@@ -1148,6 +1215,9 @@ class WstringTypeNode(VariantTypeNode):
                 debug("E", "%r" % (self), e)
                 return str(self.string())
 
+    def template_format(self):
+        return self.xml([])
+
     def tag_length(self):
         if self._length is None:
             return (2 + (self.string_length() * 2))
@@ -1172,6 +1242,9 @@ class StringTypeNode(VariantTypeNode):
     def xml(self):
         return str(self.string())
 
+    def template_format(self):
+        return self.xml([])
+
     def tag_length(self):
         if self._length is None:
             return (2 + (self.string_length()))
@@ -1190,6 +1263,9 @@ class SignedByteTypeNode(VariantTypeNode):
 
     def xml(self):
         return self.string()
+
+    def template_format(self):
+        return self.xml([])
 
     def tag_length(self):
         return 1
@@ -1212,6 +1288,9 @@ class UnsignedByteTypeNode(VariantTypeNode):
     def xml(self):
         return self.string()
 
+    def template_format(self):
+        return self.xml([])
+
     def tag_length(self):
         return 1
 
@@ -1231,6 +1310,9 @@ class SignedWordTypeNode(VariantTypeNode):
 
     def xml(self):
         return self.string()
+
+    def template_format(self):
+        return self.xml([])
 
     def tag_length(self):
         return 2
@@ -1253,6 +1335,9 @@ class UnsignedWordTypeNode(VariantTypeNode):
     def xml(self):
         return self.string()
 
+    def template_format(self):
+        return self.xml([])
+
     def tag_length(self):
         return 2
 
@@ -1272,6 +1357,9 @@ class SignedDwordTypeNode(VariantTypeNode):
 
     def xml(self):
         return self.string()
+
+    def template_format(self):
+        return self.xml([])
 
     def tag_length(self):
         return 4
@@ -1294,6 +1382,9 @@ class UnsignedDwordTypeNode(VariantTypeNode):
     def xml(self):
         return self.string()
 
+    def template_format(self):
+        return self.xml([])
+
     def tag_length(self):
         return 4
 
@@ -1313,6 +1404,9 @@ class SignedQwordTypeNode(VariantTypeNode):
 
     def xml(self):
         return self.string()
+
+    def template_format(self):
+        return self.xml([])
 
     def tag_length(self):
         return 8
@@ -1335,6 +1429,9 @@ class UnsignedQwordTypeNode(VariantTypeNode):
     def xml(self):
         return self.string()
 
+    def template_format(self):
+        return self.xml([])
+
     def tag_length(self):
         return 8
 
@@ -1354,6 +1451,9 @@ class FloatTypeNode(VariantTypeNode):
 
     def xml(self):
         return self.string()
+
+    def template_format(self):
+        return self.xml([])
 
     def tag_length(self):
         return 4
@@ -1375,6 +1475,9 @@ class DoubleTypeNode(VariantTypeNode):
     def xml(self):
         return self.string()
 
+    def template_format(self):
+        return self.xml([])
+
     def tag_length(self):
         return 8
 
@@ -1394,6 +1497,9 @@ class BooleanTypeNode(VariantTypeNode):
 
     def xml(self):
         return self.string()
+
+    def template_format(self):
+        return self.xml([])
 
     def tag_length(self):
         return 4
@@ -1423,6 +1529,9 @@ class BinaryTypeNode(VariantTypeNode):
     def xml(self):
         return self.string()
 
+    def template_format(self):
+        return self.xml([])
+
     def tag_length(self):
         if self._length is None:
             return (4 + self.size())
@@ -1444,6 +1553,9 @@ class GuidTypeNode(VariantTypeNode):
 
     def xml(self):
         return self.string()
+
+    def template_format(self):
+        return self.xml([])
 
     def tag_length(self):
         return 16
@@ -1472,6 +1584,9 @@ class SizeTypeNode(VariantTypeNode):
     def xml(self):
         return self.string()
 
+    def template_format(self):
+        return self.xml([])
+
     def tag_length(self):
         if self._length is None:
             return 8
@@ -1494,6 +1609,9 @@ class FiletimeTypeNode(VariantTypeNode):
     def xml(self):
         return self.string()
 
+    def template_format(self):
+        return self.xml([])
+
     def tag_length(self):
         return 8
 
@@ -1513,6 +1631,9 @@ class SystemtimeTypeNode(VariantTypeNode):
 
     def xml(self):
         return self.string()
+
+    def template_format(self):
+        return self.xml([])
 
     def tag_length(self):
         return 16
@@ -1552,6 +1673,9 @@ class SIDTypeNode(VariantTypeNode):
     def xml(self):
         return self.string()
 
+    def template_format(self):
+        return self.xml([])
+
     def tag_length(self):
         return 8 + 4 * self.num_elements()
 
@@ -1571,6 +1695,9 @@ class Hex32TypeNode(VariantTypeNode):
 
     def xml(self):
         return self.string()
+
+    def template_format(self):
+        return self.xml([])
 
     def tag_length(self):
         return 4
@@ -1595,6 +1722,9 @@ class Hex64TypeNode(VariantTypeNode):
     def xml(self):
         return self.string()
 
+    def template_format(self):
+        return self.xml([])
+
     def tag_length(self):
         return 8
 
@@ -1617,6 +1747,10 @@ class BXmlTypeNode(VariantTypeNode):
 
     def xml(self):
         return self._root.xml([])
+
+    def template_format(self):
+        # TODO(wb): this may be incorrect. self._root.template_format()?
+        return self.xml([])
 
     def tag_length(self):
         return self._length or self._root.length()
@@ -1656,6 +1790,9 @@ class WstringArrayTypeNode(VariantTypeNode):
         for (i, string) in enumerate(strings):
             ret += "[%d] %s\n" % (i, string.decode("utf-16"))
         return ret
+
+    def template_format(self):
+        return self.xml([])
 
     def tag_length(self):
         if self._length is None:
