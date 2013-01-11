@@ -37,7 +37,7 @@ class FileHeader(Block):
         debug("FILE HEADER at %s." % (hex(offset)))
         super(FileHeader, self).__init__(buf, offset)
         self.declare_field("string", "magic", 0x0, length=8)
-        self.declare_field("qword",  "unused0")
+        self.declare_field("qword",  "oldest_chunk")
         self.declare_field("qword",  "current_chunk_number")
         self.declare_field("qword",  "next_record_number")
         self.declare_field("dword",  "header_size")
@@ -45,8 +45,8 @@ class FileHeader(Block):
         self.declare_field("word",   "major_version")
         self.declare_field("word",   "header_chunk_size")
         self.declare_field("word",   "chunk_count")
-        self.declare_field("dword",  "flags")
         self.declare_field("binary", "unused1", length=0x4c)
+        self.declare_field("dword",  "flags")
         self.declare_field("dword",  "checksum")
 
     def __repr__(self):
@@ -88,7 +88,7 @@ class FileHeader(Block):
           opened and was changed, though not all changes might be
           reflected in the file header.
         """
-        return self.flags() & 0x1
+        return self.flags() & 0x1 == 0x1
               
     def is_full(self):
         """
@@ -138,10 +138,10 @@ class ChunkHeader(Block):
         self._templates = None
 
         self.declare_field("string", "magic", 0x0, length=8)
-        self.declare_field("qword",  "log_first_record_number")
-        self.declare_field("qword",  "log_last_record_number")
         self.declare_field("qword",  "file_first_record_number")
         self.declare_field("qword",  "file_last_record_number")
+        self.declare_field("qword",  "log_first_record_number")
+        self.declare_field("qword",  "log_last_record_number")
         self.declare_field("dword",  "header_size")
         self.declare_field("dword",  "last_record_offset")
         self.declare_field("dword",  "next_record_offset")
