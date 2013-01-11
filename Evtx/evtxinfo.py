@@ -46,7 +46,7 @@ def main():
             print "Log is full     : %s" % (full_string)
             print "Current chunk   : %d of %d" % (fh.current_chunk_number(), 
                                                   fh.chunk_count())
-            print "Oldest chunk    : TODO"
+            print "Oldest chunk    : %d" % (fh.oldest_chunk() + 1)
             print "Next record#    : %d" % (fh.next_record_number())
             checksum_string = "fail"
             if fh.calculate_checksum() == fh.checksum():
@@ -54,6 +54,22 @@ def main():
             print "Check sum       : %s" % (checksum_string)
             print ""
             
+            if fh.is_dirty():
+                chunk_count = sum([1 for c in fh.chunks() if c.verify()])
+
+                last_chunk = None
+                for chunk in fh.chunks():
+                    if not chunk.verify():
+                        continue
+                    last_chunk = chunk
+                next_record_num = last_chunk.log_last_record_number() + 1
+
+                print "Suspected updated header values (header is dirty):"
+                print "Current chunk   : %d of %d" % (chunk_count,
+                                                      chunk_count)
+                print "Next record#    : %d" % (next_record_num)
+                print ""
+
             print "Information from chunks:"
             print "  Chunk file (first/last)     log (first/last)      Header Data"
             print "- ----- --------------------- --------------------- ------ ------"
@@ -61,8 +77,8 @@ def main():
                 note_string = " "
                 if i == fh.current_chunk_number() + 1:
                     note_string = "*"
-
-                # TODO(wb): handle symbol '>'
+                elif i == fh.oldest_chunk() + 1:
+                    note_string = ">"
 
                 if not chunk.check_magic():
                     if chunk.magic() == "\x00\x00\x00\x00\x00\x00\x00\x00":
@@ -82,7 +98,7 @@ def main():
                 print "%s  %4d   %8d  %8d    %8d  %8d   %s   %s" % \
                     (note_string, 
                      i,
-                     chunk.file_first_record_number(), # TODO(wb): confirm this field
+                     chunk.file_first_record_number(),
                      chunk.file_last_record_number(),
                      chunk.log_first_record_number(),
                      chunk.log_last_record_number(),
