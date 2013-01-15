@@ -3,7 +3,7 @@
 from Evtx import __version__
 from setuptools import setup
 
-setup(name="Evtx",
+setup(name="python-evtx",
       version=__version__,
       description="Pure Python parser for recent Windows event log files (.evtx).",
       author="Willi Ballenthin",
