@@ -798,6 +798,8 @@ class EntityReferenceNode(BXmlNode):
 class ProcessingInstructionTargetNode(BXmlNode):
     """
     The binary XML node for the system token 0x0A.
+
+    TODO(wb): untested.
     """
     def __init__(self, buf, offset, chunk, parent):
         debug("ProcessingInstructionTargetNode at %s." % (hex(offset)))
@@ -840,6 +842,8 @@ class ProcessingInstructionTargetNode(BXmlNode):
 class ProcessingInstructionDataNode(BXmlNode):
     """
     The binary XML node for the system token 0x0B.
+
+    TODO(wb): untested.
     """
     def __init__(self, buf, offset, chunk, parent):
         debug("ProcessingInstructionDataNode at %s." % (hex(offset)))
