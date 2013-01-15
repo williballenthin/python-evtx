@@ -76,7 +76,7 @@ class BXmlNode(Block):
             AttributeNode,
             CDataSectionNode,
             None,
-            Node0x09,
+            EntityReferenceNode,
             Node0x0A,
             Node0x0B,
             TemplateInstanceNode,
@@ -379,7 +379,7 @@ class OpenStartElementNode(BXmlNode):
         num_active_children = 0
         for child in self.children():
             if isinstance(child, (ValueNode, CDataSectionNode,
-                                  Node0x09, Node0x0A, Node0x0B,
+                                  EntityReferenceNode, Node0x0A, Node0x0B,
                                   TemplateInstanceNode,
                                   NormalSubstitutionNode,
                                   OpenStartElementNode)):
@@ -747,30 +747,52 @@ class CDataSectionNode(BXmlNode):
             self.token() & 0x0F == SYSTEM_TOKENS.CDataSectionToken
 
 
-class Node0x09(BXmlNode):
+class EntityReferenceNode(BXmlNode):
     """
     The binary XML node for the system token 0x09.
+    
+    This is an entity reference node.  That is, something that represents
+      a non-XML character, eg. & --> &amp;.
+
+    TODO(wb): this is untested.
     """
     def __init__(self, buf, offset, chunk, parent):
-        debug("Node0x09 at %s." % (hex(offset)))
-        super(Node0x09, self).__init__(buf, offset, chunk, parent)
+        debug("EntityReferenceNode at %s." % (hex(offset)))
+        super(EntityReferenceNode, self).__init__(buf, offset, chunk, parent)
+        self.declare_field("byte", "token", 0x0)
+        self.declare_field("dword", "string_offset")
+        self._tag_length = 5
+
+        if self.string_offset() > self.offset() - self._chunk.offset():
+            new_string = self._chunk.add_string(self.string_offset(),
+                                                parent=self)
+            self._tag_length += new_string.length()
+
 
     def __repr__(self):
-        return "Node0x09(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
+        return "EntityReferenceNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
             (self._buf, self._offset, self._chunk, self._parent)
 
     def __str__(self):
-        return "Node0x09(offset=%s, length=%s, token=%s)" % \
-            (hex(self._offset), hex(self.length()), hex(0x09))
+        return "EntityReferenceNode(offset=%s, length=%s, token=%s)" % \
+            (hex(self.offset()), hex(self.length()), hex(0x09))
 
     def xml(self, substitutions):
-        raise NotImplementedError("__xml__ not implemented for Node0x09")
+        return "&%s;" % \
+            (self._chunk.strings()[self.string_offset()].string())
 
     def template_format(self):
-        raise NotImplementedError("template_format() not implemented for Node0x09")
+        return self.xml([])
 
     def tag_length(self):
-        raise NotImplementedError("tag_length not implemented for Node0x09")
+        return self._tag_length
+
+    def children(self):
+        # TODO(wb): it may be possible for this element to have children.
+        return []
+
+    def flags(self):
+        return self.token() >> 4
 
 
 class Node0x0A(BXmlNode):
