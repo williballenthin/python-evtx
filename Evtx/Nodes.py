@@ -106,10 +106,10 @@ class BXmlNode(Block):
 
     def __repr__(self):
         return "BXmlNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
-            (self._buf, self._offset, self._chunk, self._parent)
+            (self._buf, self.offset(), self._chunk, self._parent)
 
     def __str__(self):
-        return "BXmlNode(offset=%s)" % (hex(self._offset))
+        return "BXmlNode(offset=%s)" % (hex(self.offset()))
 
     def xml(self, substitutions):
         raise NotImplementedError("xml() not implemented for %r") % (self)
@@ -118,8 +118,8 @@ class BXmlNode(Block):
         raise NotImplementedError("template_format() not implemented for %r") % (self)
 
     def dump(self):
-        return hex_dump(self._buf[self._offset:self._offset + self.length()],
-                        start_addr=self._offset)
+        return hex_dump(self._buf[self.offset():self.offset() + self.length()],
+                        start_addr=self.offset())
 
     def flags(self):
         return self.token() >> 4
@@ -160,10 +160,10 @@ class BXmlNode(Block):
             token = self.unpack_byte(ofs) & 0x0F
             debug(".,", indent, "token", hex(token), \
                 "(%s)" % self._readable_tokens[token], \
-                "@", hex(self._offset + ofs))
+                "@", hex(self.offset() + ofs))
             try:
                 HandlerNodeClass = self._dispatch_table[token]
-                child = HandlerNodeClass(self._buf, self._offset + ofs,
+                child = HandlerNodeClass(self._buf, self.offset() + ofs,
                                          self._chunk, self)
             except IndexError:
                 raise ParseException("Unexpected token %02X at %s" % \
@@ -218,12 +218,12 @@ class NameStringNode(BXmlNode):
 
     def __repr__(self):
         return "NameStringNode(buf=%r, offset=%r, chunk=%r)" % \
-            (self._buf, self._offset, self._chunk)
+            (self._buf, self.offset(), self._chunk)
 
     def __str__(self):
         return "NameStringNode(offset=%s, length=%s, end=%s)" % \
-            (hex(self._offset), hex(self.length()),
-             hex(self._offset + self.length()))
+            (hex(self.offset()), hex(self.length()),
+             hex(self.offset() + self.length()))
 
     def string(self):
         return str(self._string())
@@ -253,11 +253,11 @@ class TemplateNode(BXmlNode):
 
     def __repr__(self):
         return "TemplateNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
-            (self._buf, self._offset, self._chunk, self._parent)
+            (self._buf, self.offset(), self._chunk, self._parent)
 
     def __str__(self):
         return "TemplateNode(offset=%s, guid=%s, length=%s)" % \
-            (hex(self._offset), self.guid(), hex(self.length()))
+            (hex(self.offset()), self.guid(), hex(self.length()))
 
     def xml(self, substitutions):
         ret = ""
@@ -290,11 +290,11 @@ class EndOfStreamNode(BXmlNode):
 
     def __repr__(self):
         return "EndOfStreamNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
-            (self._buf, self._offset, self._chunk, self._parent)
+            (self._buf, self.offset(), self._chunk, self._parent)
 
     def __str__(self):
         return "EndOfStreamNode(offset=%s, length=%s, token=%s)" % \
-            (hex(self._offset), hex(self.length()), 0x00)
+            (hex(self.offset()), hex(self.length()), 0x00)
 
     def xml(self, substitutions):
         return ""
@@ -333,7 +333,7 @@ class OpenStartElementNode(BXmlNode):
             debug("Has extra four, total length %s" % (self._tag_length))
 
         global indent
-        if self.string_offset() > self._offset - self._chunk._offset:
+        if self.string_offset() > self.offset() - self._chunk._offset:
             new_string = self._chunk.add_string(self.string_offset(),
                                                 parent=self)
             self._tag_length += new_string.length()
@@ -343,15 +343,15 @@ class OpenStartElementNode(BXmlNode):
 
     def __repr__(self):
         return "OpenStartElementNode(buf=%r, offset=%r, chunk=%r)" % \
-            (self._buf, self._offset, self._chunk)
+            (self._buf, self.offset(), self._chunk)
 
     def __str__(self):
         return "OpenStartElementNode(offset=%s, name=%s, length=%s, token=%s, end=%s, taglength=%s, endtag=%s)" % \
-            (hex(self._offset), self.tag_name(),
+            (hex(self.offset()), self.tag_name(),
              hex(self.length()), hex(self.token()),
-             hex(self._offset + self.length()),
+             hex(self.offset() + self.length()),
              hex(self.tag_length()),
-             hex(self._offset + self.tag_length()))
+             hex(self.offset() + self.tag_length()))
 
     def xml(self, substitutions):
         """
@@ -445,11 +445,11 @@ class CloseStartElementNode(BXmlNode):
 
     def __repr__(self):
         return "CloseStartElementNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
-            (self._buf, self._offset, self._chunk, self._parent)
+            (self._buf, self.offset(), self._chunk, self._parent)
 
     def __str__(self):
         return "CloseStartElementNode(offset=%s, length=%s, token=%s)" % \
-            (hex(self._offset), hex(self.length()), hex(self.token()))
+            (hex(self.offset()), hex(self.length()), hex(self.token()))
 
     def xml(self, substitutions):
         return ">"
@@ -482,11 +482,11 @@ class CloseEmptyElementNode(BXmlNode):
 
     def __repr__(self):
         return "CloseEmptyElementNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
-            (self._buf, self._offset, self._chunk, self._parent)
+            (self._buf, self.offset(), self._chunk, self._parent)
 
     def __str__(self):
         return "CloseEmptyElementNode(offset=%s, length=%s, token=%s)" % \
-            (hex(self._offset), hex(self.length()), hex(0x03))
+            (hex(self.offset()), hex(self.length()), hex(0x03))
 
     def xml(self, substitutions):
         return ""
@@ -517,11 +517,11 @@ class CloseElementNode(BXmlNode):
 
     def __repr__(self):
         return "CloseElementNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
-            (self._buf, self._offset, self._chunk, self._parent)
+            (self._buf, self.offset(), self._chunk, self._parent)
 
     def __str__(self):
         return "CloseElementNode(offset=%s, length=%s, token=%s)" % \
-            (hex(self._offset), hex(self.length()), hex(self.token()))
+            (hex(self.offset()), hex(self.length()), hex(self.token()))
 
     def xml(self, substitutions):
         return ""
@@ -595,11 +595,11 @@ class ValueNode(BXmlNode):
 
     def __repr__(self):
         return "ValueNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
-            (self._buf, self._offset, self._chunk, self._parent)
+            (self._buf, self.offset(), self._chunk, self._parent)
 
     def __str__(self):
         return "ValueNode(offset=%s, length=%s, token=%s, value=%s)" % \
-            (hex(self._offset), hex(self.length()),
+            (hex(self.offset()), hex(self.length()),
              hex(self.token()), self.xml([]))
 
     def xml(self, substitutions):
@@ -616,7 +616,7 @@ class ValueNode(BXmlNode):
 
     def children(self):
         child = get_variant_value(self._buf,
-                                  self._offset + self.tag_length(),
+                                  self.offset() + self.tag_length(),
                                   self._chunk, self, self.type())
         return [child]
 
@@ -640,25 +640,25 @@ class AttributeNode(BXmlNode):
         global indent
 
         self._name_string_length = 0
-        if self.string_offset() > self._offset - self._chunk._offset:
+        if self.string_offset() > self.offset() - self._chunk._offset:
             debug(".,", indent, "%r" % (self), "need new string", self.string_offset())
             new_string = self._chunk.add_string(self.string_offset(),
                                                 parent=self)
             self._name_string_length += new_string.length()
 
         debug(".,", indent, "Attribute name %s" % (self.attribute_name().xml([])))
-        debug(hex(self._offset), hex(self.tag_length()), hex(self._offset + self.tag_length()), hex(self.length()), hex(self._offset + self.length()))
+        debug(hex(self.offset()), hex(self.tag_length()), hex(self.offset() + self.tag_length()), hex(self.length()), hex(self.offset() + self.length()))
         debug(".;", indent, "Attribute value %s" % (self.children()))
 
         debug("Again %s" % (self))
 
     def __repr__(self):
         return "AttributeNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
-            (self._buf, self._offset, self._chunk, self._parent)
+            (self._buf, self.offset(), self._chunk, self._parent)
 
     def __str__(self):
         return "AttributeNode(offset=%s, length=%s, token=%s, name=%s, value=%s)" % \
-            (hex(self._offset), hex(self.length()), hex(self.token()),
+            (hex(self.offset()), hex(self.length()), hex(self.token()),
              self.attribute_name(), self.attribute_value())
 
     def xml(self, substitutions):
@@ -721,11 +721,11 @@ class CDataSectionNode(BXmlNode):
 
     def __repr__(self):
         return "CDataSectionNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
-            (self._buf, self._offset, self._chunk, self._parent)
+            (self._buf, self.offset(), self._chunk, self._parent)
 
     def __str__(self):
         return "CDataSectionNode(offset=%s, length=%s, token=%s)" % \
-            (hex(self._offset), hex(self.length()), 0x07)
+            (hex(self.offset()), hex(self.length()), 0x07)
 
     def xml(self, substitutions):
         return "<![CDATA[%s]]>" % (self.cdata())
@@ -771,7 +771,7 @@ class EntityReferenceNode(BXmlNode):
 
     def __repr__(self):
         return "EntityReferenceNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
-            (self._buf, self._offset, self._chunk, self._parent)
+            (self._buf, self.offset(), self._chunk, self._parent)
 
     def __str__(self):
         return "EntityReferenceNode(offset=%s, length=%s, token=%s)" % \
@@ -805,11 +805,11 @@ class Node0x0A(BXmlNode):
 
     def __repr__(self):
         return "Node0x0A(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
-            (self._buf, self._offset, self._chunk, self._parent)
+            (self._buf, self.offset(), self._chunk, self._parent)
 
     def __str__(self):
         return "Node0x0A(offset=%s, length=%s, token=%s)" % \
-            (hex(self._offset), hex(self.length()), hex(0x0A))
+            (hex(self.offset()), hex(self.length()), hex(0x0A))
 
     def xml(self, substitutions):
         raise NotImplementedError("__xml__ not implemented for Node0x0A")
@@ -831,11 +831,11 @@ class Node0x0B(BXmlNode):
 
     def __repr__(self):
         return "Node0x0B(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
-            (self._buf, self._offset, self._chunk, self._parent)
+            (self._buf, self.offset(), self._chunk, self._parent)
 
     def __str__(self):
         return "Node0x0B(offset=%s, length=%s, token=%s)" % \
-            (hex(self._offset), hex(self.length()), hex(0x0B))
+            (hex(self.offset()), hex(self.length()), hex(0x0B))
 
     def xml(self, substitutions):
         raise NotImplementedError("__xml__ not implemented for Node0x0B")
@@ -870,18 +870,18 @@ class TemplateInstanceNode(BXmlNode):
 
     def __repr__(self):
         return "TemplateInstanceNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
-            (self._buf, self._offset, self._chunk, self._parent)
+            (self._buf, self.offset(), self._chunk, self._parent)
 
     def __str__(self):
         return "TemplateInstanceNode(offset=%s, length=%s, token=%s)" % \
-            (hex(self._offset), hex(self.length()), hex(0x0C))
+            (hex(self.offset()), hex(self.length()), hex(0x0C))
 
     def xml(self, substitutions):
         template = self._chunk.templates()[self.template_offset()]
         return template.xml(substitutions)
 
     def is_resident_template(self):
-        return self.template_offset() > self._offset - self._chunk._offset
+        return self.template_offset() > self.offset() - self._chunk._offset
 
     def tag_length(self):
         return 10
@@ -918,11 +918,11 @@ class NormalSubstitutionNode(BXmlNode):
 
     def __repr__(self):
         return "NormalSubstitutionNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
-            (self._buf, self._offset, self._chunk, self._parent)
+            (self._buf, self.offset(), self._chunk, self._parent)
 
     def __str__(self):
         return "NormalSubstitutionNode(offset=%s, length=%s, token=%s, index=%d, type=%d)" % \
-            (hex(self._offset), hex(self.length()), hex(self.token()),
+            (hex(self.offset()), hex(self.length()), hex(self.token()),
              self.index(), self.type())
 
     def xml(self, substitutions):
@@ -964,11 +964,11 @@ class ConditionalSubstitutionNode(BXmlNode):
 
     def __repr__(self):
         return "ConditionalSubstitutionNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
-            (self._buf, self._offset, self._chunk, self._parent)
+            (self._buf, self.offset(), self._chunk, self._parent)
 
     def __str__(self):
         return "ConditionalSubstitutionNode(offset=%s, length=%s, token=%s)" % \
-            (hex(self._offset), hex(self.length()), hex(0x0E))
+            (hex(self.offset()), hex(self.length()), hex(0x0E))
 
     def should_suppress(self, substitutions):
         sub = substitutions[self.index()]
@@ -1013,11 +1013,11 @@ class StreamStartNode(BXmlNode):
 
     def __repr__(self):
         return "StreamStartNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
-            (self._buf, self._offset, self._chunk, self._parent)
+            (self._buf, self.offset(), self._chunk, self._parent)
 
     def __str__(self):
         return "StreamStartNode(offset=%s, length=%s, token=%s)" % \
-            (hex(self._offset), hex(self.length()), hex(self.token()))
+            (hex(self.offset()), hex(self.length()), hex(self.token()))
 
     def xml(self, substitutions):
         return ""
@@ -1051,11 +1051,11 @@ class RootNode(BXmlNode):
 
     def __repr__(self):
         return "RootNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
-            (self._buf, self._offset, self._chunk, self._parent)
+            (self._buf, self.offset(), self._chunk, self._parent)
 
     def __str__(self):
         return "RootNode(offset=%s, length=%s)" % \
-            (hex(self._offset), hex(self.length()))
+            (hex(self.offset()), hex(self.length()))
 
     def xml(self, substitutions):
         """
@@ -1105,7 +1105,7 @@ class RootNode(BXmlNode):
         sub_decl = []
         sub_def = []
         ofs = self.tag_and_children_length()
-        debug("subs begin at %s" % (hex(self._offset + ofs)))
+        debug("subs begin at %s" % (hex(self.offset() + ofs)))
         sub_count = self.unpack_dword(ofs)
         debug("count: %s" % (sub_count))
         ofs += 4
@@ -1116,7 +1116,7 @@ class RootNode(BXmlNode):
             ofs += 4
         debug(sub_decl)
         for (size, type_) in sub_decl:
-            val = get_variant_value(self._buf, self._offset + ofs,
+            val = get_variant_value(self._buf, self.offset() + ofs,
                                     self._chunk, self, type_, length=size)
             if abs(size - val.length()) > 4:
                 # TODO(wb): This is a hack, so I'm sorry.
@@ -1129,14 +1129,14 @@ class RootNode(BXmlNode):
                 raise ParseException("Invalid substitution value size")
             sub_def.append(val)
             ofs += size
-        debug("subs end at %s" % (hex(self._offset + ofs)))
+        debug("subs end at %s" % (hex(self.offset() + ofs)))
         return sub_def
 
     @memoize
     def length(self):
         ret = 0
         ofs = self.tag_and_children_length()
-        debug("subs begin at %s" % (hex(self._offset + ofs)))
+        debug("subs begin at %s" % (hex(self.offset() + ofs)))
         sub_count = self.unpack_dword(ofs)
         debug("count: %s" % (sub_count))
         ofs += 4
@@ -1145,8 +1145,8 @@ class RootNode(BXmlNode):
             size = self.unpack_word(ofs)
             ret += size + 4
             ofs += 4
-        debug("subs decl end at %s" % (hex(self._offset + ofs)))
-        debug("root end at %s"  % (hex(self._offset + ret)))
+        debug("subs decl end at %s" % (hex(self.offset() + ofs)))
+        debug("root end at %s"  % (hex(self.offset() + ret)))
         return ret
 
 
@@ -1161,12 +1161,12 @@ class VariantTypeNode(BXmlNode):
 
     def __repr__(self):
         return "%s(buf=%r, offset=%s, chunk=%r)" % \
-            (self.__class__.__name__, self._buf, hex(self._offset),
+            (self.__class__.__name__, self._buf, hex(self.offset()),
              self._chunk)
 
     def __str__(self):
         return "%s(offset=%s, length=%s, string=%s)" % \
-            (self.__class__.__name__, hex(self._offset),
+            (self.__class__.__name__, hex(self.offset()),
              hex(self.length()), self.string())
 
     def xml(self):
