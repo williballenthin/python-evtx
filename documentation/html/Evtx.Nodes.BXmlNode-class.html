@@ -1,0 +1,755 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Evtx.Nodes.BXmlNode</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="Evtx-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="www.williballenthin.com/evtx/doc/">python-evtx</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="Evtx-module.html">Package&nbsp;Evtx</a> ::
+        <a href="Evtx.Nodes-module.html">Module&nbsp;Nodes</a> ::
+        Class&nbsp;BXmlNode
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="Evtx.Nodes.BXmlNode-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class BXmlNode</h1><p class="nomargin-top"><span class="codelink"><a href="Evtx.Nodes-pysrc.html#BXmlNode">source&nbsp;code</a></span></p>
+<center>
+<center>  <map id="uml_class_diagram_for_evtx_nod_2" name="uml_class_diagram_for_evtx_nod_2">
+<area shape="rect" id="node1" href="Evtx.Nodes.ConditionalSubstitutionNode-class.html" title="The binary XML node for the system token 0x0E." alt="" coords="5,627,205,666"/>
+<area shape="rect" id="node2" href="Evtx.Nodes.ValueNode-class.html" title="The binary XML node for the system token 0x05." alt="" coords="235,627,336,666"/>
+<area shape="rect" id="node3" href="Evtx.Nodes.UnsignedWordTypeNode-class.html" title="Variant type 0x06." alt="" coords="355,686,536,725"/>
+<area shape="rect" id="node4" href="Evtx.Nodes.WstringArrayTypeNode-class.html" title="Variant ttype 0x81." alt="" coords="565,686,739,725"/>
+<area shape="rect" id="node5" href="Evtx.Nodes.GuidTypeNode-class.html" title="Variant type 0x0F." alt="" coords="768,686,891,725"/>
+<area shape="rect" id="node6" href="Evtx.Nodes.FiletimeTypeNode-class.html" title="Variant type 0x11." alt="" coords="920,686,1061,725"/>
+<area shape="rect" id="node7" href="Evtx.Nodes.CDataSectionNode-class.html" title="The binary XML node for the system token 0x07." alt="" coords="365,627,515,666"/>
+<area shape="rect" id="node8" href="Evtx.Nodes.EntityReferenceNode-class.html" title="The binary XML node for the system token 0x09." alt="" coords="544,627,704,666"/>
+<area shape="rect" id="node9" href="Evtx.Nodes.StringTypeNode-class.html" title="Variant type 0x02." alt="" coords="1091,686,1221,725"/>
+<area shape="rect" id="node10" href="Evtx.Nodes.BooleanTypeNode-class.html" title="Variant type 0x0D." alt="" coords="1251,686,1395,725"/>
+<area shape="rect" id="node11" href="Evtx.Nodes.TemplateInstanceNode-class.html" title="The binary XML node for the system token 0x0C." alt="" coords="733,627,904,666"/>
+<area shape="rect" id="node12" href="Evtx.Nodes.SignedDwordTypeNode-class.html" title="Variant type 0x07." alt="" coords="1424,686,1597,725"/>
+<area shape="rect" id="node13" href="Evtx.Nodes.CloseEmptyElementNode-class.html" title="The binary XML node for the system token 0x03." alt="" coords="933,627,1120,666"/>
+<area shape="rect" id="node14" href="Evtx.Nodes.ProcessingInstructionTargetNode-class.html" title="The binary XML node for the system token 0x0A." alt="" coords="1149,627,1379,666"/>
+<area shape="rect" id="node15" href="Evtx.Nodes.SIDTypeNode-class.html" title="Variant type 0x13." alt="" coords="1627,686,1747,725"/>
+<area shape="rect" id="node16" href="Evtx.Nodes.UnsignedDwordTypeNode-class.html" title="Variant type 0x08." alt="" coords="1776,686,1965,725"/>
+<area shape="rect" id="node17" href="Evtx.Nodes.Hex64TypeNode-class.html" title="Variant type 0x15." alt="" coords="1995,686,2128,725"/>
+<area shape="rect" id="node18" href="Evtx.Nodes.AttributeNode-class.html" title="The binary XML node for the system token 0x06." alt="" coords="1408,627,1525,666"/>
+<area shape="rect" id="node81" href="Evtx.BinaryParser.Block-class.html#__unicode__" title="Evtx.BinaryParser.Block.__unicode__" alt="" coords="1629,39,1973,57"/>
+<area shape="rect" id="node81" href="Evtx.BinaryParser.Block-class.html#declare_field" title="Declaratively add fields to this block." alt="" coords="1629,57,1973,76"/>
+<area shape="rect" id="node81" href="Evtx.BinaryParser.Block-class.html#current_field_offset" title="Evtx.BinaryParser.Block.current_field_offset" alt="" coords="1629,76,1973,95"/>
+<area shape="rect" id="node81" href="Evtx.BinaryParser.Block-class.html#unpack_byte" title="Returns a little&#45;endian unsigned byte from the relative offset." alt="" coords="1629,95,1973,113"/>
+<area shape="rect" id="node81" href="Evtx.BinaryParser.Block-class.html#unpack_int8" title="Returns a little&#45;endian signed byte from the relative offset." alt="" coords="1629,113,1973,132"/>
+<area shape="rect" id="node81" href="Evtx.BinaryParser.Block-class.html#unpack_word" title="Returns a little&#45;endian unsigned WORD (2 bytes) from the &#160;&#160;&#160;relative offset." alt="" coords="1629,132,1973,151"/>
+<area shape="rect" id="node81" href="Evtx.BinaryParser.Block-class.html#unpack_word_be" title="Returns a big&#45;endian unsigned WORD (2 bytes) from the &#160;&#160;&#160;relative offset." alt="" coords="1629,151,1973,169"/>
+<area shape="rect" id="node81" href="Evtx.BinaryParser.Block-class.html#unpack_int16" title="Returns a little&#45;endian signed WORD (2 bytes) from the &#160;&#160;&#160;relative offset." alt="" coords="1629,169,1973,188"/>
+<area shape="rect" id="node81" href="Evtx.BinaryParser.Block-class.html#pack_word" title="Applies the little&#45;endian WORD (2 bytes) to the relative offset." alt="" coords="1629,188,1973,207"/>
+<area shape="rect" id="node81" href="Evtx.BinaryParser.Block-class.html#unpack_dword" title="Returns a little&#45;endian DWORD (4 bytes) from the relative offset." alt="" coords="1629,207,1973,225"/>
+<area shape="rect" id="node81" href="Evtx.BinaryParser.Block-class.html#unpack_dword_be" title="Returns a big&#45;endian DWORD (4 bytes) from the relative offset." alt="" coords="1629,225,1973,244"/>
+<area shape="rect" id="node81" href="Evtx.BinaryParser.Block-class.html#unpack_int32" title="Returns a little&#45;endian signed integer (4 bytes) from the &#160;&#160;&#160;relative offset." alt="" coords="1629,244,1973,263"/>
+<area shape="rect" id="node81" href="Evtx.BinaryParser.Block-class.html#unpack_qword" title="Returns a little&#45;endian QWORD (8 bytes) from the relative offset." alt="" coords="1629,263,1973,281"/>
+<area shape="rect" id="node81" href="Evtx.BinaryParser.Block-class.html#offset" title="Equivalent to self.absolute_offset(0x0), which is the starting &#160;&#160;&#160;offset of this block." alt="" coords="1629,300,1973,319"/>
+<area shape="rect" id="node19" href="Evtx.BinaryParser.Block-class.html" title="Base class for structure blocks in binary parsing." alt="" coords="1617,6,1985,325"/>
+<area shape="rect" id="node80" href="Evtx.Nodes.BXmlNode-class.html#__init__" title="Constructor." alt="" coords="1683,377,1919,396"/>
+<area shape="rect" id="node80" href="Evtx.Nodes.BXmlNode-class.html#__repr__" title="repr(x)" alt="" coords="1683,396,1919,415"/>
+<area shape="rect" id="node80" href="Evtx.Nodes.BXmlNode-class.html#__str__" title="str(x)" alt="" coords="1683,415,1919,433"/>
+<area shape="rect" id="node80" href="Evtx.Nodes.BXmlNode-class.html#xml" title="Evtx.Nodes.BXmlNode.xml" alt="" coords="1683,433,1919,452"/>
+<area shape="rect" id="node80" href="Evtx.Nodes.BXmlNode-class.html#template_format" title="Evtx.Nodes.BXmlNode.template_format" alt="" coords="1683,452,1919,471"/>
+<area shape="rect" id="node80" href="Evtx.Nodes.BXmlNode-class.html#dump" title="Evtx.Nodes.BXmlNode.dump" alt="" coords="1683,471,1919,489"/>
+<area shape="rect" id="node80" href="Evtx.Nodes.BXmlNode-class.html#flags" title="Evtx.Nodes.BXmlNode.flags" alt="" coords="1683,489,1919,508"/>
+<area shape="rect" id="node80" href="Evtx.Nodes.BXmlNode-class.html#tag_length" title="This method must be implemented and overridden for all BXmlNodes." alt="" coords="1683,508,1919,527"/>
+<area shape="rect" id="node80" href="Evtx.Nodes.BXmlNode-class.html#verify" title="Evtx.Nodes.BXmlNode.verify" alt="" coords="1683,527,1919,545"/>
+<area shape="rect" id="node80" href="Evtx.Nodes.BXmlNode-class.html#children" title="cache the return value of a method" alt="" coords="1683,545,1919,564"/>
+<area shape="rect" id="node80" href="Evtx.Nodes.BXmlNode-class.html#length" title="cache the return value of a method" alt="" coords="1683,564,1919,583"/>
+<area shape="rect" id="node80" href="Evtx.Nodes.BXmlNode-class.html#find_end_of_stream" title="cache the return value of a method" alt="" coords="1683,583,1919,601"/>
+<area shape="rect" id="node22" href="Evtx.Nodes.BXmlNode-class.html" title="Evtx.Nodes.BXmlNode" alt="" coords="1671,345,1929,607"/>
+<area shape="rect" id="node20" href="Evtx.Nodes.SignedByteTypeNode-class.html" title="Variant type 0x03." alt="" coords="2157,686,2320,725"/>
+<area shape="rect" id="node21" href="Evtx.Nodes.CloseElementNode-class.html" title="The binary XML node for the system token 0x04." alt="" coords="1555,627,1704,666"/>
+<area shape="rect" id="node23" href="Evtx.Nodes.StreamStartNode-class.html" title="The binary XML node for the system token 0x0F." alt="" coords="1733,627,1869,666"/>
+<area shape="rect" id="node26" href="Evtx.Nodes.TemplateNode-class.html" title="Evtx.Nodes.TemplateNode" alt="" coords="1899,627,2019,666"/>
+<area shape="rect" id="node27" href="Evtx.Nodes.CloseStartElementNode-class.html" title="The binary XML node for the system token 0x02." alt="" coords="2048,627,2224,666"/>
+<area shape="rect" id="node31" href="Evtx.Nodes.EndOfStreamNode-class.html" title="The binary XML node for the system token 0x00." alt="" coords="2253,627,2400,666"/>
+<area shape="rect" id="node33" href="Evtx.Nodes.VariantTypeNode-class.html" title="Evtx.Nodes.VariantTypeNode" alt="" coords="2429,627,2565,666"/>
+<area shape="rect" id="node34" href="Evtx.Nodes.RootNode-class.html" title="The binary XML node for the Root node." alt="" coords="2595,627,2691,666"/>
+<area shape="rect" id="node35" href="Evtx.Nodes.OpenStartElementNode-class.html" title="The binary XML node for the system token 0x01." alt="" coords="2720,627,2893,666"/>
+<area shape="rect" id="node37" href="Evtx.Nodes.ProcessingInstructionDataNode-class.html" title="The binary XML node for the system token 0x0B." alt="" coords="2923,627,3144,666"/>
+<area shape="rect" id="node38" href="Evtx.Nodes.NormalSubstitutionNode-class.html" title="The binary XML node for the system token 0x0D." alt="" coords="3173,627,3352,666"/>
+<area shape="rect" id="node41" href="Evtx.Nodes.NameStringNode-class.html" title="Evtx.Nodes.NameStringNode" alt="" coords="3381,627,3517,666"/>
+<area shape="rect" id="node24" href="Evtx.Nodes.BinaryTypeNode-class.html" title="Variant type 0x0E." alt="" coords="2349,686,2483,725"/>
+<area shape="rect" id="node25" href="Evtx.Nodes.Hex32TypeNode-class.html" title="Variant type 0x14." alt="" coords="2512,686,2645,725"/>
+<area shape="rect" id="node28" href="Evtx.Nodes.SizeTypeNode-class.html" title="Variant type 0x10." alt="" coords="2675,686,2797,725"/>
+<area shape="rect" id="node29" href="Evtx.Nodes.UnsignedQwordTypeNode-class.html" title="Variant type 0x0A." alt="" coords="2827,686,3016,725"/>
+<area shape="rect" id="node30" href="Evtx.Nodes.WstringTypeNode-class.html" title="Variant ttype 0x01." alt="" coords="3045,686,3187,725"/>
+<area shape="rect" id="node32" href="Evtx.Nodes.FloatTypeNode-class.html" title="Variant type 0x0B." alt="" coords="3216,686,3341,725"/>
+<area shape="rect" id="node36" href="Evtx.Nodes.SystemtimeTypeNode-class.html" title="Variant type 0x12." alt="" coords="3371,686,3536,725"/>
+<area shape="rect" id="node39" href="Evtx.Nodes.SignedQwordTypeNode-class.html" title="Variant type 0x09." alt="" coords="3565,686,3739,725"/>
+<area shape="rect" id="node40" href="Evtx.Nodes.DoubleTypeNode-class.html" title="Variant type 0x0C." alt="" coords="3768,686,3904,725"/>
+<area shape="rect" id="node42" href="Evtx.Nodes.SignedWordTypeNode-class.html" title="Variant type 0x05." alt="" coords="3933,686,4101,725"/>
+<area shape="rect" id="node43" href="Evtx.Nodes.UnsignedByteTypeNode-class.html" title="Variant type 0x04." alt="" coords="4131,686,4309,725"/>
+<area shape="rect" id="node44" href="Evtx.Nodes.NullTypeNode-class.html" title="Variant type 0x00." alt="" coords="4339,686,4459,725"/>
+<area shape="rect" id="node45" href="Evtx.Nodes.BXmlTypeNode-class.html" title="Variant type 0x21." alt="" coords="4488,686,4616,725"/>
+</map>
+  <img src="uml_class_diagram_for_evtx_nod_2.gif" alt='' usemap="#uml_class_diagram_for_evtx_nod_2" ismap="ismap" class="graph-without-title" />
+</center>
+</center>
+<hr />
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.Nodes.BXmlNode-class.html#__init__" class="summary-sig-name">__init__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">buf</span>,
+        <span class="summary-sig-arg">offset</span>,
+        <span class="summary-sig-arg">chunk</span>,
+        <span class="summary-sig-arg">parent</span>)</span><br />
+      Constructor.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.Nodes-pysrc.html#BXmlNode.__init__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.Nodes.BXmlNode-class.html#__repr__" class="summary-sig-name">__repr__</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      repr(x)</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.Nodes-pysrc.html#BXmlNode.__repr__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.Nodes.BXmlNode-class.html#__str__" class="summary-sig-name">__str__</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      str(x)</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.Nodes-pysrc.html#BXmlNode.__str__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="xml"></a><span class="summary-sig-name">xml</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">substitutions</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.Nodes-pysrc.html#BXmlNode.xml">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="template_format"></a><span class="summary-sig-name">template_format</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.Nodes-pysrc.html#BXmlNode.template_format">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="dump"></a><span class="summary-sig-name">dump</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.Nodes-pysrc.html#BXmlNode.dump">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="flags"></a><span class="summary-sig-name">flags</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.Nodes-pysrc.html#BXmlNode.flags">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.Nodes.BXmlNode-class.html#tag_length" class="summary-sig-name">tag_length</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      This method must be implemented and overridden for all BXmlNodes.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.Nodes-pysrc.html#BXmlNode.tag_length">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="verify"></a><span class="summary-sig-name">verify</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.Nodes-pysrc.html#BXmlNode.verify">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_children"></a><span class="summary-sig-name">_children</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">max_children</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">end_tokens</span>=<span class="summary-sig-default"><code class="variable-group">[</code>0<code class="variable-group">]</code></span>)</span><br />
+      @return A list containing all of the children BXmlNodes.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.Nodes-pysrc.html#BXmlNode._children">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.Nodes.BXmlNode-class.html#children" class="summary-sig-name">children</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      cache the return value of a method</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.Nodes.BXmlNode-class.html#length" class="summary-sig-name">length</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      cache the return value of a method</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.Nodes.BXmlNode-class.html#find_end_of_stream" class="summary-sig-name">find_end_of_stream</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      cache the return value of a method</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="Evtx.BinaryParser.Block-class.html">BinaryParser.Block</a></code></b>:
+      <code><a href="Evtx.BinaryParser.Block-class.html#__unicode__">__unicode__</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#absolute_offset">absolute_offset</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#current_field_offset">current_field_offset</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#declare_field">declare_field</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#offset">offset</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#pack_word">pack_word</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_binary">unpack_binary</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_byte">unpack_byte</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_dosdate">unpack_dosdate</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_double">unpack_double</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_dword">unpack_dword</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_dword_be">unpack_dword_be</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_filetime">unpack_filetime</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_float">unpack_float</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_guid">unpack_guid</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_int16">unpack_int16</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_int32">unpack_int32</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_int64">unpack_int64</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_int8">unpack_int8</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_qword">unpack_qword</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_string">unpack_string</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_systemtime">unpack_systemtime</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_word">unpack_word</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_word_be">unpack_word_be</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_wstring">unpack_wstring</a></code>
+      </p>
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__delattr__</code>,
+      <code>__format__</code>,
+      <code>__getattribute__</code>,
+      <code>__hash__</code>,
+      <code>__new__</code>,
+      <code>__reduce__</code>,
+      <code>__reduce_ex__</code>,
+      <code>__setattr__</code>,
+      <code>__sizeof__</code>,
+      <code>__subclasshook__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== PROPERTIES ==================== -->
+<a name="section-Properties"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Properties</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Properties"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__class__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Method Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="__init__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">buf</span>,
+        <span class="sig-arg">offset</span>,
+        <span class="sig-arg">chunk</span>,
+        <span class="sig-arg">parent</span>)</span>
+    <br /><em class="fname">(Constructor)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.Nodes-pysrc.html#BXmlNode.__init__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Constructor.
+Arguments:
+- `buf`: Byte string containing stuff to parse.
+- `offset`: The offset into the buffer at which the block starts.
+
+</pre>
+  <dl class="fields">
+    <dt>Overrides:
+        object.__init__
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="__repr__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__repr__</span>(<span class="sig-arg">self</span>)</span>
+    <br /><em class="fname">(Representation operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.Nodes-pysrc.html#BXmlNode.__repr__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>repr(x)</p>
+  <dl class="fields">
+    <dt>Overrides:
+        object.__repr__
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="__str__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__str__</span>(<span class="sig-arg">self</span>)</span>
+    <br /><em class="fname">(Informal representation operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.Nodes-pysrc.html#BXmlNode.__str__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>str(x)</p>
+  <dl class="fields">
+    <dt>Overrides:
+        object.__str__
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="tag_length"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">tag_length</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.Nodes-pysrc.html#BXmlNode.tag_length">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+This method must be implemented and overridden for all BXmlNodes.
+@return An integer specifying the length of this tag, not including
+  its children.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="children"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">children</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.BinaryParser-pysrc.html">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+cache the return value of a method
+
+From http://code.activestate.com/recipes/577452-a-memoize-decorator-for-instance-methods/
+
+This class is meant to be used as a decorator of methods. The return value
+from a given method invocation will be cached on the instance whose method
+was invoked. All arguments passed to a method decorated with memoize must
+be hashable.
+
+If a memoized method is invoked directly on its class the result will not
+be cached. Instead the method will be invoked like a static method:
+class Obj(object):
+    @memoize
+    def add_to(self, arg):
+        return self + arg
+Obj.add_to(1) # not enough arguments
+Obj.add_to(1, 2) # returns 3, result is not cached
+
+</pre>
+  <dl class="fields">
+    <dt>Decorators:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code>@memoize</code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="length"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">length</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.BinaryParser-pysrc.html">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+cache the return value of a method
+
+From http://code.activestate.com/recipes/577452-a-memoize-decorator-for-instance-methods/
+
+This class is meant to be used as a decorator of methods. The return value
+from a given method invocation will be cached on the instance whose method
+was invoked. All arguments passed to a method decorated with memoize must
+be hashable.
+
+If a memoized method is invoked directly on its class the result will not
+be cached. Instead the method will be invoked like a static method:
+class Obj(object):
+    @memoize
+    def add_to(self, arg):
+        return self + arg
+Obj.add_to(1) # not enough arguments
+Obj.add_to(1, 2) # returns 3, result is not cached
+
+</pre>
+  <dl class="fields">
+    <dt>Decorators:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code>@memoize</code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="find_end_of_stream"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">find_end_of_stream</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.BinaryParser-pysrc.html">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+cache the return value of a method
+
+From http://code.activestate.com/recipes/577452-a-memoize-decorator-for-instance-methods/
+
+This class is meant to be used as a decorator of methods. The return value
+from a given method invocation will be cached on the instance whose method
+was invoked. All arguments passed to a method decorated with memoize must
+be hashable.
+
+If a memoized method is invoked directly on its class the result will not
+be cached. Instead the method will be invoked like a static method:
+class Obj(object):
+    @memoize
+    def add_to(self, arg):
+        return self + arg
+Obj.add_to(1) # not enough arguments
+Obj.add_to(1, 2) # returns 3, result is not cached
+
+</pre>
+  <dl class="fields">
+    <dt>Decorators:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code>@memoize</code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="Evtx-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="www.williballenthin.com/evtx/doc/">python-evtx</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Sat Jan 19 21:04:14 2013
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

@@ -1,0 +1,1479 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Evtx.BinaryParser.Block</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="Evtx-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="www.williballenthin.com/evtx/doc/">python-evtx</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="Evtx-module.html">Package&nbsp;Evtx</a> ::
+        <a href="Evtx.BinaryParser-module.html">Module&nbsp;BinaryParser</a> ::
+        Class&nbsp;Block
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="Evtx.BinaryParser.Block-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class Block</h1><p class="nomargin-top"><span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block">source&nbsp;code</a></span></p>
+<center>
+<center>  <map id="uml_class_diagram_for_evtx_bin_2" name="uml_class_diagram_for_evtx_bin_2">
+<area shape="rect" id="node1" href="Evtx.Nodes.ConditionalSubstitutionNode-class.html" title="The binary XML node for the system token 0x0E." alt="" coords="5,403,248,442"/>
+<area shape="rect" id="node2" href="Evtx.Nodes.BXmlNode-class.html" title="Evtx.Nodes.BXmlNode" alt="" coords="2115,345,2256,383"/>
+<area shape="rect" id="node7" href="Evtx.Nodes.OpenStartElementNode-class.html" title="The binary XML node for the system token 0x01." alt="" coords="277,403,493,442"/>
+<area shape="rect" id="node10" href="Evtx.Nodes.TemplateInstanceNode-class.html" title="The binary XML node for the system token 0x0C." alt="" coords="523,403,736,442"/>
+<area shape="rect" id="node12" href="Evtx.Nodes.CloseEmptyElementNode-class.html" title="The binary XML node for the system token 0x03." alt="" coords="765,403,995,442"/>
+<area shape="rect" id="node13" href="Evtx.Nodes.ProcessingInstructionTargetNode-class.html" title="The binary XML node for the system token 0x0A." alt="" coords="1024,403,1296,442"/>
+<area shape="rect" id="node16" href="Evtx.Nodes.TemplateNode-class.html" title="Evtx.Nodes.TemplateNode" alt="" coords="1325,403,1488,442"/>
+<area shape="rect" id="node18" href="Evtx.Nodes.ValueNode-class.html" title="The binary XML node for the system token 0x05." alt="" coords="1517,403,1659,442"/>
+<area shape="rect" id="node19" href="Evtx.Nodes.AttributeNode-class.html" title="The binary XML node for the system token 0x06." alt="" coords="1688,403,1845,442"/>
+<area shape="rect" id="node22" href="Evtx.Nodes.CloseElementNode-class.html" title="The binary XML node for the system token 0x04." alt="" coords="1875,403,2067,442"/>
+<area shape="rect" id="node25" href="Evtx.Nodes.StreamStartNode-class.html" title="The binary XML node for the system token 0x0F." alt="" coords="2096,403,2275,442"/>
+<area shape="rect" id="node28" href="Evtx.Nodes.EntityReferenceNode-class.html" title="The binary XML node for the system token 0x09." alt="" coords="2304,403,2507,442"/>
+<area shape="rect" id="node29" href="Evtx.Nodes.CloseStartElementNode-class.html" title="The binary XML node for the system token 0x02." alt="" coords="2536,403,2755,442"/>
+<area shape="rect" id="node33" href="Evtx.Nodes.EndOfStreamNode-class.html" title="The binary XML node for the system token 0x00." alt="" coords="2784,403,2973,442"/>
+<area shape="rect" id="node35" href="Evtx.Nodes.VariantTypeNode-class.html" title="Evtx.Nodes.VariantTypeNode" alt="" coords="3003,403,3181,442"/>
+<area shape="rect" id="node36" href="Evtx.Nodes.RootNode-class.html" title="The binary XML node for the Root node." alt="" coords="3211,403,3347,442"/>
+<area shape="rect" id="node37" href="Evtx.Nodes.CDataSectionNode-class.html" title="The binary XML node for the system token 0x07." alt="" coords="3376,403,3568,442"/>
+<area shape="rect" id="node39" href="Evtx.Nodes.ProcessingInstructionDataNode-class.html" title="The binary XML node for the system token 0x0B." alt="" coords="3597,403,3861,442"/>
+<area shape="rect" id="node40" href="Evtx.Nodes.NormalSubstitutionNode-class.html" title="The binary XML node for the system token 0x0D." alt="" coords="3891,403,4112,442"/>
+<area shape="rect" id="node43" href="Evtx.Nodes.NameStringNode-class.html" title="Evtx.Nodes.NameStringNode" alt="" coords="4141,403,4320,442"/>
+<area shape="rect" id="node3" href="Evtx.Nodes.UnsignedWordTypeNode-class.html" title="Variant type 0x06." alt="" coords="411,462,635,501"/>
+<area shape="rect" id="node4" href="Evtx.Nodes.WstringArrayTypeNode-class.html" title="Variant ttype 0x81." alt="" coords="664,462,877,501"/>
+<area shape="rect" id="node5" href="Evtx.Nodes.GuidTypeNode-class.html" title="Variant type 0x0F." alt="" coords="907,462,1072,501"/>
+<area shape="rect" id="node6" href="Evtx.Nodes.FiletimeTypeNode-class.html" title="Variant type 0x11." alt="" coords="1101,462,1285,501"/>
+<area shape="rect" id="node8" href="Evtx.Nodes.StringTypeNode-class.html" title="Variant type 0x02." alt="" coords="1315,462,1488,501"/>
+<area shape="rect" id="node9" href="Evtx.Nodes.BooleanTypeNode-class.html" title="Variant type 0x0D." alt="" coords="1517,462,1701,501"/>
+<area shape="rect" id="node11" href="Evtx.Nodes.SignedDwordTypeNode-class.html" title="Variant type 0x07." alt="" coords="1731,462,1947,501"/>
+<area shape="rect" id="node14" href="Evtx.Nodes.SIDTypeNode-class.html" title="Variant type 0x13." alt="" coords="1976,462,2136,501"/>
+<area shape="rect" id="node15" href="Evtx.Nodes.UnsignedDwordTypeNode-class.html" title="Variant type 0x08." alt="" coords="2165,462,2397,501"/>
+<area shape="rect" id="node17" href="Evtx.Nodes.Hex64TypeNode-class.html" title="Variant type 0x15." alt="" coords="2427,462,2603,501"/>
+<area shape="rect" id="node6" href="Evtx.BinaryParser.Block-class.html#__init__" title="Constructor." alt="" coords="2265,39,2609,57"/>
+<area shape="rect" id="node6" href="Evtx.BinaryParser.Block-class.html#__repr__" title="repr(x)" alt="" coords="2265,57,2609,76"/>
+<area shape="rect" id="node6" href="Evtx.BinaryParser.Block-class.html#__unicode__" title="Evtx.BinaryParser.Block.__unicode__" alt="" coords="2265,76,2609,95"/>
+<area shape="rect" id="node6" href="Evtx.BinaryParser.Block-class.html#__str__" title="str(x)" alt="" coords="2265,95,2609,113"/>
+<area shape="rect" id="node6" href="Evtx.BinaryParser.Block-class.html#declare_field" title="Declaratively add fields to this block." alt="" coords="2265,113,2609,132"/>
+<area shape="rect" id="node6" href="Evtx.BinaryParser.Block-class.html#current_field_offset" title="Evtx.BinaryParser.Block.current_field_offset" alt="" coords="2265,132,2609,151"/>
+<area shape="rect" id="node6" href="Evtx.BinaryParser.Block-class.html#unpack_byte" title="Returns a little&#45;endian unsigned byte from the relative offset." alt="" coords="2265,151,2609,169"/>
+<area shape="rect" id="node6" href="Evtx.BinaryParser.Block-class.html#unpack_int8" title="Returns a little&#45;endian signed byte from the relative offset." alt="" coords="2265,169,2609,188"/>
+<area shape="rect" id="node6" href="Evtx.BinaryParser.Block-class.html#unpack_word" title="Returns a little&#45;endian unsigned WORD (2 bytes) from the &#160;&#160;&#160;relative offset." alt="" coords="2265,188,2609,207"/>
+<area shape="rect" id="node6" href="Evtx.BinaryParser.Block-class.html#unpack_word_be" title="Returns a big&#45;endian unsigned WORD (2 bytes) from the &#160;&#160;&#160;relative offset." alt="" coords="2265,207,2609,225"/>
+<area shape="rect" id="node6" href="Evtx.BinaryParser.Block-class.html#unpack_int16" title="Returns a little&#45;endian signed WORD (2 bytes) from the &#160;&#160;&#160;relative offset." alt="" coords="2265,225,2609,244"/>
+<area shape="rect" id="node6" href="Evtx.BinaryParser.Block-class.html#pack_word" title="Applies the little&#45;endian WORD (2 bytes) to the relative offset." alt="" coords="2265,244,2609,263"/>
+<area shape="rect" id="node6" href="Evtx.BinaryParser.Block-class.html#unpack_dword" title="Returns a little&#45;endian DWORD (4 bytes) from the relative offset." alt="" coords="2265,263,2609,281"/>
+<area shape="rect" id="node6" href="Evtx.BinaryParser.Block-class.html#offset" title="Equivalent to self.absolute_offset(0x0), which is the starting &#160;&#160;&#160;offset of this block." alt="" coords="2265,300,2609,319"/>
+<area shape="rect" id="node20" href="Evtx.BinaryParser.Block-class.html" title="Base class for structure blocks in binary parsing." alt="" coords="2253,6,2621,325"/>
+<area shape="rect" id="node24" href="Evtx.Evtx.ChunkHeader-class.html" title="Evtx.Evtx.ChunkHeader" alt="" coords="2285,345,2432,383"/>
+<area shape="rect" id="node45" href="Evtx.Evtx.Record-class.html" title="Evtx.Evtx.Record" alt="" coords="2461,345,2571,383"/>
+<area shape="rect" id="node46" href="Evtx.Evtx.FileHeader-class.html" title="Evtx.Evtx.FileHeader" alt="" coords="2600,345,2731,383"/>
+<area shape="rect" id="node21" href="Evtx.Nodes.SignedByteTypeNode-class.html" title="Variant type 0x03." alt="" coords="2632,462,2837,501"/>
+<area shape="rect" id="node23" href="Evtx.Nodes.UnsignedByteTypeNode-class.html" title="Variant type 0x04." alt="" coords="2867,462,3088,501"/>
+<area shape="rect" id="node26" href="Evtx.Nodes.BinaryTypeNode-class.html" title="Variant type 0x0E." alt="" coords="3117,462,3293,501"/>
+<area shape="rect" id="node27" href="Evtx.Nodes.Hex32TypeNode-class.html" title="Variant type 0x14." alt="" coords="3323,462,3499,501"/>
+<area shape="rect" id="node30" href="Evtx.Nodes.SizeTypeNode-class.html" title="Variant type 0x10." alt="" coords="3528,462,3693,501"/>
+<area shape="rect" id="node31" href="Evtx.Nodes.UnsignedQwordTypeNode-class.html" title="Variant type 0x0A." alt="" coords="3723,462,3955,501"/>
+<area shape="rect" id="node32" href="Evtx.Nodes.WstringTypeNode-class.html" title="Variant ttype 0x01." alt="" coords="3984,462,4168,501"/>
+<area shape="rect" id="node34" href="Evtx.Nodes.FloatTypeNode-class.html" title="Variant type 0x0B." alt="" coords="4197,462,4365,501"/>
+<area shape="rect" id="node38" href="Evtx.Nodes.SystemtimeTypeNode-class.html" title="Variant type 0x12." alt="" coords="4395,462,4603,501"/>
+<area shape="rect" id="node41" href="Evtx.Nodes.SignedQwordTypeNode-class.html" title="Variant type 0x09." alt="" coords="4632,462,4848,501"/>
+<area shape="rect" id="node42" href="Evtx.Nodes.DoubleTypeNode-class.html" title="Variant type 0x0C." alt="" coords="4877,462,5056,501"/>
+<area shape="rect" id="node44" href="Evtx.Nodes.SignedWordTypeNode-class.html" title="Variant type 0x05." alt="" coords="5085,462,5293,501"/>
+<area shape="rect" id="node47" href="Evtx.Nodes.NullTypeNode-class.html" title="Variant type 0x00." alt="" coords="5323,462,5483,501"/>
+<area shape="rect" id="node48" href="Evtx.Nodes.BXmlTypeNode-class.html" title="Variant type 0x21." alt="" coords="5512,462,5683,501"/>
+</map>
+  <img src="uml_class_diagram_for_evtx_bin_2.gif" alt='' usemap="#uml_class_diagram_for_evtx_bin_2" ismap="ismap" class="graph-without-title" />
+</center>
+</center>
+<hr />
+<p>Base class for structure blocks in binary parsing. A block is 
+  associated with a offset into a byte-string.</p>
+
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.BinaryParser.Block-class.html#__init__" class="summary-sig-name">__init__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">buf</span>,
+        <span class="summary-sig-arg">offset</span>)</span><br />
+      Constructor.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.__init__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.BinaryParser.Block-class.html#__repr__" class="summary-sig-name">__repr__</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      repr(x)</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.__repr__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__unicode__"></a><span class="summary-sig-name">__unicode__</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.__unicode__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.BinaryParser.Block-class.html#__str__" class="summary-sig-name">__str__</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      str(x)</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.__str__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.BinaryParser.Block-class.html#declare_field" class="summary-sig-name">declare_field</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">type</span>,
+        <span class="summary-sig-arg">name</span>,
+        <span class="summary-sig-arg">offset</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">length</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Declaratively add fields to this block.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.declare_field">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="current_field_offset"></a><span class="summary-sig-name">current_field_offset</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.current_field_offset">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.BinaryParser.Block-class.html#unpack_byte" class="summary-sig-name">unpack_byte</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">offset</span>)</span><br />
+      Returns a little-endian unsigned byte from the relative offset.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_byte">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.BinaryParser.Block-class.html#unpack_int8" class="summary-sig-name">unpack_int8</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">offset</span>)</span><br />
+      Returns a little-endian signed byte from the relative offset.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_int8">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.BinaryParser.Block-class.html#unpack_word" class="summary-sig-name">unpack_word</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">offset</span>)</span><br />
+      Returns a little-endian unsigned WORD (2 bytes) from the 
+  relative offset.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_word">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.BinaryParser.Block-class.html#unpack_word_be" class="summary-sig-name">unpack_word_be</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">offset</span>)</span><br />
+      Returns a big-endian unsigned WORD (2 bytes) from the 
+  relative offset.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_word_be">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.BinaryParser.Block-class.html#unpack_int16" class="summary-sig-name">unpack_int16</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">offset</span>)</span><br />
+      Returns a little-endian signed WORD (2 bytes) from the 
+  relative offset.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_int16">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.BinaryParser.Block-class.html#pack_word" class="summary-sig-name">pack_word</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">offset</span>,
+        <span class="summary-sig-arg">word</span>)</span><br />
+      Applies the little-endian WORD (2 bytes) to the relative offset.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.pack_word">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.BinaryParser.Block-class.html#unpack_dword" class="summary-sig-name">unpack_dword</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">offset</span>)</span><br />
+      Returns a little-endian DWORD (4 bytes) from the relative offset.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_dword">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.BinaryParser.Block-class.html#unpack_dword_be" class="summary-sig-name">unpack_dword_be</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">offset</span>)</span><br />
+      Returns a big-endian DWORD (4 bytes) from the relative offset.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_dword_be">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.BinaryParser.Block-class.html#unpack_int32" class="summary-sig-name">unpack_int32</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">offset</span>)</span><br />
+      Returns a little-endian signed integer (4 bytes) from the 
+  relative offset.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_int32">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.BinaryParser.Block-class.html#unpack_qword" class="summary-sig-name">unpack_qword</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">offset</span>)</span><br />
+      Returns a little-endian QWORD (8 bytes) from the relative offset.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_qword">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.BinaryParser.Block-class.html#unpack_int64" class="summary-sig-name">unpack_int64</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">offset</span>)</span><br />
+      Returns a little-endian signed 64-bit integer (8 bytes) from 
+  the relative offset.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_int64">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.BinaryParser.Block-class.html#unpack_float" class="summary-sig-name">unpack_float</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">offset</span>)</span><br />
+      Returns a single-precision float (4 bytes) from 
+  the relative offset.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_float">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.BinaryParser.Block-class.html#unpack_double" class="summary-sig-name">unpack_double</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">offset</span>)</span><br />
+      Returns a double-precision float (8 bytes) from 
+  the relative offset.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_double">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.BinaryParser.Block-class.html#unpack_binary" class="summary-sig-name">unpack_binary</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">offset</span>,
+        <span class="summary-sig-arg">length</span>=<span class="summary-sig-default">False</span>)</span><br />
+      Returns raw binary data from the relative offset with the given length.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_binary">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.BinaryParser.Block-class.html#unpack_string" class="summary-sig-name">unpack_string</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">offset</span>,
+        <span class="summary-sig-arg">length</span>)</span><br />
+      Returns a string from the relative offset with the given length.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_string">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.BinaryParser.Block-class.html#unpack_wstring" class="summary-sig-name">unpack_wstring</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">offset</span>,
+        <span class="summary-sig-arg">length</span>)</span><br />
+      Returns a string from the relative offset with the given length,
+where each character is a wchar (2 bytes)
+Arguments:
+- `offset`: The relative offset from the start of the block.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_wstring">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.BinaryParser.Block-class.html#unpack_dosdate" class="summary-sig-name">unpack_dosdate</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">offset</span>)</span><br />
+      Returns a datetime from the DOSDATE and DOSTIME starting at 
+the relative offset.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_dosdate">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.BinaryParser.Block-class.html#unpack_filetime" class="summary-sig-name">unpack_filetime</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">offset</span>)</span><br />
+      Returns a datetime from the QWORD Windows timestamp starting at
+the relative offset.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_filetime">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.BinaryParser.Block-class.html#unpack_systemtime" class="summary-sig-name">unpack_systemtime</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">offset</span>)</span><br />
+      Returns a datetime from the QWORD Windows SYSTEMTIME timestamp 
+  starting at the relative offset.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_systemtime">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.BinaryParser.Block-class.html#unpack_guid" class="summary-sig-name">unpack_guid</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">offset</span>)</span><br />
+      Returns a string containing a GUID starting at the relative offset.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_guid">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="absolute_offset"></a><span class="summary-sig-name">absolute_offset</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">offset</span>)</span><br />
+      Get the absolute offset from an offset relative to this block
+Arguments:
+- `offset`: The relative offset into this block.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.absolute_offset">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="offset"></a><span class="summary-sig-name">offset</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Equivalent to self.absolute_offset(0x0), which is the starting 
+  offset of this block.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.offset">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__delattr__</code>,
+      <code>__format__</code>,
+      <code>__getattribute__</code>,
+      <code>__hash__</code>,
+      <code>__new__</code>,
+      <code>__reduce__</code>,
+      <code>__reduce_ex__</code>,
+      <code>__setattr__</code>,
+      <code>__sizeof__</code>,
+      <code>__subclasshook__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== PROPERTIES ==================== -->
+<a name="section-Properties"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Properties</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Properties"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__class__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Method Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="__init__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">buf</span>,
+        <span class="sig-arg">offset</span>)</span>
+    <br /><em class="fname">(Constructor)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.__init__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Constructor.
+Arguments:
+- `buf`: Byte string containing stuff to parse.
+- `offset`: The offset into the buffer at which the block starts.
+
+</pre>
+  <dl class="fields">
+    <dt>Overrides:
+        object.__init__
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="__repr__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__repr__</span>(<span class="sig-arg">self</span>)</span>
+    <br /><em class="fname">(Representation operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.__repr__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>repr(x)</p>
+  <dl class="fields">
+    <dt>Overrides:
+        object.__repr__
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="__str__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__str__</span>(<span class="sig-arg">self</span>)</span>
+    <br /><em class="fname">(Informal representation operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.__str__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>str(x)</p>
+  <dl class="fields">
+    <dt>Overrides:
+        object.__str__
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="declare_field"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">declare_field</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">type</span>,
+        <span class="sig-arg">name</span>,
+        <span class="sig-arg">offset</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">length</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.declare_field">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Declaratively add fields to this block.
+This method will dynamically add corresponding offset and unpacker methods
+to this block.
+Arguments:
+- `type`: A string. Should be one of the unpack_* types.
+- `name`: A string. 
+- `offset`: A number.
+- `length`: (Optional) A number. For (w)strings, length in chars.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="unpack_byte"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">unpack_byte</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">offset</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_byte">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Returns a little-endian unsigned byte from the relative offset.
+Arguments:
+- `offset`: The relative offset from the start of the block.
+Throws:
+- `OverrunBufferException`
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="unpack_int8"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">unpack_int8</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">offset</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_int8">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Returns a little-endian signed byte from the relative offset.
+Arguments:
+- `offset`: The relative offset from the start of the block.
+Throws:
+- `OverrunBufferException`
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="unpack_word"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">unpack_word</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">offset</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_word">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Returns a little-endian unsigned WORD (2 bytes) from the 
+  relative offset.
+Arguments:
+- `offset`: The relative offset from the start of the block.
+Throws:
+- `OverrunBufferException`
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="unpack_word_be"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">unpack_word_be</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">offset</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_word_be">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Returns a big-endian unsigned WORD (2 bytes) from the 
+  relative offset.
+Arguments:
+- `offset`: The relative offset from the start of the block.
+Throws:
+- `OverrunBufferException`
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="unpack_int16"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">unpack_int16</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">offset</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_int16">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Returns a little-endian signed WORD (2 bytes) from the 
+  relative offset.
+Arguments:
+- `offset`: The relative offset from the start of the block.
+Throws:
+- `OverrunBufferException`
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="pack_word"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">pack_word</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">offset</span>,
+        <span class="sig-arg">word</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.pack_word">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Applies the little-endian WORD (2 bytes) to the relative offset.
+Arguments:
+- `offset`: The relative offset from the start of the block.
+- `word`: The data to apply.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="unpack_dword"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">unpack_dword</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">offset</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_dword">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Returns a little-endian DWORD (4 bytes) from the relative offset.
+Arguments:
+- `offset`: The relative offset from the start of the block.
+Throws:
+- `OverrunBufferException`
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="unpack_dword_be"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">unpack_dword_be</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">offset</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_dword_be">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Returns a big-endian DWORD (4 bytes) from the relative offset.
+Arguments:
+- `offset`: The relative offset from the start of the block.
+Throws:
+- `OverrunBufferException`
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="unpack_int32"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">unpack_int32</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">offset</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_int32">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Returns a little-endian signed integer (4 bytes) from the 
+  relative offset.
+Arguments:
+- `offset`: The relative offset from the start of the block.
+Throws:
+- `OverrunBufferException`
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="unpack_qword"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">unpack_qword</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">offset</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_qword">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Returns a little-endian QWORD (8 bytes) from the relative offset.
+Arguments:
+- `offset`: The relative offset from the start of the block.
+Throws:
+- `OverrunBufferException`
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="unpack_int64"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">unpack_int64</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">offset</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_int64">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Returns a little-endian signed 64-bit integer (8 bytes) from 
+  the relative offset.
+Arguments:
+- `offset`: The relative offset from the start of the block.
+Throws:
+- `OverrunBufferException`
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="unpack_float"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">unpack_float</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">offset</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_float">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Returns a single-precision float (4 bytes) from 
+  the relative offset.  IEEE 754 format.
+Arguments:
+- `offset`: The relative offset from the start of the block.
+Throws:
+- `OverrunBufferException`
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="unpack_double"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">unpack_double</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">offset</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_double">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Returns a double-precision float (8 bytes) from 
+  the relative offset.  IEEE 754 format.
+Arguments:
+- `offset`: The relative offset from the start of the block.
+Throws:
+- `OverrunBufferException`
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="unpack_binary"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">unpack_binary</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">offset</span>,
+        <span class="sig-arg">length</span>=<span class="sig-default">False</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_binary">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Returns raw binary data from the relative offset with the given length.
+Arguments:
+- `offset`: The relative offset from the start of the block.
+- `length`: The length of the binary blob. If zero, the empty string
+    zero length is returned.
+Throws:
+- `OverrunBufferException`
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="unpack_string"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">unpack_string</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">offset</span>,
+        <span class="sig-arg">length</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_string">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Returns a string from the relative offset with the given length.
+Arguments:
+- `offset`: The relative offset from the start of the block.
+- `length`: The length of the string.
+Throws:
+- `OverrunBufferException`
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="unpack_wstring"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">unpack_wstring</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">offset</span>,
+        <span class="sig-arg">length</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_wstring">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Returns a string from the relative offset with the given length,
+where each character is a wchar (2 bytes)
+Arguments:
+- `offset`: The relative offset from the start of the block.
+- `length`: The length of the string.
+Throws:
+- `UnicodeDecodeError`
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="unpack_dosdate"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">unpack_dosdate</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">offset</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_dosdate">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Returns a datetime from the DOSDATE and DOSTIME starting at 
+the relative offset.
+Arguments:
+- `offset`: The relative offset from the start of the block.
+Throws:
+- `OverrunBufferException`
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="unpack_filetime"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">unpack_filetime</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">offset</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_filetime">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Returns a datetime from the QWORD Windows timestamp starting at
+the relative offset.
+Arguments:
+- `offset`: The relative offset from the start of the block.
+Throws:
+- `OverrunBufferException`
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="unpack_systemtime"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">unpack_systemtime</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">offset</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_systemtime">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Returns a datetime from the QWORD Windows SYSTEMTIME timestamp 
+  starting at the relative offset.
+  See http://msdn.microsoft.com/en-us/library/ms724950%28VS.85%29.aspx
+Arguments:
+- `offset`: The relative offset from the start of the block.
+Throws:
+- `OverrunBufferException`
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="unpack_guid"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">unpack_guid</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">offset</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.BinaryParser-pysrc.html#Block.unpack_guid">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Returns a string containing a GUID starting at the relative offset.
+Arguments:
+- `offset`: The relative offset from the start of the block.
+Throws:
+- `OverrunBufferException`
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="Evtx-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="www.williballenthin.com/evtx/doc/">python-evtx</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Sat Jan 19 21:04:13 2013
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

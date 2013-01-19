@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Evtx.Evtx.Record</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="Evtx-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="www.williballenthin.com/evtx/doc/">python-evtx</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="Evtx-module.html">Package&nbsp;Evtx</a> ::
+        <a href="Evtx.Evtx-module.html">Module&nbsp;Evtx</a> ::
+        Class&nbsp;Record
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="Evtx.Evtx.Record-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class Record</h1><p class="nomargin-top"><span class="codelink"><a href="Evtx.Evtx-pysrc.html#Record">source&nbsp;code</a></span></p>
+<center>
+<center>  <map id="uml_class_diagram_for_evtx_evt_4" name="uml_class_diagram_for_evtx_evt_4">
+<area shape="rect" id="node75" href="Evtx.Evtx.Record-class.html#__init__" title="Constructor." alt="" coords="93,377,285,396"/>
+<area shape="rect" id="node75" href="Evtx.Evtx.Record-class.html#root" title="Evtx.Evtx.Record.root" alt="" coords="93,396,285,415"/>
+<area shape="rect" id="node75" href="Evtx.Evtx.Record-class.html#length" title="Evtx.Evtx.Record.length" alt="" coords="93,415,285,433"/>
+<area shape="rect" id="node75" href="Evtx.Evtx.Record-class.html#verify" title="Evtx.Evtx.Record.verify" alt="" coords="93,433,285,452"/>
+<area shape="rect" id="node1" href="Evtx.Evtx.Record-class.html" title="Evtx.Evtx.Record" alt="" coords="81,345,297,458"/>
+<area shape="rect" id="node76" href="Evtx.BinaryParser.Block-class.html#__repr__" title="repr(x)" alt="" coords="17,39,361,57"/>
+<area shape="rect" id="node76" href="Evtx.BinaryParser.Block-class.html#__unicode__" title="Evtx.BinaryParser.Block.__unicode__" alt="" coords="17,57,361,76"/>
+<area shape="rect" id="node76" href="Evtx.BinaryParser.Block-class.html#__str__" title="str(x)" alt="" coords="17,76,361,95"/>
+<area shape="rect" id="node76" href="Evtx.BinaryParser.Block-class.html#declare_field" title="Declaratively add fields to this block." alt="" coords="17,95,361,113"/>
+<area shape="rect" id="node76" href="Evtx.BinaryParser.Block-class.html#current_field_offset" title="Evtx.BinaryParser.Block.current_field_offset" alt="" coords="17,113,361,132"/>
+<area shape="rect" id="node76" href="Evtx.BinaryParser.Block-class.html#unpack_byte" title="Returns a little&#45;endian unsigned byte from the relative offset." alt="" coords="17,132,361,151"/>
+<area shape="rect" id="node76" href="Evtx.BinaryParser.Block-class.html#unpack_int8" title="Returns a little&#45;endian signed byte from the relative offset." alt="" coords="17,151,361,169"/>
+<area shape="rect" id="node76" href="Evtx.BinaryParser.Block-class.html#unpack_word" title="Returns a little&#45;endian unsigned WORD (2 bytes) from the &#160;&#160;&#160;relative offset." alt="" coords="17,169,361,188"/>
+<area shape="rect" id="node76" href="Evtx.BinaryParser.Block-class.html#unpack_word_be" title="Returns a big&#45;endian unsigned WORD (2 bytes) from the &#160;&#160;&#160;relative offset." alt="" coords="17,188,361,207"/>
+<area shape="rect" id="node76" href="Evtx.BinaryParser.Block-class.html#unpack_int16" title="Returns a little&#45;endian signed WORD (2 bytes) from the &#160;&#160;&#160;relative offset." alt="" coords="17,207,361,225"/>
+<area shape="rect" id="node76" href="Evtx.BinaryParser.Block-class.html#pack_word" title="Applies the little&#45;endian WORD (2 bytes) to the relative offset." alt="" coords="17,225,361,244"/>
+<area shape="rect" id="node76" href="Evtx.BinaryParser.Block-class.html#unpack_dword" title="Returns a little&#45;endian DWORD (4 bytes) from the relative offset." alt="" coords="17,244,361,263"/>
+<area shape="rect" id="node76" href="Evtx.BinaryParser.Block-class.html#unpack_dword_be" title="Returns a big&#45;endian DWORD (4 bytes) from the relative offset." alt="" coords="17,263,361,281"/>
+<area shape="rect" id="node76" href="Evtx.BinaryParser.Block-class.html#offset" title="Equivalent to self.absolute_offset(0x0), which is the starting &#160;&#160;&#160;offset of this block." alt="" coords="17,300,361,319"/>
+<area shape="rect" id="node2" href="Evtx.BinaryParser.Block-class.html" title="Base class for structure blocks in binary parsing." alt="" coords="5,6,373,325"/>
+</map>
+  <img src="uml_class_diagram_for_evtx_evt_4.gif" alt='' usemap="#uml_class_diagram_for_evtx_evt_4" ismap="ismap" class="graph-without-title" />
+</center>
+</center>
+<hr />
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.Evtx.Record-class.html#__init__" class="summary-sig-name">__init__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">buf</span>,
+        <span class="summary-sig-arg">offset</span>,
+        <span class="summary-sig-arg">chunk</span>)</span><br />
+      Constructor.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.Evtx-pysrc.html#Record.__init__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="root"></a><span class="summary-sig-name">root</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.Evtx-pysrc.html#Record.root">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="length"></a><span class="summary-sig-name">length</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.Evtx-pysrc.html#Record.length">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="verify"></a><span class="summary-sig-name">verify</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.Evtx-pysrc.html#Record.verify">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="Evtx.BinaryParser.Block-class.html">BinaryParser.Block</a></code></b>:
+      <code><a href="Evtx.BinaryParser.Block-class.html#__repr__">__repr__</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#__str__">__str__</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#__unicode__">__unicode__</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#absolute_offset">absolute_offset</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#current_field_offset">current_field_offset</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#declare_field">declare_field</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#offset">offset</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#pack_word">pack_word</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_binary">unpack_binary</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_byte">unpack_byte</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_dosdate">unpack_dosdate</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_double">unpack_double</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_dword">unpack_dword</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_dword_be">unpack_dword_be</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_filetime">unpack_filetime</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_float">unpack_float</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_guid">unpack_guid</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_int16">unpack_int16</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_int32">unpack_int32</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_int64">unpack_int64</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_int8">unpack_int8</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_qword">unpack_qword</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_string">unpack_string</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_systemtime">unpack_systemtime</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_word">unpack_word</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_word_be">unpack_word_be</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_wstring">unpack_wstring</a></code>
+      </p>
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__delattr__</code>,
+      <code>__format__</code>,
+      <code>__getattribute__</code>,
+      <code>__hash__</code>,
+      <code>__new__</code>,
+      <code>__reduce__</code>,
+      <code>__reduce_ex__</code>,
+      <code>__setattr__</code>,
+      <code>__sizeof__</code>,
+      <code>__subclasshook__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== PROPERTIES ==================== -->
+<a name="section-Properties"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Properties</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Properties"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__class__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Method Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="__init__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">buf</span>,
+        <span class="sig-arg">offset</span>,
+        <span class="sig-arg">chunk</span>)</span>
+    <br /><em class="fname">(Constructor)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.Evtx-pysrc.html#Record.__init__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Constructor.
+Arguments:
+- `buf`: Byte string containing stuff to parse.
+- `offset`: The offset into the buffer at which the block starts.
+
+</pre>
+  <dl class="fields">
+    <dt>Overrides:
+        object.__init__
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="Evtx-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="www.williballenthin.com/evtx/doc/">python-evtx</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Sat Jan 19 21:04:13 2013
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

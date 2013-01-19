@@ -1,0 +1,661 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Evtx.Evtx.ChunkHeader</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="Evtx-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="www.williballenthin.com/evtx/doc/">python-evtx</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="Evtx-module.html">Package&nbsp;Evtx</a> ::
+        <a href="Evtx.Evtx-module.html">Module&nbsp;Evtx</a> ::
+        Class&nbsp;ChunkHeader
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="Evtx.Evtx.ChunkHeader-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class ChunkHeader</h1><p class="nomargin-top"><span class="codelink"><a href="Evtx.Evtx-pysrc.html#ChunkHeader">source&nbsp;code</a></span></p>
+<center>
+<center>  <map id="uml_class_diagram_for_evtx_evt" name="uml_class_diagram_for_evtx_evt">
+<area shape="rect" id="node66" href="Evtx.Evtx.ChunkHeader-class.html#__init__" title="Constructor." alt="" coords="69,377,308,396"/>
+<area shape="rect" id="node66" href="Evtx.Evtx.ChunkHeader-class.html#__repr__" title="repr(x)" alt="" coords="69,396,308,415"/>
+<area shape="rect" id="node66" href="Evtx.Evtx.ChunkHeader-class.html#__str__" title="str(x)" alt="" coords="69,415,308,433"/>
+<area shape="rect" id="node66" href="Evtx.Evtx.ChunkHeader-class.html#check_magic" title="@return A boolean that indicates if the first eight bytes of &#160;&#160;the ChunkHeader match the expected magic value." alt="" coords="69,433,308,452"/>
+<area shape="rect" id="node66" href="Evtx.Evtx.ChunkHeader-class.html#calculate_header_checksum" title="@return A integer in the range of an unsigned int that &#160;&#160;is the calculated CRC32 checksum of the ChunkHeader fields." alt="" coords="69,452,308,471"/>
+<area shape="rect" id="node66" href="Evtx.Evtx.ChunkHeader-class.html#calculate_data_checksum" title="@return A integer in the range of an unsigned int that &#160;&#160;is the calculated CRC32 checksum of the Chunk data." alt="" coords="69,471,308,489"/>
+<area shape="rect" id="node66" href="Evtx.Evtx.ChunkHeader-class.html#verify" title="@return A boolean that indicates that the FileHeader &#160;&#160;&#160;successfully passes a set of heuristic checks that &#160;&#160;all EVTX ChunkHeaders should pass." alt="" coords="69,489,308,508"/>
+<area shape="rect" id="node66" href="Evtx.Evtx.ChunkHeader-class.html#strings" title="@return A dict(offset &#45;&#45;&gt; NameStringNode)" alt="" coords="69,508,308,527"/>
+<area shape="rect" id="node66" href="Evtx.Evtx.ChunkHeader-class.html#add_string" title="@param offset An integer offset that is relative to the start of &#160;&#160;this chunk." alt="" coords="69,527,308,545"/>
+<area shape="rect" id="node66" href="Evtx.Evtx.ChunkHeader-class.html#add_template" title="@param offset An integer which contains the chunk&#45;relative offset &#160;&#160;&#160;to a template to load into this Chunk." alt="" coords="69,545,308,564"/>
+<area shape="rect" id="node66" href="Evtx.Evtx.ChunkHeader-class.html#templates" title="@return A dict(offset &#45;&#45;&gt; TemplateNode) of all encountered &#160;&#160;&#160;templates in this Chunk." alt="" coords="69,564,308,583"/>
+<area shape="rect" id="node66" href="Evtx.Evtx.ChunkHeader-class.html#first_record" title="Evtx.Evtx.ChunkHeader.first_record" alt="" coords="69,583,308,601"/>
+<area shape="rect" id="node66" href="Evtx.Evtx.ChunkHeader-class.html#records" title="Evtx.Evtx.ChunkHeader.records" alt="" coords="69,601,308,620"/>
+<area shape="rect" id="node1" href="Evtx.Evtx.ChunkHeader-class.html" title="Evtx.Evtx.ChunkHeader" alt="" coords="57,345,319,626"/>
+<area shape="rect" id="node67" href="Evtx.BinaryParser.Block-class.html#__unicode__" title="Evtx.BinaryParser.Block.__unicode__" alt="" coords="17,39,361,57"/>
+<area shape="rect" id="node67" href="Evtx.BinaryParser.Block-class.html#declare_field" title="Declaratively add fields to this block." alt="" coords="17,57,361,76"/>
+<area shape="rect" id="node67" href="Evtx.BinaryParser.Block-class.html#current_field_offset" title="Evtx.BinaryParser.Block.current_field_offset" alt="" coords="17,76,361,95"/>
+<area shape="rect" id="node67" href="Evtx.BinaryParser.Block-class.html#unpack_byte" title="Returns a little&#45;endian unsigned byte from the relative offset." alt="" coords="17,95,361,113"/>
+<area shape="rect" id="node67" href="Evtx.BinaryParser.Block-class.html#unpack_int8" title="Returns a little&#45;endian signed byte from the relative offset." alt="" coords="17,113,361,132"/>
+<area shape="rect" id="node67" href="Evtx.BinaryParser.Block-class.html#unpack_word" title="Returns a little&#45;endian unsigned WORD (2 bytes) from the &#160;&#160;&#160;relative offset." alt="" coords="17,132,361,151"/>
+<area shape="rect" id="node67" href="Evtx.BinaryParser.Block-class.html#unpack_word_be" title="Returns a big&#45;endian unsigned WORD (2 bytes) from the &#160;&#160;&#160;relative offset." alt="" coords="17,151,361,169"/>
+<area shape="rect" id="node67" href="Evtx.BinaryParser.Block-class.html#unpack_int16" title="Returns a little&#45;endian signed WORD (2 bytes) from the &#160;&#160;&#160;relative offset." alt="" coords="17,169,361,188"/>
+<area shape="rect" id="node67" href="Evtx.BinaryParser.Block-class.html#pack_word" title="Applies the little&#45;endian WORD (2 bytes) to the relative offset." alt="" coords="17,188,361,207"/>
+<area shape="rect" id="node67" href="Evtx.BinaryParser.Block-class.html#unpack_dword" title="Returns a little&#45;endian DWORD (4 bytes) from the relative offset." alt="" coords="17,207,361,225"/>
+<area shape="rect" id="node67" href="Evtx.BinaryParser.Block-class.html#unpack_dword_be" title="Returns a big&#45;endian DWORD (4 bytes) from the relative offset." alt="" coords="17,225,361,244"/>
+<area shape="rect" id="node67" href="Evtx.BinaryParser.Block-class.html#unpack_int32" title="Returns a little&#45;endian signed integer (4 bytes) from the &#160;&#160;&#160;relative offset." alt="" coords="17,244,361,263"/>
+<area shape="rect" id="node67" href="Evtx.BinaryParser.Block-class.html#unpack_qword" title="Returns a little&#45;endian QWORD (8 bytes) from the relative offset." alt="" coords="17,263,361,281"/>
+<area shape="rect" id="node67" href="Evtx.BinaryParser.Block-class.html#offset" title="Equivalent to self.absolute_offset(0x0), which is the starting &#160;&#160;&#160;offset of this block." alt="" coords="17,300,361,319"/>
+<area shape="rect" id="node2" href="Evtx.BinaryParser.Block-class.html" title="Base class for structure blocks in binary parsing." alt="" coords="5,6,373,325"/>
+</map>
+  <img src="uml_class_diagram_for_evtx_evt.gif" alt='' usemap="#uml_class_diagram_for_evtx_evt" ismap="ismap" class="graph-without-title" />
+</center>
+</center>
+<hr />
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.Evtx.ChunkHeader-class.html#__init__" class="summary-sig-name">__init__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">buf</span>,
+        <span class="summary-sig-arg">offset</span>)</span><br />
+      Constructor.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.Evtx-pysrc.html#ChunkHeader.__init__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.Evtx.ChunkHeader-class.html#__repr__" class="summary-sig-name">__repr__</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      repr(x)</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.Evtx-pysrc.html#ChunkHeader.__repr__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.Evtx.ChunkHeader-class.html#__str__" class="summary-sig-name">__str__</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      str(x)</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.Evtx-pysrc.html#ChunkHeader.__str__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="check_magic"></a><span class="summary-sig-name">check_magic</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      @return A boolean that indicates if the first eight bytes of
+  the ChunkHeader match the expected magic value.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.Evtx-pysrc.html#ChunkHeader.check_magic">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="calculate_header_checksum"></a><span class="summary-sig-name">calculate_header_checksum</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      @return A integer in the range of an unsigned int that
+  is the calculated CRC32 checksum of the ChunkHeader fields.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.Evtx-pysrc.html#ChunkHeader.calculate_header_checksum">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="calculate_data_checksum"></a><span class="summary-sig-name">calculate_data_checksum</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      @return A integer in the range of an unsigned int that
+  is the calculated CRC32 checksum of the Chunk data.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.Evtx-pysrc.html#ChunkHeader.calculate_data_checksum">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="verify"></a><span class="summary-sig-name">verify</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      @return A boolean that indicates that the FileHeader 
+  successfully passes a set of heuristic checks that
+  all EVTX ChunkHeaders should pass.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.Evtx-pysrc.html#ChunkHeader.verify">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_load_strings"></a><span class="summary-sig-name">_load_strings</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.Evtx-pysrc.html#ChunkHeader._load_strings">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="strings"></a><span class="summary-sig-name">strings</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      @return A dict(offset --&gt; NameStringNode)</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.Evtx-pysrc.html#ChunkHeader.strings">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.Evtx.ChunkHeader-class.html#add_string" class="summary-sig-name">add_string</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">offset</span>,
+        <span class="summary-sig-arg">parent</span>=<span class="summary-sig-default">None</span>)</span><br />
+      @param offset An integer offset that is relative to the start of
+  this chunk.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.Evtx-pysrc.html#ChunkHeader.add_string">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_load_templates"></a><span class="summary-sig-name">_load_templates</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      @return None</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.Evtx-pysrc.html#ChunkHeader._load_templates">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="Evtx.Evtx.ChunkHeader-class.html#add_template" class="summary-sig-name">add_template</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">offset</span>,
+        <span class="summary-sig-arg">parent</span>=<span class="summary-sig-default">None</span>)</span><br />
+      @param offset An integer which contains the chunk-relative offset
+   to a template to load into this Chunk.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.Evtx-pysrc.html#ChunkHeader.add_template">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="templates"></a><span class="summary-sig-name">templates</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      @return A dict(offset --&gt; TemplateNode) of all encountered 
+  templates in this Chunk.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.Evtx-pysrc.html#ChunkHeader.templates">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="first_record"></a><span class="summary-sig-name">first_record</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.Evtx-pysrc.html#ChunkHeader.first_record">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="records"></a><span class="summary-sig-name">records</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="Evtx.Evtx-pysrc.html#ChunkHeader.records">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="Evtx.BinaryParser.Block-class.html">BinaryParser.Block</a></code></b>:
+      <code><a href="Evtx.BinaryParser.Block-class.html#__unicode__">__unicode__</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#absolute_offset">absolute_offset</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#current_field_offset">current_field_offset</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#declare_field">declare_field</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#offset">offset</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#pack_word">pack_word</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_binary">unpack_binary</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_byte">unpack_byte</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_dosdate">unpack_dosdate</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_double">unpack_double</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_dword">unpack_dword</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_dword_be">unpack_dword_be</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_filetime">unpack_filetime</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_float">unpack_float</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_guid">unpack_guid</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_int16">unpack_int16</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_int32">unpack_int32</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_int64">unpack_int64</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_int8">unpack_int8</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_qword">unpack_qword</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_string">unpack_string</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_systemtime">unpack_systemtime</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_word">unpack_word</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_word_be">unpack_word_be</a></code>,
+      <code><a href="Evtx.BinaryParser.Block-class.html#unpack_wstring">unpack_wstring</a></code>
+      </p>
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__delattr__</code>,
+      <code>__format__</code>,
+      <code>__getattribute__</code>,
+      <code>__hash__</code>,
+      <code>__new__</code>,
+      <code>__reduce__</code>,
+      <code>__reduce_ex__</code>,
+      <code>__setattr__</code>,
+      <code>__sizeof__</code>,
+      <code>__subclasshook__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== PROPERTIES ==================== -->
+<a name="section-Properties"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Properties</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Properties"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__class__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Method Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="__init__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">buf</span>,
+        <span class="sig-arg">offset</span>)</span>
+    <br /><em class="fname">(Constructor)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.Evtx-pysrc.html#ChunkHeader.__init__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Constructor.
+Arguments:
+- `buf`: Byte string containing stuff to parse.
+- `offset`: The offset into the buffer at which the block starts.
+
+</pre>
+  <dl class="fields">
+    <dt>Overrides:
+        object.__init__
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="__repr__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__repr__</span>(<span class="sig-arg">self</span>)</span>
+    <br /><em class="fname">(Representation operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.Evtx-pysrc.html#ChunkHeader.__repr__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>repr(x)</p>
+  <dl class="fields">
+    <dt>Overrides:
+        object.__repr__
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="__str__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__str__</span>(<span class="sig-arg">self</span>)</span>
+    <br /><em class="fname">(Informal representation operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.Evtx-pysrc.html#ChunkHeader.__str__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>str(x)</p>
+  <dl class="fields">
+    <dt>Overrides:
+        object.__str__
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="add_string"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">add_string</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">offset</span>,
+        <span class="sig-arg">parent</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.Evtx-pysrc.html#ChunkHeader.add_string">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+@param offset An integer offset that is relative to the start of
+  this chunk.
+@param parent (Optional) The parent of the newly created 
+   NameStringNode instance. (Default: this chunk).
+@return None
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="add_template"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">add_template</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">offset</span>,
+        <span class="sig-arg">parent</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="Evtx.Evtx-pysrc.html#ChunkHeader.add_template">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+@param offset An integer which contains the chunk-relative offset
+   to a template to load into this Chunk.
+@param parent (Optional) The parent of the newly created 
+   TemplateNode instance. (Default: this chunk).
+@return Newly added TemplateNode instance.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="Evtx-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="www.williballenthin.com/evtx/doc/">python-evtx</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Sat Jan 19 21:04:13 2013
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>
