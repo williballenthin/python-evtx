@@ -16,7 +16,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 #
-#   Version v.0.1
+#   Version v0.1.1
 
 import itertools
 import base64
@@ -1270,7 +1270,7 @@ class WstringTypeNode(VariantTypeNode):
             return str(self.string())
         except UnicodeEncodeError:
             try:
-                return self.string().encode("ascii", "xmlcharrefreplace")
+                return self.string().encode("utf-8", "xmlcharrefreplace")
             except (UnicodeEncodeError, UnicodeDecodeError) as e:
                 debug("E", "%r" % (self), e)
                 return str(self.string())
@@ -1842,13 +1842,18 @@ class WstringArrayTypeNode(VariantTypeNode):
         for apart in bin.split("\x00\x00\x00"):
             for bpart in apart.split("\x00\x00"):
                 if len(bpart) % 2 == 1:
-                    strings.append(bpart + "\x00")
+                    strings.append((bpart + "\x00").decode("utf-16"))
                 else:
-                    strings.append(bpart)
+                    strings.append(bpart.decode("utf-16"))
         if strings[-1].strip("\x00") == "":
             strings = strings[:-1]
-        for (i, string) in enumerate(strings):
-            ret += "[%d] %s\n" % (i, string.decode("utf-16"))
+        for (index, string) in enumerate(strings):
+            if string == "":
+                ret += "<string index=\"%d\" isNull=\"True\" />\n" \
+                    (index)
+            else:
+                ret += "<string index=\"%d\">%s</string>\n" \
+                    (index, string)
         return ret
 
     def template_format(self):

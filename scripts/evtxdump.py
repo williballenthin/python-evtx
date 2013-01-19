@@ -16,14 +16,14 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 #
-#   Version v0.1
+#   Version v0.1.1
 
 
 import sys
 import binascii
 import mmap
 import contextlib
-from Evtx import *
+from Evtx.Evtx import FileHeader
 
 
 def main():
@@ -35,7 +35,7 @@ def main():
             print "<Events>"
             for chunk in fh.chunks():
                 for record in chunk.records():
-                    print record.root().xml([])
+                    print record.root().xml([]).encode("utf-8")
             print "</Events>"            
 
 if __name__ == "__main__":

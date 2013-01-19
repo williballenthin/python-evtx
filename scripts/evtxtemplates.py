@@ -23,7 +23,7 @@ import sys
 import binascii
 import mmap
 import contextlib
-from Evtx import *
+from Evtx.Evtx import FileHeader
 
 
 def main():
