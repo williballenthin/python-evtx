@@ -135,7 +135,7 @@ class BXmlNode(Block):
             (self)
 
     def verify(self):
-        return true
+        return True
 
     def _children(self, max_children=None,
                   end_tokens=[SYSTEM_TOKENS.EndOfStreamToken]):
