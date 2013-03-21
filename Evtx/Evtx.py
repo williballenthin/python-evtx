@@ -20,8 +20,7 @@
 
 import binascii
 import mmap
-import contextlib
-from exceptions import NotImplementedError
+from functools import wraps
 
 from BinaryParser import *
 from Nodes import *
@@ -30,6 +29,82 @@ from Nodes import *
 class InvalidRecordException(ParseException):
     def __init__(self):
         super(InvalidRecordException, self).__init__("Invalid record structure")
+
+
+class Evtx(object):
+    """
+    A convenience class that makes it easy to open an EVTX file and start iterating the important structures.
+    Note, this class must be used in a context statement (see the `with` keyword).
+    Note, this class will mmap the target file, so ensure your platform supports this operation.
+    """
+    def __init__(self, filename):
+        """
+        @type filename:  str
+        @param filename: A string that contains the path to the EVTX file to open.
+        """
+        self._filename = filename
+        self._buf = None
+        self._f = None
+        self._fh = None
+
+    def __enter__(self):
+        self._f = open(self._filename, "rb")
+        self._buf = mmap.mmap(self._f.fileno(), 0, access=mmap.ACCESS_READ)
+        self._fh = FileHeader(self._buf, 0x0)
+        return self
+
+    def __exit__(self, type, value, traceback):
+        self._buf.close()
+        self._f.close()
+        self._fh = None
+
+    def ensure_contexted(func):
+        """
+        This decorator ensure that an instance of the Evtx class is used within a context statement.  That is,
+          that the `with` statement is used, or `__enter__()` and `__exit__()` are called explicitly.
+        """
+        @wraps(func)
+        def wrapped(self, *args, **kwargs):
+            if self._buf is None:
+                raise TypeError("An Evtx object must be used with a context (see the `with` statement).")
+            else:
+                return func(self, *args, **kwargs)
+        return wrapped
+
+    @ensure_contexted
+    def chunks(self):
+        """
+        Get each of the ChunkHeaders from within this EVTX file.
+
+        @rtype generator of ChunkHeader
+        @return A generator of ChunkHeaders from this EVTX file.
+        """
+        for chunk in self._fh.chunks():
+            yield chunk
+
+    @ensure_contexted
+    def records(self):
+        """
+        Get each of the Records from within this EVTX file.
+
+        @rtype generator of Record
+        @return A generator of Records from this EVTX file.
+        """
+        for chunk in self.chunks():
+            for record in chunk.records():
+                yield record
+
+    @ensure_contexted
+    def get_record(self, record_num):
+        """
+        Get a Record by record number.
+
+        @type record_num:  int
+        @param record_num: The record number of the the record to fetch.
+        @rtype Record or None
+        @return The record request by record number, or None if the record is not found.
+        """
+        return self._fh.get_record(record_num)
 
 
 class FileHeader(Block):
