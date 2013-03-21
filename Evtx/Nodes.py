@@ -26,6 +26,7 @@ from BinaryParser import *
 
 indent = ""
 
+
 class SYSTEM_TOKENS:
     EndOfStreamToken = 0x00
     OpenStartElementToken = 0x01
@@ -1258,10 +1259,10 @@ class WstringTypeNode(VariantTypeNode):
                                               parent, length=length)
         if self._length is None:
             self.declare_field("word",    "string_length", 0x0)
-            self.declare_field("wstring", "string",
+            self.declare_field("wstring", "_string",
                                length=(self.string_length()))
         else:
-            self.declare_field("wstring", "string", 0x0,
+            self.declare_field("wstring", "_string", 0x0,
                                length=(self._length / 2))
 
     def xml(self):
@@ -1283,6 +1284,9 @@ class WstringTypeNode(VariantTypeNode):
             return (2 + (self.string_length() * 2))
         return self._length
 
+    def string(self):
+        return self._string().rstrip("\x00")
+
 
 class StringTypeNode(VariantTypeNode):
     """
@@ -1294,10 +1298,10 @@ class StringTypeNode(VariantTypeNode):
                                              parent, length=length)
         if self._length is None:
             self.declare_field("word",   "string_length", 0x0)
-            self.declare_field("string", "string",
+            self.declare_field("string", "_string",
                                length=(self.string_length()))
         else:
-            self.declare_field("string", "string", 0x0, length=self._length)
+            self.declare_field("string", "_string", 0x0, length=self._length)
 
     def xml(self):
         return str(self.string())
@@ -1309,6 +1313,9 @@ class StringTypeNode(VariantTypeNode):
         if self._length is None:
             return (2 + (self.string_length()))
         return self._length
+
+    def string(self):
+        return self._string().rstrip("\x00")
 
 
 class SignedByteTypeNode(VariantTypeNode):
@@ -1853,7 +1860,7 @@ class WstringArrayTypeNode(VariantTypeNode):
                     (index)
             else:
                 ret += "<string index=\"%d\">%s</string>\n" \
-                    (index, string)
+                    (index, string.rstrip("\x00"))
         return ret
 
     def template_format(self):
