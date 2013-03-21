@@ -129,6 +129,23 @@ class FileHeader(Block):
             yield ChunkHeader(self._buf, ofs)
             ofs += 0x10000
 
+    def get_record(self, record_num):
+        """
+        Get a Record by record number.
+
+        @type record_num:  int
+        @param record_num: The record number of the the record to fetch.
+        @rtype Record or None
+        @return The record request by record number, or None if the record is not found.
+        """
+        for chunk in self.chunks():
+            if not (chunk.file_first_record_number() < record_num < chunk.file_last_record_number()):
+                continue
+            for record in chunk.records():
+                if record.record_num() == record_num:
+                    return record
+        return None
+
 
 class ChunkHeader(Block):
     def __init__(self, buf, offset):
@@ -305,3 +322,12 @@ class Record(Block):
 
     def verify(self):
         return self.size() == self.size2()
+
+    def data(self):
+        """
+        Return the raw data block which makes up this record as a bytestring.
+
+        @rtype str
+        @return A string that is a copy of the buffer that makes up this record.
+        """
+        return self._buf[self.offset():self.offset() + self.size()]
