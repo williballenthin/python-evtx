@@ -57,37 +57,36 @@ def hex_dump(src, start_addr=0):
       data is interpreted as starting at this offset, and 
       the offset column is updated accordingly.
     """
-    FILTER=''.join([(len(repr(chr(x))) == 3) and \
-                        chr(x) or \
+    FILTER = ''.join([(len(repr(chr(x))) == 3) and
+                        chr(x) or
                         '.' for x in range(256)])
     length = 16
     result = []
-    base_addr = start_addr
 
     remainder_start_addr = start_addr
 
     if start_addr % length != 0:
         base_addr = start_addr - (start_addr % length)
         num_spaces = (start_addr % length)
-        num_chars  = length - (start_addr % length)
+        num_chars = length - (start_addr % length)
 
         spaces = " ".join(["  " for i in xrange(num_spaces)])
         s = src[0:num_chars]
         hexa = ' '.join(["%02X" % ord(x) for x in s])
         printable = s.translate(FILTER)
 
-        result.append("%04X   %s %s   %s%s\n" % \
-                          (base_addr, spaces, hexa,
-                           " " * (num_spaces + 1), printable))
+        result.append("%04X   %s %s   %s%s\n" %
+                      (base_addr, spaces, hexa,
+                      " " * (num_spaces + 1), printable))
 
         src = src[num_chars:]
         remainder_start_addr = base_addr + length
 
     for i in xrange(0, len(src), length):
-       s = src[i:i + length]
-       hexa = ' '.join(["%02X" % ord(x) for x in s])
-       printable = s.translate(FILTER)
-       result.append("%04X   %-*s   %s\n" % \
+        s = src[i:i + length]
+        hexa = ' '.join(["%02X" % ord(x) for x in s])
+        printable = s.translate(FILTER)
+        result.append("%04X   %-*s   %s\n" %
                          (remainder_start_addr + i, length * 3, 
                           hexa, printable))
 
