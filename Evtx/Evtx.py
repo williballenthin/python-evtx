@@ -214,7 +214,7 @@ class FileHeader(Block):
         @return The record request by record number, or None if the record is not found.
         """
         for chunk in self.chunks():
-            if not (chunk.file_first_record_number() < record_num < chunk.file_last_record_number()):
+            if not (chunk.log_first_record_number() <= record_num <= chunk.log_last_record_number()):
                 continue
             for record in chunk.records():
                 if record.record_num() == record_num:
