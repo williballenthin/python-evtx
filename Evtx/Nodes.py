@@ -278,6 +278,7 @@ class TemplateNode(BXmlNode):
     def length(self):
         return self.tag_length() + self.data_length()
 
+
 class EndOfStreamNode(BXmlNode):
     """
     The binary XML node for the system token 0x00.
@@ -311,6 +312,7 @@ class EndOfStreamNode(BXmlNode):
 
     def children(self):
         return []
+
 
 class OpenStartElementNode(BXmlNode):
     """
