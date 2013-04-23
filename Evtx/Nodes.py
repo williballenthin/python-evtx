@@ -1858,10 +1858,10 @@ class WstringArrayTypeNode(VariantTypeNode):
             strings = strings[:-1]
         for (index, string) in enumerate(strings):
             if string == "":
-                ret += "<string index=\"%d\" isNull=\"True\" />\n" \
+                ret += "<string index=\"%d\" isNull=\"True\" />\n" % \
                     (index)
             else:
-                ret += "<string index=\"%d\">%s</string>\n" \
+                ret += "<string index=\"%d\">%s</string>\n" % \
                     (index, string.rstrip("\x00"))
         return ret
 
