@@ -397,8 +397,21 @@ class OpenStartElementNode(BXmlNode):
         if (self.is_empty_node() or num_active_children == 0) \
                 and has_attr_xml:
             return "\n<%s%s />" % (self.tag_name(), attr_xml)
-        else: # num_active_children != 0 and has_attr_xml
-            cxml = "".join(c.xml(substitutions) for c in self.children())
+        else:  # num_active_children != 0 and has_attr_xml
+            try:
+                cxml = "".join(c.xml(substitutions).decode("utf-8") for c in self.children())
+            except UnicodeEncodeError as e:
+                # somewhere, unicode vs raw strings are getting mixed up.
+                #  here's a hacky fix.
+                cxml = ""
+                for c in self.children():
+                    try:
+                        cxml += c.xml(substitutions).encode("utf-8")
+                    except UnicodeEncodeError as f:
+                        raise f
+                return cxml
+            except UnicodeDecodeError as e:
+                raise e
             return "\n<%s%s</%s>" % (self.tag_name(), cxml, self.tag_name())
 
     def template_format(self):
