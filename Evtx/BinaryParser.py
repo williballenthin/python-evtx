@@ -47,14 +47,14 @@ def error(message):
 
 def hex_dump(src, start_addr=0):
     """
-    see: 
+    see:
     http://code.activestate.com/recipes/142812-hex-dumper/
     @param src A bytestring containing the data to dump.
-    @param start_addr An integer representing the start 
+    @param start_addr An integer representing the start
       address of the data in whatever context it comes from.
     @return A string containing a classic hex dump with 16
-      bytes per line.  If start_addr is provided, then the 
-      data is interpreted as starting at this offset, and 
+      bytes per line.  If start_addr is provided, then the
+      data is interpreted as starting at this offset, and
       the offset column is updated accordingly.
     """
     FILTER = ''.join([(len(repr(chr(x))) == 3) and
@@ -87,7 +87,7 @@ def hex_dump(src, start_addr=0):
         hexa = ' '.join(["%02X" % ord(x) for x in s])
         printable = s.translate(FILTER)
         result.append("%04X   %-*s   %s\n" %
-                         (remainder_start_addr + i, length * 3, 
+                         (remainder_start_addr + i, length * 3,
                           hexa, printable))
 
     return ''.join(result)
@@ -95,14 +95,14 @@ def hex_dump(src, start_addr=0):
 
 class memoize(object):
     """cache the return value of a method
-    
+
     From http://code.activestate.com/recipes/577452-a-memoize-decorator-for-instance-methods/
 
     This class is meant to be used as a decorator of methods. The return value
     from a given method invocation will be cached on the instance whose method
     was invoked. All arguments passed to a method decorated with memoize must
     be hashable.
-    
+
     If a memoized method is invoked directly on its class the result will not
     be cached. Instead the method will be invoked like a static method:
     class Obj(object):
@@ -159,7 +159,7 @@ def dosdate(dosdate, dostime):
         month = (t & 0b0000000111100000) >> 5
         year  = (t & 0b1111111000000000) >> 9
         year += 1980
-        
+
         t  = ord(dostime[1]) << 8
         t |= ord(dostime[0])
         sec     = t & 0b0000000000011111
@@ -180,7 +180,7 @@ def parse_filetime(qword):
 class BinaryParserException(Exception):
     """
     Base Exception class for binary parsing.
-    """    
+    """
     def __init__(self, value):
         """
         Constructor.
@@ -199,7 +199,7 @@ class BinaryParserException(Exception):
 
 class ParseException(BinaryParserException):
     """
-    An exception to be thrown during binary parsing, such as 
+    An exception to be thrown during binary parsing, such as
     when an invalid header is encountered.
     """
     def __init__(self, value):
@@ -231,7 +231,7 @@ class OverrunBufferException(ParseException):
 
 
 class Block(object):
-    """ 
+    """
     Base class for structure blocks in binary parsing.
     A block is associated with a offset into a byte-string.
     """
@@ -262,7 +262,7 @@ class Block(object):
         to this block.
         Arguments:
         - `type`: A string. Should be one of the unpack_* types.
-        - `name`: A string. 
+        - `name`: A string.
         - `offset`: A number.
         - `length`: (Optional) A number. For (w)strings, length in chars.
         """
@@ -280,13 +280,13 @@ class Block(object):
         setattr(self, name, handler)
         setattr(self, "_off_" + name, offset)
         try:
-            debug("(%s) %s\t@ %s\t: %s" % (type.upper(), 
-                                           name, 
+            debug("(%s) %s\t@ %s\t: %s" % (type.upper(),
+                                           name,
                                            hex(self.absolute_offset(offset)),
                                            str(handler())[:0x20]))
         except ValueError: # invalid Windows timestamp
-            debug("(%s) %s\t@ %s\t: %s" % (type.upper(), 
-                                           name, 
+            debug("(%s) %s\t@ %s\t: %s" % (type.upper(),
+                                           name,
                                            hex(self.absolute_offset(offset)),
                                            "<<error>>"))
         if type == "byte":
@@ -330,7 +330,7 @@ class Block(object):
         elif "string" in type and length == None:
             raise ParseException("Implicit offset not supported for dynamic length strings")
         else:
-            raise ParseException("Implicit offset not supported for type: " + type)            
+            raise ParseException("Implicit offset not supported for type: " + type)
 
     def current_field_offset(self):
         return self._implicit_offset
@@ -365,7 +365,7 @@ class Block(object):
 
     def unpack_word(self, offset):
         """
-        Returns a little-endian unsigned WORD (2 bytes) from the 
+        Returns a little-endian unsigned WORD (2 bytes) from the
           relative offset.
         Arguments:
         - `offset`: The relative offset from the start of the block.
@@ -380,7 +380,7 @@ class Block(object):
 
     def unpack_word_be(self, offset):
         """
-        Returns a big-endian unsigned WORD (2 bytes) from the 
+        Returns a big-endian unsigned WORD (2 bytes) from the
           relative offset.
         Arguments:
         - `offset`: The relative offset from the start of the block.
@@ -395,7 +395,7 @@ class Block(object):
 
     def unpack_int16(self, offset):
         """
-        Returns a little-endian signed WORD (2 bytes) from the 
+        Returns a little-endian signed WORD (2 bytes) from the
           relative offset.
         Arguments:
         - `offset`: The relative offset from the start of the block.
@@ -448,7 +448,7 @@ class Block(object):
 
     def unpack_int32(self, offset):
         """
-        Returns a little-endian signed integer (4 bytes) from the 
+        Returns a little-endian signed integer (4 bytes) from the
           relative offset.
         Arguments:
         - `offset`: The relative offset from the start of the block.
@@ -477,7 +477,7 @@ class Block(object):
 
     def unpack_int64(self, offset):
         """
-        Returns a little-endian signed 64-bit integer (8 bytes) from 
+        Returns a little-endian signed 64-bit integer (8 bytes) from
           the relative offset.
         Arguments:
         - `offset`: The relative offset from the start of the block.
@@ -492,7 +492,7 @@ class Block(object):
 
     def unpack_float(self, offset):
         """
-        Returns a single-precision float (4 bytes) from 
+        Returns a single-precision float (4 bytes) from
           the relative offset.  IEEE 754 format.
         Arguments:
         - `offset`: The relative offset from the start of the block.
@@ -507,7 +507,7 @@ class Block(object):
 
     def unpack_double(self, offset):
         """
-        Returns a double-precision float (8 bytes) from 
+        Returns a double-precision float (8 bytes) from
           the relative offset.  IEEE 754 format.
         Arguments:
         - `offset`: The relative offset from the start of the block.
@@ -568,7 +568,7 @@ class Block(object):
 
     def unpack_dosdate(self, offset):
         """
-        Returns a datetime from the DOSDATE and DOSTIME starting at 
+        Returns a datetime from the DOSDATE and DOSTIME starting at
         the relative offset.
         Arguments:
         - `offset`: The relative offset from the start of the block.
@@ -594,7 +594,7 @@ class Block(object):
 
     def unpack_systemtime(self, offset):
         """
-        Returns a datetime from the QWORD Windows SYSTEMTIME timestamp 
+        Returns a datetime from the QWORD Windows SYSTEMTIME timestamp
           starting at the relative offset.
           See http://msdn.microsoft.com/en-us/library/ms724950%28VS.85%29.aspx
         Arguments:
@@ -607,9 +607,9 @@ class Block(object):
             parts = struct.unpack_from("<WWWWWWWW", self._buf, o)
         except struct.error:
             raise OverrunBufferException(o, len(self._buf))
-        return datetime.datetime(parts[0], parts[1], 
+        return datetime.datetime(parts[0], parts[1],
                                  parts[3],  # skip part 2 (day of week)
-                                 parts[4], parts[5], 
+                                 parts[4], parts[5],
                                  parts[6], parts[7])
 
     def unpack_guid(self, offset):
@@ -646,7 +646,7 @@ class Block(object):
 
     def offset(self):
         """
-        Equivalent to self.absolute_offset(0x0), which is the starting 
+        Equivalent to self.absolute_offset(0x0), which is the starting
           offset of this block.
         """
         return self._offset
