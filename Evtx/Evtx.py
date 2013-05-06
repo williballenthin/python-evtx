@@ -147,7 +147,7 @@ class FileHeader(Block):
 
     def verify(self):
         """
-        @return A boolean that indicates that the FileHeader 
+        @return A boolean that indicates that the FileHeader
           successfully passes a set of heuristic checks that
           all EVTX FileHeaders should pass.
         """
@@ -164,7 +164,7 @@ class FileHeader(Block):
           reflected in the file header.
         """
         return self.flags() & 0x1 == 0x1
-              
+
     def is_full(self):
         """
         @return A boolean that indicates that the log
@@ -273,7 +273,7 @@ class ChunkHeader(Block):
 
     def verify(self):
         """
-        @return A boolean that indicates that the FileHeader 
+        @return A boolean that indicates that the FileHeader
           successfully passes a set of heuristic checks that
           all EVTX ChunkHeaders should pass.
         """
@@ -302,13 +302,13 @@ class ChunkHeader(Block):
         """
         @param offset An integer offset that is relative to the start of
           this chunk.
-        @param parent (Optional) The parent of the newly created 
+        @param parent (Optional) The parent of the newly created
            NameStringNode instance. (Default: this chunk).
         @return None
         """
         if self._strings is None:
             self._load_strings()
-        string_node = NameStringNode(self._buf, self._offset + offset, 
+        string_node = NameStringNode(self._buf, self._offset + offset,
                                      self, parent or self)
         self._strings[offset] = string_node
         return string_node
@@ -337,21 +337,21 @@ class ChunkHeader(Block):
         """
         @param offset An integer which contains the chunk-relative offset
            to a template to load into this Chunk.
-        @param parent (Optional) The parent of the newly created 
+        @param parent (Optional) The parent of the newly created
            TemplateNode instance. (Default: this chunk).
         @return Newly added TemplateNode instance.
         """
         if self._templates is None:
             self._load_templates()
-            
-        template = TemplateNode(self._buf, self._offset + offset, 
+
+        template = TemplateNode(self._buf, self._offset + offset,
                                 self, parent or self)
         self._templates[offset] = template
         return template
 
     def templates(self):
         """
-        @return A dict(offset --> TemplateNode) of all encountered 
+        @return A dict(offset --> TemplateNode) of all encountered
           templates in this Chunk.
         """
         if not self._templates:
@@ -366,8 +366,8 @@ class ChunkHeader(Block):
         while record._offset < self._offset + self.next_record_offset():
             yield record
             try:
-                record = Record(self._buf, 
-                                record._offset + record.length(), 
+                record = Record(self._buf,
+                                record._offset + record.length(),
                                 self)
             except InvalidRecordException:
                 return
@@ -378,7 +378,7 @@ class Record(Block):
         debug("Record at %s." % (hex(offset)))
         super(Record, self).__init__(buf, offset)
         self._chunk = chunk
-        
+
         self.declare_field("dword", "magic", 0x0)  # 0x00002a2a
         self.declare_field("dword", "size")
         self.declare_field("qword", "record_num")
@@ -388,6 +388,12 @@ class Record(Block):
             raise InvalidRecordException()
 
         self.declare_field("dword", "size2", self.size() - 4)
+
+    def __repr__(self):
+        return "Record(buf=%r, offset=%r)" % (self._buf, self._offset)
+
+    def __str__(self):
+        return "Record(offset=%s)" % (hex(self._offset))
 
     def root(self):
         return RootNode(self._buf, self._offset + 0x18, self._chunk, self)
