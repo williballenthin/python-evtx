@@ -921,6 +921,10 @@ class TemplateInstanceNode(BXmlNode):
         template = self._chunk.templates()[self.template_offset()]
         return template.xml(substitutions)
 
+    def template_format(self):
+        template = self._chunk.templates()[self.template_offset()]
+        return template.template_format()
+
     def is_resident_template(self):
         return self.template_offset() > self.offset() - self._chunk._offset
 
@@ -1111,6 +1115,12 @@ class RootNode(BXmlNode):
         for child in self.children():
             cxml += child.xml(substitutions or self.substitutions())
         return cxml
+
+    def template_format(self):
+        ret = []
+        for child in self.children():
+            ret.append(child.template_format())
+        return "".join(ret)
 
     def tag_length(self):
         return 0
