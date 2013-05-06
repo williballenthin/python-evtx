@@ -1280,13 +1280,13 @@ class WstringTypeNode(VariantTypeNode):
     def xml(self):
         # ensure this is a str, not unicode
         try:
-            return str(self.string())
+            return str(self.string().replace("<", "&gt;").replace(">", "&lt;"))
         except UnicodeEncodeError:
             try:
-                return self.string().encode("utf-8", "xmlcharrefreplace")
+                return self.string().encode("utf-8", "xmlcharrefreplace").replace("<", "&gt;").replace(">", "&lt;")
             except (UnicodeEncodeError, UnicodeDecodeError) as e:
                 debug("E", "%r" % (self), e)
-                return str(self.string())
+                return str(self.string().replace("<", "&gt;").replace(">", "&lt;"))
 
     def template_format(self):
         return self.xml([])
@@ -1316,7 +1316,7 @@ class StringTypeNode(VariantTypeNode):
             self.declare_field("string", "_string", 0x0, length=self._length)
 
     def xml(self):
-        return str(self.string())
+        return str(self.string().replace("<", "&gt;").replace(">", "&lt;"))
 
     def template_format(self):
         return self.xml([])
