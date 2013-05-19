@@ -241,7 +241,7 @@ class Template(object):
             return
         matcher = "\[(?:Normal|Conditional) Substitution\(index=(\d+), type=\d+\)\]"
         self._xml = re.sub(matcher, "{\\1:}",
-                           self._template_node.template_format())
+                           self._template_node.template_format().replace("{", "{{").replace("}", "}}"))
 
     def make_substitutions(self, substitutions):
         """
@@ -364,7 +364,7 @@ class ChunkHeader(Block):
                     ofs = 0
                     continue
                 template = self.add_template(ofs)
-                ofs = template.next_offset()
+                ofs = template.node().next_offset()
 
     def add_template(self, offset, parent=None):
         """

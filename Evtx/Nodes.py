@@ -924,7 +924,7 @@ class TemplateInstanceNode(BXmlNode):
                       "need new template", self.template_offset())
             new_template = self._chunk.add_template(self.template_offset(),
                                                     parent=self)
-            self._data_length += new_template.length()
+            self._data_length += new_template.node().length()
 
     def __repr__(self):
         return "TemplateInstanceNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
