@@ -17,7 +17,7 @@
 #   limitations under the License.
 #
 #   Version v.0.1
-
+import re
 import binascii
 import mmap
 from functools import wraps
@@ -227,6 +227,34 @@ class FileHeader(Block):
         return None
 
 
+class Template(object):
+    def __init__(self, template_node):
+        self._template_node = template_node
+        self._xml = None
+
+    def _load_xml(self):
+        """
+        TODO(wb): One day, nodes should generate format strings
+          instead of the XML format made-up abomination.
+        """
+        if self._xml is not None:
+            return
+        matcher = "\[(?:Normal|Conditional) Substitution\(index=(\d+), type=\d+\)\]"
+        self._xml = re.sub(matcher, "{\\1:}",
+                           self._template_node.template_format())
+
+    def make_substitutions(self, substitutions):
+        """
+
+        @type substitutions: list of VariantTypeNode
+        """
+        self._load_xml()
+        return self._xml.format(*map(lambda n: n.xml(), substitutions))
+
+    def node(self):
+        return self._template_node
+
+
 class ChunkHeader(Block):
     def __init__(self, buf, offset):
         debug("CHUNK HEADER at %s." % (hex(offset)))
@@ -344,19 +372,20 @@ class ChunkHeader(Block):
            to a template to load into this Chunk.
         @param parent (Optional) The parent of the newly created
            TemplateNode instance. (Default: this chunk).
-        @return Newly added TemplateNode instance.
+        @return Newly added Template instance.
         """
         if self._templates is None:
             self._load_templates()
 
-        template = TemplateNode(self._buf, self._offset + offset,
+        node = TemplateNode(self._buf, self._offset + offset,
                                 self, parent or self)
-        self._templates[offset] = template
+        template = Template(node)
+        self._templates[offset] = Template(node)
         return template
 
     def templates(self):
         """
-        @return A dict(offset --> TemplateNode) of all encountered
+        @return A dict(offset --> Template) of all encountered
           templates in this Chunk.
         """
         if not self._templates:

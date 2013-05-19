@@ -936,11 +936,11 @@ class TemplateInstanceNode(BXmlNode):
 
     def xml(self, substitutions):
         template = self._chunk.templates()[self.template_offset()]
-        return template.xml(substitutions)
+        return template.make_substitutions(substitutions)
 
     def template_format(self):
         template = self._chunk.templates()[self.template_offset()]
-        return template.template_format()
+        return template.node().template_format()
 
     def is_resident_template(self):
         return self.template_offset() > self.offset() - self._chunk._offset
@@ -959,7 +959,7 @@ class TemplateInstanceNode(BXmlNode):
 
     @memoize
     def find_end_of_stream(self):
-        return self.template().find_end_of_stream()
+        return self.template().node().find_end_of_stream()
 
 
 class NormalSubstitutionNode(BXmlNode):
