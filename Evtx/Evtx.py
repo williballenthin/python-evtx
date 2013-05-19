@@ -22,8 +22,13 @@ import binascii
 import mmap
 from functools import wraps
 
-from BinaryParser import *
-from Nodes import *
+from BinaryParser import ParseException
+from BinaryParser import Block
+from BinaryParser import debug
+from BinaryParser import warning
+from Nodes import NameStringNode
+from Nodes import TemplateNode
+from Nodes import RootNode
 
 
 class InvalidRecordException(ParseException):

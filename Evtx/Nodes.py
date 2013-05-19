@@ -21,7 +21,11 @@
 import itertools
 import base64
 
-from BinaryParser import *
+from BinaryParser import Block
+from BinaryParser import debug
+from BinaryParser import hex_dump
+from BinaryParser import ParseException
+from BinaryParser import memoize
 
 
 indent = ""
