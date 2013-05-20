@@ -116,7 +116,7 @@ class BXmlNode(Block):
     def __str__(self):
         return "BXmlNode(offset=%s)" % (hex(self.offset()))
 
-    def xml(self, substitutions):
+    def xml(self, substitutions, cleanup=False):
         raise NotImplementedError("xml() not implemented for %r") % (self)
 
     def template_format(self):
@@ -233,7 +233,7 @@ class NameStringNode(BXmlNode):
     def string(self):
         return str(self._string())
 
-    def xml(self, substitutions):
+    def xml(self, substitutions, cleanup=False):
         return self.string()
 
     def template_format(self):
@@ -264,10 +264,10 @@ class TemplateNode(BXmlNode):
         return "TemplateNode(offset=%s, guid=%s, length=%s)" % \
             (hex(self.offset()), self.guid(), hex(self.length()))
 
-    def xml(self, substitutions):
+    def xml(self, substitutions, cleanup=False):
         ret = ""
         for child in self.children():
-            ret += child.xml(substitutions)
+            ret += child.xml(substitutions, cleanup=cleanup)
         return ret
 
     def template_format(self):
@@ -302,7 +302,7 @@ class EndOfStreamNode(BXmlNode):
         return "EndOfStreamNode(offset=%s, length=%s, token=%s)" % \
             (hex(self.offset()), hex(self.length()), 0x00)
 
-    def xml(self, substitutions):
+    def xml(self, substitutions, cleanup=False):
         return ""
 
     def template_format(self):
@@ -360,7 +360,7 @@ class OpenStartElementNode(BXmlNode):
              hex(self.tag_length()),
              hex(self.offset() + self.tag_length()))
 
-    def xml(self, substitutions):
+    def xml(self, substitutions, cleanup=False):
         """
         @return A string containing an XML fragment representation of
           this element and its descendants.  The return value may be the
@@ -379,7 +379,7 @@ class OpenStartElementNode(BXmlNode):
         attr_xml = ""
         for child in self.children():
             if isinstance(child, AttributeNode):
-                attr_xml += child.xml(substitutions)
+                attr_xml += child.xml(substitutions, cleanup)
         # this is a hack using the length of the XML :-(
         has_attr_xml = len(attr_xml) != 0
 
@@ -403,14 +403,14 @@ class OpenStartElementNode(BXmlNode):
             return "\n<%s%s />" % (self.tag_name(), attr_xml)
         else:  # num_active_children != 0 and has_attr_xml
             try:
-                cxml = "".join(c.xml(substitutions).decode("utf-8") for c in self.children())
+                cxml = "".join(c.xml(substitutions, cleanup).decode("utf-8") for c in self.children())
             except UnicodeEncodeError as e:
                 # somewhere, unicode vs raw strings are getting mixed up.
                 #  here's a hacky fix.
                 cxml = ""
                 for c in self.children():
                     try:
-                        cxml += c.xml(substitutions).encode("utf-8")
+                        cxml += c.xml(substitutions, cleanup).encode("utf-8")
                     except UnicodeEncodeError as f:
                         raise f
                 return cxml
@@ -471,7 +471,7 @@ class CloseStartElementNode(BXmlNode):
         return "CloseStartElementNode(offset=%s, length=%s, token=%s)" % \
             (hex(self.offset()), hex(self.length()), hex(self.token()))
 
-    def xml(self, substitutions):
+    def xml(self, substitutions, cleanup=False):
         return ">"
 
     def template_format(self):
@@ -508,7 +508,7 @@ class CloseEmptyElementNode(BXmlNode):
         return "CloseEmptyElementNode(offset=%s, length=%s, token=%s)" % \
             (hex(self.offset()), hex(self.length()), hex(0x03))
 
-    def xml(self, substitutions):
+    def xml(self, substitutions, cleanup=False):
         return ""
 
     def template_format(self):
@@ -543,7 +543,7 @@ class CloseElementNode(BXmlNode):
         return "CloseElementNode(offset=%s, length=%s, token=%s)" % \
             (hex(self.offset()), hex(self.length()), hex(self.token()))
 
-    def xml(self, substitutions):
+    def xml(self, substitutions, cleanup=False):
         return ""
 
     def template_format(self):
@@ -622,7 +622,7 @@ class ValueNode(BXmlNode):
             (hex(self.offset()), hex(self.length()),
              hex(self.token()), self.xml([]))
 
-    def xml(self, substitutions):
+    def xml(self, substitutions, cleanup=False):
         return self.children()[0].xml()
 
     def template_format(self):
@@ -681,18 +681,16 @@ class AttributeNode(BXmlNode):
             (hex(self.offset()), hex(self.length()), hex(self.token()),
              self.attribute_name(), self.attribute_value())
 
-    def xml(self, substitutions):
+    def xml(self, substitutions, cleanup=False):
         """
         @return A string containing an XML fragment representation of this
           attribute.  This string may be empty if the value of the
           attribute was conditionally suppressed.
         """
-        name = self.attribute_name().xml(substitutions)
+        name = self.attribute_name().xml(substitutions, cleanup=cleanup)
         val = self.attribute_value()
-        debug("C", val, type(val), isinstance(val, ConditionalSubstitutionNode))
         if isinstance(val, ConditionalSubstitutionNode) and \
                 val.should_suppress(substitutions):
-            debug("SUPRESSING", name, val)
             return ""
         return " %s=\"%s\"" % (name, val.xml(substitutions))
 
@@ -747,7 +745,7 @@ class CDataSectionNode(BXmlNode):
         return "CDataSectionNode(offset=%s, length=%s, token=%s)" % \
             (hex(self.offset()), hex(self.length()), 0x07)
 
-    def xml(self, substitutions):
+    def xml(self, substitutions, cleanup=False):
         return "<![CDATA[%s]]>" % (self.cdata())
 
     def template_format(self):
@@ -797,7 +795,7 @@ class EntityReferenceNode(BXmlNode):
         return "EntityReferenceNode(offset=%s, length=%s, token=%s)" % \
             (hex(self.offset()), hex(self.length()), hex(0x09))
 
-    def xml(self, substitutions):
+    def xml(self, substitutions, cleanup=False):
         return "&%s;" % \
             (self._chunk.strings()[self.string_offset()].string())
 
@@ -841,7 +839,7 @@ class ProcessingInstructionTargetNode(BXmlNode):
         return "ProcessingInstructionTargetNode(offset=%s, length=%s, token=%s)" % \
             (hex(self.offset()), hex(self.length()), hex(0x0A))
 
-    def xml(self, substitutions):
+    def xml(self, substitutions, cleanup=False):
         return "<?%s" % \
             (self._chunk.strings()[self.string_offset()].string())
 
@@ -885,7 +883,7 @@ class ProcessingInstructionDataNode(BXmlNode):
         return "ProcessingInstructionDataNode(offset=%s, length=%s, token=%s)" % \
             (hex(self.offset()), hex(self.length()), hex(0x0B))
 
-    def xml(self, substitutions):
+    def xml(self, substitutions, cleanup=False):
         if self.string_length() > 0:
             return " %s?>" % (self._string)
         else:
@@ -934,9 +932,13 @@ class TemplateInstanceNode(BXmlNode):
         return "TemplateInstanceNode(offset=%s, length=%s, token=%s)" % \
             (hex(self.offset()), hex(self.length()), hex(0x0C))
 
-    def xml(self, substitutions):
-        template = self._chunk.templates()[self.template_offset()]
-        return template.make_substitutions(substitutions)
+    def xml(self, substitutions, cleanup=False):
+        if cleanup:
+            template = self._chunk.templates()[self.template_offset()]
+            return template.node().xml(substitutions, cleanup=cleanup)
+        else:
+            template = self._chunk.templates()[self.template_offset()]
+            return template.make_substitutions(substitutions)
 
     def template_format(self):
         template = self._chunk.templates()[self.template_offset()]
@@ -987,7 +989,7 @@ class NormalSubstitutionNode(BXmlNode):
             (hex(self.offset()), hex(self.length()), hex(self.token()),
              self.index(), self.type())
 
-    def xml(self, substitutions):
+    def xml(self, substitutions, cleanup=False):
         # TODO(wb): verify type
         return substitutions[self.index()].xml()
 
@@ -1034,10 +1036,9 @@ class ConditionalSubstitutionNode(BXmlNode):
 
     def should_suppress(self, substitutions):
         sub = substitutions[self.index()]
-        debug("D", sub, type(sub) is NullTypeNode)
         return type(sub) is NullTypeNode
 
-    def xml(self, substitutions):
+    def xml(self, substitutions, cleanup=False):
         if self.should_suppress(substitutions):
             return "WARNING: THIS ELEMENT SHOULD BE SUPPRESSED"
         return substitutions[self.index()].xml()
@@ -1081,7 +1082,7 @@ class StreamStartNode(BXmlNode):
         return "StreamStartNode(offset=%s, length=%s, token=%s)" % \
             (hex(self.offset()), hex(self.length()), hex(self.token()))
 
-    def xml(self, substitutions):
+    def xml(self, substitutions, cleanup=False):
         return ""
 
     def template_format(self):
@@ -1119,7 +1120,7 @@ class RootNode(BXmlNode):
         return "RootNode(offset=%s, length=%s)" % \
             (hex(self.offset()), hex(self.length()))
 
-    def xml(self, substitutions):
+    def xml(self, substitutions, cleanup=False):
         """
         @param substitutions A list of substitutions, which for this
           RootNode, will override the substitutions stored in this
@@ -1128,10 +1129,10 @@ class RootNode(BXmlNode):
         @return A string containing an XML fragment representation
           off this element and its descendants.
         """
-        cxml = ""
+        cxml = []
         for child in self.children():
-            cxml += child.xml(substitutions or self.substitutions())
-        return cxml
+            cxml.append(child.xml(substitutions or self.substitutions(), cleanup=cleanup))
+        return "".join(cxml)
 
     def template_format(self):
         ret = []

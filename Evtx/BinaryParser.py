@@ -27,20 +27,32 @@ verbose = False
 
 
 def debug(*message):
+    """
+    TODO(wb): replace with logging
+    """
     global verbose
     if verbose:
         print "# [d] %s" % (", ".join(map(str, message)))
 
 
 def warning(message):
+    """
+    TODO(wb): replace with logging
+    """
     print "# [w] %s" % (message)
 
 
 def info(message):
+    """
+    TODO(wb): replace with logging
+    """
     print "# [i] %s" % (message)
 
 
 def error(message):
+    """
+    TODO(wb): replace with logging
+    """
     print "# [e] %s" % (message)
     sys.exit(-1)
 
@@ -245,6 +257,7 @@ class Block(object):
         self._buf = buf
         self._offset = offset
         self._implicit_offset = 0
+        #print "-- OBJECT: %s" % self.__class__.__name__
 
     def __repr__(self):
         return "Block(buf=%r, offset=%r)" % (self._buf, self._offset)
