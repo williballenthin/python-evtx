@@ -22,7 +22,6 @@ import itertools
 import base64
 
 from BinaryParser import Block
-from BinaryParser import debug
 from BinaryParser import hex_dump
 from BinaryParser import ParseException
 from BinaryParser import memoize
@@ -67,7 +66,6 @@ class SuppressConditionalSubstitution(Exception):
 
 class BXmlNode(Block):
     def __init__(self, buf, offset, chunk, parent):
-        debug("BXmlNode at %s." % (hex(offset)))
         super(BXmlNode, self).__init__(buf, offset)
         self._chunk = chunk
         self._parent = parent
@@ -107,7 +105,6 @@ class BXmlNode(Block):
             "Conditional Substitution",
             "Start of Stream",
             ]
-
 
     def __repr__(self):
         return "BXmlNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
@@ -149,11 +146,6 @@ class BXmlNode(Block):
         ret = []
         ofs = self.tag_length()
 
-        global indent
-        debug(".,", indent, self.__class__.__name__, "children")
-
-        indent += "\t"
-
         if max_children:
             gen = xrange(max_children)
         else:
@@ -163,9 +155,6 @@ class BXmlNode(Block):
             # we lose error checking by masking off the higher nibble,
             #   but, some tokens like 0x01, make use of the flags nibble.
             token = self.unpack_byte(ofs) & 0x0F
-            debug(".,", indent, "token", hex(token), \
-                "(%s)" % self._readable_tokens[token], \
-                "@", hex(self.offset() + ofs))
             try:
                 HandlerNodeClass = self._dispatch_table[token]
                 child = HandlerNodeClass(self._buf, self.offset() + ofs,
@@ -180,8 +169,6 @@ class BXmlNode(Block):
                 break
             if child.find_end_of_stream():
                 break
-        indent = indent[:-2]
-
         return ret
 
     @memoize
@@ -212,14 +199,11 @@ class BXmlNode(Block):
 
 class NameStringNode(BXmlNode):
     def __init__(self, buf, offset, chunk, parent):
-        debug("NameStringNode at %s." % (hex(offset)))
         super(NameStringNode, self).__init__(buf, offset, chunk, parent)
         self.declare_field("dword", "next_offset", 0x0)
         self.declare_field("word", "hash")
         self.declare_field("word", "string_length")
         self.declare_field("wstring", "string", length=self.string_length())
-
-        debug("Same %s" % (self))
 
     def __repr__(self):
         return "NameStringNode(buf=%r, offset=%r, chunk=%r)" % \
@@ -249,7 +233,6 @@ class NameStringNode(BXmlNode):
 
 class TemplateNode(BXmlNode):
     def __init__(self, buf, offset, chunk, parent):
-        debug("TemplateNode at %s." % (hex(offset)))
         super(TemplateNode, self).__init__(buf, offset, chunk, parent)
         self.declare_field("dword", "next_offset", 0x0)
         self.declare_field("dword", "template_id")
@@ -291,7 +274,6 @@ class EndOfStreamNode(BXmlNode):
       be instantiated here.
     """
     def __init__(self, buf, offset, chunk, parent):
-        debug("EndOfStreamNode at %s." % (hex(offset)))
         super(EndOfStreamNode, self).__init__(buf, offset, chunk, parent)
 
     def __repr__(self):
@@ -325,7 +307,6 @@ class OpenStartElementNode(BXmlNode):
     This is the "open start element" token.
     """
     def __init__(self, buf, offset, chunk, parent):
-        debug("OpenStartElementNode at %s." % (hex(offset)))
         super(OpenStartElementNode, self).__init__(buf, offset, chunk, parent)
         self.declare_field("byte", "token", 0x0)
         self.declare_field("word", "unknown0")
@@ -337,16 +318,12 @@ class OpenStartElementNode(BXmlNode):
 
         if self.flags() & 0x04:
             self._tag_length += 4
-            debug("Has extra four, total length %s" % (self._tag_length))
 
         global indent
         if self.string_offset() > self.offset() - self._chunk._offset:
             new_string = self._chunk.add_string(self.string_offset(),
                                                 parent=self)
             self._tag_length += new_string.length()
-            debug("Has embedded string, total length %s" % (hex(self._tag_length)))
-
-        debug("Same %s" % (self))
 
     def __repr__(self):
         return "OpenStartElementNode(buf=%r, offset=%r, chunk=%r)" % \
@@ -459,7 +436,6 @@ class CloseStartElementNode(BXmlNode):
     This is the "close start element" token.
     """
     def __init__(self, buf, offset, chunk, parent):
-        debug("CloseStartElementNode at %s." % (hex(offset)))
         super(CloseStartElementNode, self).__init__(buf, offset, chunk, parent)
         self.declare_field("byte", "token", 0x0)
 
@@ -496,7 +472,6 @@ class CloseEmptyElementNode(BXmlNode):
     The binary XML node for the system token 0x03.
     """
     def __init__(self, buf, offset, chunk, parent):
-        debug("CloseEmptyElementNode at %s." % (hex(offset)))
         super(CloseEmptyElementNode, self).__init__(buf, offset, chunk, parent)
         self.declare_field("byte", "token", 0x0)
 
@@ -531,7 +506,6 @@ class CloseElementNode(BXmlNode):
     This is the "close element" token.
     """
     def __init__(self, buf, offset, chunk, parent):
-        debug("CloseElementNode at %s." % (hex(offset)))
         super(CloseElementNode, self).__init__(buf, offset, chunk, parent)
         self.declare_field("byte", "token", 0x0)
 
@@ -608,7 +582,6 @@ class ValueNode(BXmlNode):
     This is the "value" token.
     """
     def __init__(self, buf, offset, chunk, parent):
-        debug("ValueNode at %s." % (hex(offset)))
         super(ValueNode, self).__init__(buf, offset, chunk, parent)
         self.declare_field("byte", "token", 0x0)
         self.declare_field("byte", "type")
@@ -652,25 +625,15 @@ class AttributeNode(BXmlNode):
     This is the "attribute" token.
     """
     def __init__(self, buf, offset, chunk, parent):
-        debug("AttributeNode at %s." % (hex(offset)))
         super(AttributeNode, self).__init__(buf, offset, chunk, parent)
         self.declare_field("byte", "token", 0x0)
         self.declare_field("dword", "string_offset")
 
-        global indent
-
         self._name_string_length = 0
         if self.string_offset() > self.offset() - self._chunk._offset:
-            debug(".,", indent, "%r" % (self), "need new string", self.string_offset())
             new_string = self._chunk.add_string(self.string_offset(),
                                                 parent=self)
             self._name_string_length += new_string.length()
-
-        debug(".,", indent, "Attribute name %s" % (self.attribute_name().xml([])))
-        debug(hex(self.offset()), hex(self.tag_length()), hex(self.offset() + self.tag_length()), hex(self.length()), hex(self.offset() + self.length()))
-        debug(".;", indent, "Attribute value %s" % (self.children()))
-
-        debug("Again %s" % (self))
 
     def __repr__(self):
         return "AttributeNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
@@ -731,7 +694,6 @@ class CDataSectionNode(BXmlNode):
     This is the "CDATA section" system token.
     """
     def __init__(self, buf, offset, chunk, parent):
-        debug("CDataSectionNode at %s." % (hex(offset)))
         super(CDataSectionNode, self).__init__(buf, offset, chunk, parent)
         self.declare_field("byte", "token", 0x0)
         self.declare_field("word", "string_length")
@@ -775,7 +737,6 @@ class EntityReferenceNode(BXmlNode):
     TODO(wb): this is untested.
     """
     def __init__(self, buf, offset, chunk, parent):
-        debug("EntityReferenceNode at %s." % (hex(offset)))
         super(EntityReferenceNode, self).__init__(buf, offset, chunk, parent)
         self.declare_field("byte", "token", 0x0)
         self.declare_field("dword", "string_offset")
@@ -820,7 +781,6 @@ class ProcessingInstructionTargetNode(BXmlNode):
     TODO(wb): untested.
     """
     def __init__(self, buf, offset, chunk, parent):
-        debug("ProcessingInstructionTargetNode at %s." % (hex(offset)))
         super(ProcessingInstructionTargetNode, self).__init__(buf, offset, chunk, parent)
         self.declare_field("byte", "token", 0x0)
         self.declare_field("dword", "string_offset")
@@ -864,7 +824,6 @@ class ProcessingInstructionDataNode(BXmlNode):
     TODO(wb): untested.
     """
     def __init__(self, buf, offset, chunk, parent):
-        debug("ProcessingInstructionDataNode at %s." % (hex(offset)))
         super(ProcessingInstructionDataNode, self).__init__(buf, offset, chunk, parent)
         self.declare_field("byte", "token", 0x0)
         self.declare_field("word", "string_length")
@@ -908,7 +867,6 @@ class TemplateInstanceNode(BXmlNode):
     The binary XML node for the system token 0x0C.
     """
     def __init__(self, buf, offset, chunk, parent):
-        debug("TemplateInstanceNode at %s." % (hex(offset)))
         super(TemplateInstanceNode, self).__init__(buf, offset, chunk, parent)
         self.declare_field("byte", "token", 0x0)
         self.declare_field("byte", "unknown0")
@@ -918,8 +876,6 @@ class TemplateInstanceNode(BXmlNode):
         self._data_length = 0
 
         if self.is_resident_template():
-            debug(".,", indent, "%r" % (self), \
-                      "need new template", self.template_offset())
             new_template = self._chunk.add_template(self.template_offset(),
                                                     parent=self)
             self._data_length += new_template.node().length()
@@ -971,14 +927,10 @@ class NormalSubstitutionNode(BXmlNode):
     This is a "normal substitution" token.
     """
     def __init__(self, buf, offset, chunk, parent):
-        debug("NormalSubstitutionNode at %s." % (hex(offset)))
         super(NormalSubstitutionNode, self).__init__(buf, offset, chunk, parent)
         self.declare_field("byte", "token", 0x0)
         self.declare_field("word", "index")
         self.declare_field("byte", "type")
-
-        global indent
-        debug(".,", indent, "Normal Substitution", self)
 
     def __repr__(self):
         return "NormalSubstitutionNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
@@ -1016,15 +968,10 @@ class ConditionalSubstitutionNode(BXmlNode):
     The binary XML node for the system token 0x0E.
     """
     def __init__(self, buf, offset, chunk, parent):
-        debug("ConditionalSubstitutionNode at %s." % (hex(offset)))
         super(ConditionalSubstitutionNode, self).__init__(buf, offset, chunk, parent)
         self.declare_field("byte", "token", 0x0)
         self.declare_field("word", "index")
         self.declare_field("byte", "type")
-
-        global indent
-        debug(".,", indent, "Conditional Substitution", self)
-
 
     def __repr__(self):
         return "ConditionalSubstitutionNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
@@ -1068,7 +1015,6 @@ class StreamStartNode(BXmlNode):
     This is the "start of stream" token.
     """
     def __init__(self, buf, offset, chunk, parent):
-        debug("StreamStartNode at %s." % (hex(offset)))
         super(StreamStartNode, self).__init__(buf, offset, chunk, parent)
         self.declare_field("byte", "token", 0x0)
         self.declare_field("byte", "unknown0")
@@ -1109,7 +1055,6 @@ class RootNode(BXmlNode):
     The binary XML node for the Root node.
     """
     def __init__(self, buf, offset, chunk, parent):
-        debug("RootNode at %s." % (hex(offset)))
         super(RootNode, self).__init__(buf, offset, chunk, parent)
 
     def __repr__(self):
@@ -1174,16 +1119,13 @@ class RootNode(BXmlNode):
         sub_decl = []
         sub_def = []
         ofs = self.tag_and_children_length()
-        debug("subs begin at %s" % (hex(self.offset() + ofs)))
         sub_count = self.unpack_dword(ofs)
-        debug("count: %s" % (sub_count))
         ofs += 4
         for _ in xrange(sub_count):
             size = self.unpack_word(ofs)
             type_ = self.unpack_byte(ofs + 0x2)
             sub_decl.append((size, type_))
             ofs += 4
-        debug(sub_decl)
         for (size, type_) in sub_decl:
             val = get_variant_value(self._buf, self.offset() + ofs,
                                     self._chunk, self, type_, length=size)
@@ -1194,28 +1136,22 @@ class RootNode(BXmlNode):
                 #   variant type.  It seems some BXmlTypeNode sizes
                 #   are not exact.  Hopefully, this is just alignment.
                 #   So, that's what we compensate for here.
-                debug("E", size, val.length())
                 raise ParseException("Invalid substitution value size")
             sub_def.append(val)
             ofs += size
-        debug("subs end at %s" % (hex(self.offset() + ofs)))
         return sub_def
 
     @memoize
     def length(self):
         ret = 0
         ofs = self.tag_and_children_length()
-        debug("subs begin at %s" % (hex(self.offset() + ofs)))
         sub_count = self.unpack_dword(ofs)
-        debug("count: %s" % (sub_count))
         ofs += 4
         ret = ofs
         for _ in xrange(sub_count):
             size = self.unpack_word(ofs)
             ret += size + 4
             ofs += 4
-        debug("subs decl end at %s" % (hex(self.offset() + ofs)))
-        debug("root end at %s"  % (hex(self.offset() + ret)))
         return ret
 
 
@@ -1224,7 +1160,6 @@ class VariantTypeNode(BXmlNode):
 
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        debug("VariantTypeNode at %s." % (hex(offset)))
         super(VariantTypeNode, self).__init__(buf, offset, chunk, parent)
         self._length = length
 
@@ -1262,7 +1197,6 @@ class NullTypeNode(VariantTypeNode):
     Variant type 0x00.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(NullTypeNode, self).__init__(buf, offset, chunk,
                                            parent, length=length)
 
@@ -1284,7 +1218,6 @@ class WstringTypeNode(VariantTypeNode):
     Variant ttype 0x01.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(WstringTypeNode, self).__init__(buf, offset, chunk,
                                               parent, length=length)
         if self._length is None:
@@ -1303,7 +1236,6 @@ class WstringTypeNode(VariantTypeNode):
             try:
                 return self.string().encode("utf-8", "xmlcharrefreplace").replace("<", "&gt;").replace(">", "&lt;")
             except (UnicodeEncodeError, UnicodeDecodeError) as e:
-                debug("E", "%r" % (self), e)
                 return str(self.string().replace("<", "&gt;").replace(">", "&lt;"))
 
     def template_format(self):
@@ -1323,7 +1255,6 @@ class StringTypeNode(VariantTypeNode):
     Variant type 0x02.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(StringTypeNode, self).__init__(buf, offset, chunk,
                                              parent, length=length)
         if self._length is None:
@@ -1353,7 +1284,6 @@ class SignedByteTypeNode(VariantTypeNode):
     Variant type 0x03.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(SignedByteTypeNode, self).__init__(buf, offset, chunk,
                                                  parent, length=length)
         self.declare_field("int8", "byte", 0x0)
@@ -1376,7 +1306,6 @@ class UnsignedByteTypeNode(VariantTypeNode):
     Variant type 0x04.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(UnsignedByteTypeNode, self).__init__(buf, offset,
                                                    chunk, parent,
                                                    length=length)
@@ -1400,7 +1329,6 @@ class SignedWordTypeNode(VariantTypeNode):
     Variant type 0x05.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(SignedWordTypeNode, self).__init__(buf, offset, chunk,
                                                  parent, length=length)
         self.declare_field("int16", "word", 0x0)
@@ -1423,7 +1351,6 @@ class UnsignedWordTypeNode(VariantTypeNode):
     Variant type 0x06.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(UnsignedWordTypeNode, self).__init__(buf, offset,
                                                    chunk, parent,
                                                    length=length)
@@ -1447,7 +1374,6 @@ class SignedDwordTypeNode(VariantTypeNode):
     Variant type 0x07.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(SignedDwordTypeNode, self).__init__(buf, offset, chunk,
                                                   parent, length=length)
         self.declare_field("int32", "dword", 0x0)
@@ -1470,7 +1396,6 @@ class UnsignedDwordTypeNode(VariantTypeNode):
     Variant type 0x08.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(UnsignedDwordTypeNode, self).__init__(buf, offset,
                                                    chunk, parent,
                                                     length=length)
@@ -1494,7 +1419,6 @@ class SignedQwordTypeNode(VariantTypeNode):
     Variant type 0x09.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(SignedQwordTypeNode, self).__init__(buf, offset, chunk,
                                                   parent, length=length)
         self.declare_field("int64", "qword", 0x0)
@@ -1517,7 +1441,6 @@ class UnsignedQwordTypeNode(VariantTypeNode):
     Variant type 0x0A.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(UnsignedQwordTypeNode, self).__init__(buf, offset,
                                                    chunk, parent,
                                                     length=length)
@@ -1541,7 +1464,6 @@ class FloatTypeNode(VariantTypeNode):
     Variant type 0x0B.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(FloatTypeNode, self).__init__(buf, offset, chunk,
                                             parent, length=length)
         self.declare_field("float", "float", 0x0)
@@ -1564,7 +1486,6 @@ class DoubleTypeNode(VariantTypeNode):
     Variant type 0x0C.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(DoubleTypeNode, self).__init__(buf, offset, chunk,
                                              parent, length=length)
         self.declare_field("double", "double", 0x0)
@@ -1587,7 +1508,6 @@ class BooleanTypeNode(VariantTypeNode):
     Variant type 0x0D.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(BooleanTypeNode, self).__init__(buf, offset, chunk,
                                               parent, length=length)
         self.declare_field("int32", "int32", 0x0)
@@ -1614,7 +1534,6 @@ class BinaryTypeNode(VariantTypeNode):
     String/XML representation is Base64 encoded.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(BinaryTypeNode, self).__init__(buf, offset, chunk,
                                              parent, length=length)
         if self._length is None:
@@ -1643,7 +1562,6 @@ class GuidTypeNode(VariantTypeNode):
     Variant type 0x0F.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(GuidTypeNode, self).__init__(buf, offset, chunk,
                                            parent, length=length)
         self.declare_field("guid", "guid", 0x0)
@@ -1668,7 +1586,6 @@ class SizeTypeNode(VariantTypeNode):
     Note: Assuming sizeof(size_t) == 0x8.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(SizeTypeNode, self).__init__(buf, offset, chunk,
                                            parent, length=length)
         if self._length == 0x4:
@@ -1698,7 +1615,6 @@ class FiletimeTypeNode(VariantTypeNode):
     Variant type 0x11.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(FiletimeTypeNode, self).__init__(buf, offset, chunk,
                                                parent, length=length)
         self.declare_field("filetime", "filetime", 0x0)
@@ -1721,7 +1637,6 @@ class SystemtimeTypeNode(VariantTypeNode):
     Variant type 0x12.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(SystemtimeTypeNode, self).__init__(buf, offset, chunk,
                                                  parent, length=length)
         self.declare_field("systemtime", "systemtime", 0x0)
@@ -1744,7 +1659,6 @@ class SIDTypeNode(VariantTypeNode):
     Variant type 0x13.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(SIDTypeNode, self).__init__(buf, offset, chunk,
                                           parent, length=length)
         self.declare_field("byte",  "version", 0x0)
@@ -1785,7 +1699,6 @@ class Hex32TypeNode(VariantTypeNode):
     Variant type 0x14.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(Hex32TypeNode, self).__init__(buf, offset, chunk,
                                             parent, length=length)
         self.declare_field("binary", "hex", 0x0, length=0x4)
@@ -1811,7 +1724,6 @@ class Hex64TypeNode(VariantTypeNode):
     Variant type 0x15.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(Hex64TypeNode, self).__init__(buf, offset, chunk,
                                             parent, length=length)
         self.declare_field("binary", "hex", 0x0, length=0x8)
@@ -1837,7 +1749,6 @@ class BXmlTypeNode(VariantTypeNode):
     Variant type 0x21.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(BXmlTypeNode, self).__init__(buf, offset, chunk,
                                            parent, length=length)
         self._root = RootNode(buf, offset, chunk, self)
@@ -1861,7 +1772,6 @@ class WstringArrayTypeNode(VariantTypeNode):
     Variant ttype 0x81.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        debug("%s at %s." % (self.__class__.__name__, hex(offset)))
         super(WstringArrayTypeNode, self).__init__(buf, offset, chunk,
                                               parent, length=length)
         if self._length is None:
