@@ -257,7 +257,7 @@ class Block(object):
         self._buf = buf
         self._offset = offset
         self._implicit_offset = 0
-        #print "-- OBJECT: %s" % self.__class__.__name__
+        print "-- OBJECT: %s" % self.__class__.__name__
 
     def __repr__(self):
         return "Block(buf=%r, offset=%r)" % (self._buf, self._offset)

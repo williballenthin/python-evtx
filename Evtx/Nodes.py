@@ -124,6 +124,8 @@ class BXmlNode(Block):
                         start_addr=self.offset())
 
     def flags(self):
+        # TODO(wb): it doesn't sense for this to be here if VariantTypeNode
+        #  will descend from this.
         return self.token() >> 4
 
     def tag_length(self):
@@ -136,6 +138,8 @@ class BXmlNode(Block):
             (self)
 
     def verify(self):
+        # TODO(wb): it doesn't sense for this to be here if VariantTypeNode
+        #  will descend from this.
         return True
 
     def _children(self, max_children=None,
@@ -236,7 +240,7 @@ class TemplateNode(BXmlNode):
         super(TemplateNode, self).__init__(buf, offset, chunk, parent)
         self.declare_field("dword", "next_offset", 0x0)
         self.declare_field("dword", "template_id")
-        self.declare_field("guid",  "guid", 0x04) # unsure why this overlaps
+        self.declare_field("guid",  "guid", 0x04)  # unsure why this overlaps
         self.declare_field("dword", "data_length")
 
     def __repr__(self):
@@ -566,7 +570,7 @@ def get_variant_value(buf, offset, chunk, parent, type_, length=None):
         0x14: Hex32TypeNode,
         0x15: Hex64TypeNode,
         0x21: BXmlTypeNode,
-        0x81: WstringArrayTypeNode
+        0x81: WstringArrayTypeNode,
     }
     try:
         TypeClass = types[type_]
@@ -1111,6 +1115,144 @@ class RootNode(BXmlNode):
         return self.tag_length() + children_length
 
     @memoize
+    def substitutions_xml(self):
+        """
+        @return A list of VariantTypeNode subclass instances that
+          contain the substitutions for this root node.
+        """
+        sub_decl = []
+        sub_def = []
+        ofs = self.tag_and_children_length()
+        sub_count = self.unpack_dword(ofs)
+        ofs += 4
+        for _ in xrange(sub_count):
+            size = self.unpack_word(ofs)
+            type_ = self.unpack_byte(ofs + 0x2)
+            sub_decl.append((size, type_))
+            ofs += 4
+        for (size, type_) in sub_decl:
+            value = None
+            #[0] = parse_null_type_node,
+            if type_ == 0x0:
+                value = None
+                sub_def.append(value)
+            #[1] = parse_wstring_type_node,
+            elif type_ == 0x1:
+                s = self.unpack_wstring(ofs, size / 2)
+                value = s.decode("utf-16le").replace("<", "&gt;").replace(">", "&lt;")
+                sub_def.append(value)
+            #[2] = parse_string_type_node,
+            elif type_ == 0x2:
+                s = self.unpack_string(ofs, size)
+                value = s.decode("utf-16le").replace("<", "&gt;").replace(">", "&lt;")
+                sub_def.append(value)
+            #[3] = parse_signed_byte_type_node,
+            elif type_ == 0x3:
+                sub_def.append(self.unpack_int8(ofs))
+            #[4] = parse_unsigned_byte_type_node,
+            elif type_ == 0x4:
+                sub_def.append(self.unpack_byte(ofs))
+            #[5] = parse_signed_word_type_node,
+            elif type_ == 0x5:
+                sub_def.append(self.unpack_int16(ofs))
+            #[6] = parse_unsigned_word_type_node,
+            elif type_ == 0x6:
+                sub_def.append(self.unpack_word(ofs))
+            #[7] = parse_signed_dword_type_node,
+            elif type_ == 0x7:
+                sub_def.append(self.unpack_int32(ofs))
+            #[8] = parse_unsigned_dword_type_node,
+            elif type_ == 0x8:
+                sub_def.append(self.unpack_dword(ofs))
+            #[9] = parse_signed_qword_type_node,
+            elif type_ == 0x9:
+                sub_def.append(self.unpack_int64(ofs))
+            #[10] = parse_unsigned_qword_type_node,
+            elif type_ == 0xA:
+                sub_def.append(self.unpack_qword(ofs))
+            #[11] = parse_float_type_node,
+            elif type_ == 0xB:
+                sub_def.append(self.unpack_float(ofs))
+            #[12] = parse_double_type_node,
+            elif type_ == 0xC:
+                sub_def.append(self.unpack_double(ofs))
+            #[13] = parse_boolean_type_node,
+            elif type_ == 0xD:
+                sub_def.append(str(self.unpack_word(ofs) > 1))
+            #[14] = parse_binary_type_node,
+            elif type_ == 0xE:
+                sub_def.append(self.unpack_binary(ofs, size))
+            #[15] = parse_guid_type_node,
+            elif type_ == 0xF:
+                sub_def.append(self.unpack_guid(ofs))
+            #[16] = parse_size_type_node,
+            elif type_ == 0x10:
+                if size == 0x4:
+                    sub_def.append(self.unpack_dword(ofs))
+                elif size == 0x8:
+                    sub_def.append(self.unpack_qword(ofs))
+                else:
+                    raise "Unexpected size for SizeTypeNode: %s" % hex(size)
+            #[17] = parse_filetime_type_node,
+            elif type_ == 0x11:
+                sub_def.append(self.unpack_filetime(ofs))
+            #[18] = parse_systemtime_type_node,
+            elif type_ == 0x12:
+                sub_def.append(self.unpack_systemtime(ofs))
+            #[19] = parse_sid_type_node,  -- SIDTypeNode, 0x13
+            elif type_ == 0x13:
+                version = self.unpack_byte(ofs)
+                num_elements = self.unpack_byte(ofs + 1)
+                id_high = self.unpack_dword_be(ofs)
+                id_low = self.unpack_word_be(ofs)
+                value = "S-%d-%d" % (version, (id_high << 16) ^ id_low)
+                for i in xrange(num_elements):
+                    val = self.unpack_dword(ofs + 8 + (4 * i))
+                    value += "-%d" % val
+                sub_def.append(value)
+            #[20] = parse_hex32_type_node,  -- Hex32TypeNoe, 0x14
+            elif type_ == 0x14:
+                value = "0x"
+                for c in self.unpack_binary(ofs, size)[::-1]:
+                    value += "%02x" % ord(c)
+                sub_def.append(value)
+            #[21] = parse_hex64_type_node,  -- Hex64TypeNode, 0x15
+            elif type_ == 0x15:
+                value = "0x"
+                for c in self.unpack_binary(ofs, size)[::-1]:
+                    value += "%02x" % ord(c)
+                sub_def.append(value)
+            #[33] = parse_bxml_type_node,  -- BXmlTypeNode, 0x21
+            elif type_ == 0x21:
+                root = RootNode(self._buf, self.offset() + ofs, self._chunk, self)
+                return root.xml()
+            #[129] = TODO, -- WstringArrayTypeNode, 0x81
+            elif type_ == 0x81:
+                ret = []
+                strings = []
+                bin = self.unpack_binary(ofs, size)
+                for apart in bin.split("\x00\x00\x00"):
+                    for bpart in apart.split("\x00\x00"):
+                        if len(bpart) % 2 == 1:
+                            strings.append((bpart + "\x00").decode("utf-16").rstrip("\x00"))
+                        else:
+                            strings.append(bpart.decode("utf-16").rstrip("\x00"))
+                if strings[-1].strip("\x00") == "":
+                    strings = strings[:-1]
+                for (index, string) in enumerate(strings):
+                    if string == "":
+                        ret.append("<string index=\"%d\" isNull=\"True\" />\n" % \
+                                       (index))
+                    else:
+                        ret.append("<string index=\"%d\">%s</string>\n" % \
+                                       (index, string.rstrip("\x00")))
+                sub_def.append("".join(ret))
+            else:
+                raise "Unexpected type encountered: %s" % hex(type_)
+            ofs += size
+        return sub_def
+
+    @memoize
     def substitutions(self):
         """
         @return A list of VariantTypeNode subclass instances that
@@ -1192,25 +1334,34 @@ class VariantTypeNode(BXmlNode):
                                       (self))
 
 
-class NullTypeNode(VariantTypeNode):
+class NullTypeNode(object):  # but satisfies the contract of VariantTypeNode, BXmlNode, but not Block
     """
     Variant type 0x00.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        super(NullTypeNode, self).__init__(buf, offset, chunk,
-                                           parent, length=length)
+        super(NullTypeNode, self).__init__()
+        self._length = length
+
+    def __str__(self):
+        return "NullTypeNode"
 
     def xml(self):
         return ""
 
     def template_format(self):
-        return self.xml([])
+        return ""
 
     def string(self):
         return "NULL"
 
+    def length(self):
+        return self._length or 0
+
     def tag_length(self):
         return self._length or 0
+
+    def children(self):
+        return []
 
 
 class WstringTypeNode(VariantTypeNode):
@@ -1235,7 +1386,7 @@ class WstringTypeNode(VariantTypeNode):
         except UnicodeEncodeError:
             try:
                 return self.string().encode("utf-8", "xmlcharrefreplace").replace("<", "&gt;").replace(">", "&lt;")
-            except (UnicodeEncodeError, UnicodeDecodeError) as e:
+            except (UnicodeEncodeError, UnicodeDecodeError):
                 return str(self.string().replace("<", "&gt;").replace(">", "&lt;"))
 
     def template_format(self):
