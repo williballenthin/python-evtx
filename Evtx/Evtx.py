@@ -29,23 +29,43 @@ from BinaryParser import warning
 from Nodes import NameStringNode
 from Nodes import TemplateNode
 from Nodes import RootNode
+from Nodes import EndOfStreamNode
+from Nodes import OpenStartElementNode
+from Nodes import CloseStartElementNode
+from Nodes import CloseEmptyElementNode
+from Nodes import CloseElementNode
+from Nodes import ValueNode
+from Nodes import AttributeNode
+from Nodes import CDataSectionNode
+from Nodes import EntityReferenceNode
+from Nodes import ProcessingInstructionTargetNode
+from Nodes import ProcessingInstructionDataNode
+from Nodes import TemplateInstanceNode
+from Nodes import NormalSubstitutionNode
+from Nodes import ConditionalSubstitutionNode
+from Nodes import StreamStartNode
 
 
 class InvalidRecordException(ParseException):
     def __init__(self):
-        super(InvalidRecordException, self).__init__("Invalid record structure")
+        super(InvalidRecordException, self).__init__(
+            "Invalid record structure")
 
 
 class Evtx(object):
     """
-    A convenience class that makes it easy to open an EVTX file and start iterating the important structures.
-    Note, this class must be used in a context statement (see the `with` keyword).
-    Note, this class will mmap the target file, so ensure your platform supports this operation.
+    A convenience class that makes it easy to open an
+      EVTX file and start iterating the important structures.
+    Note, this class must be used in a context statement
+       (see the `with` keyword).
+    Note, this class will mmap the target file, so ensure
+      your platform supports this operation.
     """
     def __init__(self, filename):
         """
         @type filename:  str
-        @param filename: A string that contains the path to the EVTX file to open.
+        @param filename: A string that contains the path
+          to the EVTX file to open.
         """
         self._filename = filename
         self._buf = None
@@ -65,13 +85,16 @@ class Evtx(object):
 
     def ensure_contexted(func):
         """
-        This decorator ensure that an instance of the Evtx class is used within a context statement.  That is,
-          that the `with` statement is used, or `__enter__()` and `__exit__()` are called explicitly.
+        This decorator ensure that an instance of the
+          Evtx class is used within a context statement.  That is,
+          that the `with` statement is used, or `__enter__()`
+          and `__exit__()` are called explicitly.
         """
         @wraps(func)
         def wrapped(self, *args, **kwargs):
             if self._buf is None:
-                raise TypeError("An Evtx object must be used with a context (see the `with` statement).")
+                raise TypeError("An Evtx object must be used with"
+                                " a context (see the `with` statement).")
             else:
                 return func(self, *args, **kwargs)
         return wrapped
@@ -107,7 +130,8 @@ class Evtx(object):
         @type record_num:  int
         @param record_num: The record number of the the record to fetch.
         @rtype Record or None
-        @return The record request by record number, or None if the record is not found.
+        @return The record request by record number, or None if
+          the record is not found.
         """
         return self._fh.get_record(record_num)
 
@@ -216,10 +240,13 @@ class FileHeader(Block):
         @type record_num:  int
         @param record_num: The record number of the the record to fetch.
         @rtype Record or None
-        @return The record request by record number, or None if the record is not found.
+        @return The record request by record number, or None if the
+          record is not found.
         """
         for chunk in self.chunks():
-            if not (chunk.log_first_record_number() <= record_num <= chunk.log_last_record_number()):
+            first_record = chunk.log_first_record_number()
+            last_record = chunk.log_last_record_number()
+            if not (first_record <= record_num <= last_record):
                 continue
             for record in chunk.records():
                 if record.record_num() == record_num:
@@ -357,7 +384,7 @@ class ChunkHeader(Block):
             while ofs > 0:
                 # unclear why these are found before the offset
                 # this is a direct port from A.S.'s code
-                token   = self.unpack_byte(ofs - 10)
+                token = self.unpack_byte(ofs - 10)
                 pointer = self.unpack_dword(ofs - 4)
                 if token != 0x0c or pointer != ofs:
                     warning("Unexpected token encountered")
@@ -443,6 +470,83 @@ class Record(Block):
         Return the raw data block which makes up this record as a bytestring.
 
         @rtype str
-        @return A string that is a copy of the buffer that makes up this record.
+        @return A string that is a copy of the buffer that makes
+          up this record.
         """
         return self._buf[self.offset():self.offset() + self.size()]
+
+
+class UnexpectedElementException(Exception):
+    def __init__(self, msg):
+        super(UnexpectedElementException, self).__init__(msg)
+
+
+def make_template_xml_view(root_node):
+    """
+    Given a RootNode, parse only the template/children
+      and not the substitutions.
+    Return a string that is a Python format string.
+    You'd probably cache the results of this call at the
+      Chunk level.
+    """
+    def rec(node, acc):
+        if isinstance(node, EndOfStreamNode):
+            pass  # intended
+        elif isinstance(node, OpenStartElementNode):
+            acc.append("<")
+            acc.append(node.tag_name())
+            for child in node.children():
+                if isinstance(child, AttributeNode):
+                    acc.append(" ")
+                    acc.append(child.attribute_name().string())
+                    acc.append("=\"")
+                    rec(child.attribute_value(), acc)
+                    acc.append("\"")
+            acc.append(">")
+            for child in node.children():
+                rec(child, acc)
+            acc.append("</")
+            acc.append(node.tag_name())
+            acc.append(">\n")
+        elif isinstance(node, CloseStartElementNode):
+            pass  # intended
+        elif isinstance(node, CloseEmptyElementNode):
+            pass  # intended
+        elif isinstance(node, CloseElementNode):
+            pass  # intended
+        elif isinstance(node, ValueNode):
+            acc.append(node.children()[0].string())
+        elif isinstance(node, AttributeNode):
+            pass  # intended
+        elif isinstance(node, CDataSectionNode):
+            acc.append("<![CDATA[")
+            acc.append(node.cdata())
+            acc.append("]]>")
+        elif isinstance(node, EntityReferenceNode):
+            acc.append(node.entity_reference())
+        elif isinstance(node, ProcessingInstructionTargetNode):
+            acc.append(node.processing_instruction_target())
+        elif isinstance(node, ProcessingInstructionDataNode):
+            acc.append(node.string())
+        elif isinstance(node, TemplateInstanceNode):
+            raise UnexpectedElementException("TemplateInstanceNode")
+        elif isinstance(node, NormalSubstitutionNode):
+            acc.append("{")
+            acc.append("%d" % node.index())
+            acc.append("}")
+        elif isinstance(node, ConditionalSubstitutionNode):
+            acc.append("{")
+            acc.append("%d" % node.index())
+            acc.append("}")
+        elif isinstance(node, StreamStartNode):
+            pass  # intended
+
+    acc = []
+    for child in root_node.children():
+        if isinstance(child, TemplateInstanceNode):
+            templ_off = child.template_offset() + child._chunk.offset()
+            node = TemplateNode(child._buf, templ_off,
+                                child._chunk, child)
+            for c in node.children():
+                rec(c, acc)
+    return "".join(acc)

@@ -27,9 +27,6 @@ from BinaryParser import ParseException
 from BinaryParser import memoize
 
 
-indent = ""
-
-
 class SYSTEM_TOKENS:
     EndOfStreamToken = 0x00
     OpenStartElementToken = 0x01
@@ -46,6 +43,10 @@ class SYSTEM_TOKENS:
     NormalSubstitutionToken = 0x0D
     ConditionalSubstitutionToken = 0x0E
     StartOfStreamToken = 0x0F
+
+
+node_dispatch_table = []  # updated at end of file
+node_readable_tokens = []  # updated at end of file
 
 
 class SuppressConditionalSubstitution(Exception):
@@ -65,46 +66,11 @@ class SuppressConditionalSubstitution(Exception):
 
 
 class BXmlNode(Block):
+
     def __init__(self, buf, offset, chunk, parent):
         super(BXmlNode, self).__init__(buf, offset)
         self._chunk = chunk
         self._parent = parent
-        self._dispatch_table = [
-            EndOfStreamNode,
-            OpenStartElementNode,
-            CloseStartElementNode,
-            CloseEmptyElementNode,
-            CloseElementNode,
-            ValueNode,
-            AttributeNode,
-            CDataSectionNode,
-            None,
-            EntityReferenceNode,
-            ProcessingInstructionTargetNode,
-            ProcessingInstructionDataNode,
-            TemplateInstanceNode,
-            NormalSubstitutionNode,
-            ConditionalSubstitutionNode,
-            StreamStartNode,
-            ]
-        self._readable_tokens = [
-            "End of Stream",
-            "Open Start Element",
-            "Close Start Element",
-            "Close Empty Element",
-            "Close Element",
-            "Value",
-            "Attribute",
-            "unknown",
-            "unknown",
-            "unknown",
-            "unknown",
-            "unknown",
-            "TemplateInstanceNode",
-            "Normal Substitution",
-            "Conditional Substitution",
-            "Start of Stream",
-            ]
 
     def __repr__(self):
         return "BXmlNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
@@ -160,7 +126,7 @@ class BXmlNode(Block):
             #   but, some tokens like 0x01, make use of the flags nibble.
             token = self.unpack_byte(ofs) & 0x0F
             try:
-                HandlerNodeClass = self._dispatch_table[token]
+                HandlerNodeClass = node_dispatch_table[token]
                 child = HandlerNodeClass(self._buf, self.offset() + ofs,
                                          self._chunk, self)
             except IndexError:
@@ -323,7 +289,6 @@ class OpenStartElementNode(BXmlNode):
         if self.flags() & 0x04:
             self._tag_length += 4
 
-        global indent
         if self.string_offset() > self.offset() - self._chunk._offset:
             new_string = self._chunk.add_string(self.string_offset(),
                                                 parent=self)
@@ -764,6 +729,10 @@ class EntityReferenceNode(BXmlNode):
         return "&%s;" % \
             (self._chunk.strings()[self.string_offset()].string())
 
+    def entity_reference(self):
+        return "&%s;" % \
+            (self._chunk.strings()[self.string_offset()].string())
+
     def template_format(self):
         return self.xml([])
 
@@ -807,6 +776,10 @@ class ProcessingInstructionTargetNode(BXmlNode):
         return "<?%s" % \
             (self._chunk.strings()[self.string_offset()].string())
 
+    def processing_instruction_target(self):
+        return "<?%s" % \
+            (self._chunk.strings()[self.string_offset()].string())
+
     def template_format(self):
         return self.xml([])
 
@@ -847,6 +820,12 @@ class ProcessingInstructionDataNode(BXmlNode):
             (hex(self.offset()), hex(self.length()), hex(0x0B))
 
     def xml(self, substitutions, cleanup=False):
+        if self.string_length() > 0:
+            return " %s?>" % (self._string)
+        else:
+            return "?>"
+
+    def string(self):
         if self.string_length() > 0:
             return " %s?>" % (self._string)
         else:
@@ -1961,3 +1940,41 @@ class WstringArrayTypeNode(VariantTypeNode):
         if self._length is None:
             return (2 + self.binary_length())
         return self._length
+
+node_dispatch_table = [
+    EndOfStreamNode,
+    OpenStartElementNode,
+    CloseStartElementNode,
+    CloseEmptyElementNode,
+    CloseElementNode,
+    ValueNode,
+    AttributeNode,
+    CDataSectionNode,
+    None,
+    EntityReferenceNode,
+    ProcessingInstructionTargetNode,
+    ProcessingInstructionDataNode,
+    TemplateInstanceNode,
+    NormalSubstitutionNode,
+    ConditionalSubstitutionNode,
+    StreamStartNode,
+    ]
+
+node_readable_tokens = [
+    "End of Stream",
+    "Open Start Element",
+    "Close Start Element",
+    "Close Empty Element",
+    "Close Element",
+    "Value",
+    "Attribute",
+    "unknown",
+    "unknown",
+    "unknown",
+    "unknown",
+    "unknown",
+    "TemplateInstanceNode",
+    "Normal Substitution",
+    "Conditional Substitution",
+    "Start of Stream",
+    ]
