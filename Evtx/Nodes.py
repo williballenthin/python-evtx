@@ -870,10 +870,16 @@ class RootNode(BXmlNode):
         return self.tag_length() + children_length
 
     @memoize
-    def substitutions_2(self):
+    def fast_substitutions(self):
         """
-        @return A list of strings that
-          contain the substitutions for this root node.
+        Get the list of elements that are the
+          the substitutions for this root node.
+          Each element is one of:
+            str
+            int
+            float
+            RootNode
+        @rtype: list
         """
         sub_decl = []
         sub_def = []
