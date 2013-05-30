@@ -34,22 +34,15 @@ def build_record_xml(record, cache=None):
 
     def rec(root_node):
         f = make_template_xml_view(root_node, cache=cache)
-        subs = root_node.substitutions_2()
         subs_strs = []
-        for sub in subs:
-            if isinstance(sub, RootNode):
-                subs_strs.append(rec(sub))
-            elif isinstance(sub, basestring):
+        for sub in root_node.fast_substitutions():
+            if isinstance(sub, basestring):
                 subs_strs.append(sub.encode("ascii", "xmlcharrefreplace"))
+            elif isinstance(sub, RootNode):
+                subs_strs.append(rec(sub))
             else:
                 subs_strs.append(str(sub))
-        try:
-            return f.format(*subs_strs)
-        except UnicodeDecodeError as e:
-            sys.stderr.write(str(e) + "\n")
-            sys.stderr.write(f + "\n")
-            sys.stderr.write(str(subs_strs) + "\n")
-            sys.exit(-1)
+        return f.format(*subs_strs)
     return rec(record.root())
 
 
