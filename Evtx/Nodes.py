@@ -79,12 +79,6 @@ class BXmlNode(Block):
     def __str__(self):
         return "BXmlNode(offset=%s)" % (hex(self.offset()))
 
-    def xml(self, substitutions, cleanup=False):
-        raise NotImplementedError("xml() not implemented for %r") % (self)
-
-    def template_format(self):
-        raise NotImplementedError("template_format() not implemented for %r") % (self)
-
     def dump(self):
         return hex_dump(self._buf[self.offset():self.offset() + self.length()],
                         start_addr=self.offset())
@@ -187,12 +181,6 @@ class NameStringNode(BXmlNode):
     def string(self):
         return str(self._string())
 
-    def xml(self, substitutions, cleanup=False):
-        return self.string()
-
-    def template_format(self):
-        return self.xml([])
-
     def tag_length(self):
         return (self.string_length() * 2) + 8
 
@@ -216,18 +204,6 @@ class TemplateNode(BXmlNode):
     def __str__(self):
         return "TemplateNode(offset=%s, guid=%s, length=%s)" % \
             (hex(self.offset()), self.guid(), hex(self.length()))
-
-    def xml(self, substitutions, cleanup=False):
-        ret = ""
-        for child in self.children():
-            ret += child.xml(substitutions, cleanup=cleanup)
-        return ret
-
-    def template_format(self):
-        ret = ""
-        for child in self.children():
-            ret += child.template_format()
-        return ret
 
     def tag_length(self):
         return 0x18
@@ -253,12 +229,6 @@ class EndOfStreamNode(BXmlNode):
     def __str__(self):
         return "EndOfStreamNode(offset=%s, length=%s, token=%s)" % \
             (hex(self.offset()), hex(self.length()), 0x00)
-
-    def xml(self, substitutions, cleanup=False):
-        return ""
-
-    def template_format(self):
-        return self.xml([])
 
     def tag_length(self):
         return 1
@@ -306,74 +276,6 @@ class OpenStartElementNode(BXmlNode):
              hex(self.tag_length()),
              hex(self.offset() + self.tag_length()))
 
-    def xml(self, substitutions, cleanup=False):
-        """
-        @return A string containing an XML fragment representation of
-          this element and its descendants.  The return value may be the
-          empty string if all values were conditionally suppressed. If only
-          some values are conditionally suppressed, let's use this strategy:
-
-          Some active attributes, some active children:
-            <tag attr=".."> children </tag>
-          No active attributes, some active children:
-            <tag> children </tag>
-          Some active attributes, no active children:
-            <tag attr=".." />
-          No active attributes, no active children:
-            (empty string)
-        """
-        attr_xml = ""
-        for child in self.children():
-            if isinstance(child, AttributeNode):
-                attr_xml += child.xml(substitutions, cleanup)
-        # this is a hack using the length of the XML :-(
-        has_attr_xml = len(attr_xml) != 0
-
-        num_active_children = 0
-        for child in self.children():
-            if isinstance(child, (ValueNode, CDataSectionNode,
-                                  EntityReferenceNode, ProcessingInstructionTargetNode, ProcessingInstructionDataNode,
-                                  TemplateInstanceNode,
-                                  NormalSubstitutionNode,
-                                  OpenStartElementNode)):
-                num_active_children += 1
-            elif isinstance(child, ConditionalSubstitutionNode) and \
-                    not child.should_suppress(substitutions):
-                num_active_children += 1
-
-        if (self.is_empty_node() or num_active_children == 0) \
-                and not has_attr_xml:
-            return ""
-        if (self.is_empty_node() or num_active_children == 0) \
-                and has_attr_xml:
-            return "\n<%s%s />" % (self.tag_name(), attr_xml)
-        else:  # num_active_children != 0 and has_attr_xml
-            try:
-                cxml = "".join(c.xml(substitutions, cleanup).decode("utf-8") for c in self.children())
-            except UnicodeEncodeError as e:
-                # somewhere, unicode vs raw strings are getting mixed up.
-                #  here's a hacky fix.
-                cxml = ""
-                for c in self.children():
-                    try:
-                        cxml += c.xml(substitutions, cleanup).encode("utf-8")
-                    except UnicodeEncodeError as f:
-                        raise f
-                return cxml
-            except UnicodeDecodeError as e:
-                raise e
-            return "\n<%s%s</%s>" % (self.tag_name(), cxml, self.tag_name())
-
-    def template_format(self):
-        children_string = ""
-        for child in self.children():
-            children_string += child.template_format()
-        if self.is_empty_node():
-            return "\n<%s%s />" % (self.tag_name(), children_string)
-        else:
-            return "\n<%s%s</%s>" % (self.tag_name(), children_string, 
-                                     self.tag_name())
-
     @memoize
     def is_empty_node(self):
         for child in self.children():
@@ -416,12 +318,6 @@ class CloseStartElementNode(BXmlNode):
         return "CloseStartElementNode(offset=%s, length=%s, token=%s)" % \
             (hex(self.offset()), hex(self.length()), hex(self.token()))
 
-    def xml(self, substitutions, cleanup=False):
-        return ">"
-
-    def template_format(self):
-        return self.xml([])
-
     def tag_length(self):
         return 1
 
@@ -452,12 +348,6 @@ class CloseEmptyElementNode(BXmlNode):
         return "CloseEmptyElementNode(offset=%s, length=%s, token=%s)" % \
             (hex(self.offset()), hex(self.length()), hex(0x03))
 
-    def xml(self, substitutions, cleanup=False):
-        return ""
-
-    def template_format(self):
-        return self.xml([])
-
     def tag_length(self):
         return 1
 
@@ -485,12 +375,6 @@ class CloseElementNode(BXmlNode):
     def __str__(self):
         return "CloseElementNode(offset=%s, length=%s, token=%s)" % \
             (hex(self.offset()), hex(self.length()), hex(self.token()))
-
-    def xml(self, substitutions, cleanup=False):
-        return ""
-
-    def template_format(self):
-        return self.xml([])
 
     def tag_length(self):
         return 1
@@ -562,13 +446,7 @@ class ValueNode(BXmlNode):
     def __str__(self):
         return "ValueNode(offset=%s, length=%s, token=%s, value=%s)" % \
             (hex(self.offset()), hex(self.length()),
-             hex(self.token()), self.xml([]))
-
-    def xml(self, substitutions, cleanup=False):
-        return self.children()[0].xml()
-
-    def template_format(self):
-        return self.xml([])
+             hex(self.token()), self.value().string())
 
     def value(self):
         return self.children()[0]
@@ -612,24 +490,6 @@ class AttributeNode(BXmlNode):
         return "AttributeNode(offset=%s, length=%s, token=%s, name=%s, value=%s)" % \
             (hex(self.offset()), hex(self.length()), hex(self.token()),
              self.attribute_name(), self.attribute_value())
-
-    def xml(self, substitutions, cleanup=False):
-        """
-        @return A string containing an XML fragment representation of this
-          attribute.  This string may be empty if the value of the
-          attribute was conditionally suppressed.
-        """
-        name = self.attribute_name().xml(substitutions, cleanup=cleanup)
-        val = self.attribute_value()
-        if isinstance(val, ConditionalSubstitutionNode) and \
-                val.should_suppress(substitutions):
-            return ""
-        return " %s=\"%s\"" % (name, val.xml(substitutions))
-
-    def template_format(self):
-        name = self.attribute_name().template_format()
-        val = self.attribute_value().template_format()
-        return " %s=\"%s\"" % (name, val)
 
     def attribute_name(self):
         """
@@ -676,12 +536,6 @@ class CDataSectionNode(BXmlNode):
         return "CDataSectionNode(offset=%s, length=%s, token=%s)" % \
             (hex(self.offset()), hex(self.length()), 0x07)
 
-    def xml(self, substitutions, cleanup=False):
-        return "<![CDATA[%s]]>" % (self.cdata())
-
-    def template_format(self):
-        return self.xml([])
-
     def tag_length(self):
         return 0x3 + self.string_length()
 
@@ -725,16 +579,9 @@ class EntityReferenceNode(BXmlNode):
         return "EntityReferenceNode(offset=%s, length=%s, token=%s)" % \
             (hex(self.offset()), hex(self.length()), hex(0x09))
 
-    def xml(self, substitutions, cleanup=False):
-        return "&%s;" % \
-            (self._chunk.strings()[self.string_offset()].string())
-
     def entity_reference(self):
         return "&%s;" % \
             (self._chunk.strings()[self.string_offset()].string())
-
-    def template_format(self):
-        return self.xml([])
 
     def tag_length(self):
         return self._tag_length
@@ -772,16 +619,9 @@ class ProcessingInstructionTargetNode(BXmlNode):
         return "ProcessingInstructionTargetNode(offset=%s, length=%s, token=%s)" % \
             (hex(self.offset()), hex(self.length()), hex(0x0A))
 
-    def xml(self, substitutions, cleanup=False):
-        return "<?%s" % \
-            (self._chunk.strings()[self.string_offset()].string())
-
     def processing_instruction_target(self):
         return "<?%s" % \
             (self._chunk.strings()[self.string_offset()].string())
-
-    def template_format(self):
-        return self.xml([])
 
     def tag_length(self):
         return self._tag_length
@@ -819,20 +659,11 @@ class ProcessingInstructionDataNode(BXmlNode):
         return "ProcessingInstructionDataNode(offset=%s, length=%s, token=%s)" % \
             (hex(self.offset()), hex(self.length()), hex(0x0B))
 
-    def xml(self, substitutions, cleanup=False):
-        if self.string_length() > 0:
-            return " %s?>" % (self._string)
-        else:
-            return "?>"
-
     def string(self):
         if self.string_length() > 0:
             return " %s?>" % (self._string)
         else:
             return "?>"
-
-    def template_format(self):
-        return self.xml([])
 
     def tag_length(self):
         return self._tag_length
@@ -870,18 +701,6 @@ class TemplateInstanceNode(BXmlNode):
     def __str__(self):
         return "TemplateInstanceNode(offset=%s, length=%s, token=%s)" % \
             (hex(self.offset()), hex(self.length()), hex(0x0C))
-
-    def xml(self, substitutions, cleanup=False):
-        if cleanup:
-            template = self._chunk.templates()[self.template_offset()]
-            return template.node().xml(substitutions, cleanup=cleanup)
-        else:
-            template = self._chunk.templates()[self.template_offset()]
-            return template.make_substitutions(substitutions)
-
-    def template_format(self):
-        template = self._chunk.templates()[self.template_offset()]
-        return template.node().template_format()
 
     def is_resident_template(self):
         return self.template_offset() > self.offset() - self._chunk._offset
@@ -924,14 +743,6 @@ class NormalSubstitutionNode(BXmlNode):
             (hex(self.offset()), hex(self.length()), hex(self.token()),
              self.index(), self.type())
 
-    def xml(self, substitutions, cleanup=False):
-        # TODO(wb): verify type
-        return substitutions[self.index()].xml()
-
-    def template_format(self):
-        return "[Normal Substitution(index=%s, type=%s)]" % \
-            (self.index(), self.type())
-
     def tag_length(self):
         return 0x4
 
@@ -968,15 +779,6 @@ class ConditionalSubstitutionNode(BXmlNode):
         sub = substitutions[self.index()]
         return type(sub) is NullTypeNode
 
-    def xml(self, substitutions, cleanup=False):
-        if self.should_suppress(substitutions):
-            return "WARNING: THIS ELEMENT SHOULD BE SUPPRESSED"
-        return substitutions[self.index()].xml()
-
-    def template_format(self):
-        return "[Conditional Substitution(index=%s, type=%s)]" % \
-            (self.index(), self.type())
-
     def tag_length(self):
         return 0x4
 
@@ -1011,12 +813,6 @@ class StreamStartNode(BXmlNode):
         return "StreamStartNode(offset=%s, length=%s, token=%s)" % \
             (hex(self.offset()), hex(self.length()), hex(self.token()))
 
-    def xml(self, substitutions, cleanup=False):
-        return ""
-
-    def template_format(self):
-        return self.xml([])
-
     def verify(self):
         return self.flags() == 0x0 and \
             self.token() & 0x0F == SYSTEM_TOKENS.StartOfStreamToken and \
@@ -1048,26 +844,6 @@ class RootNode(BXmlNode):
         return "RootNode(offset=%s, length=%s)" % \
             (hex(self.offset()), hex(self.length()))
 
-    def xml(self, substitutions, cleanup=False):
-        """
-        @param substitutions A list of substitutions, which for this
-          RootNode, will override the substitutions stored in this
-          element.  Provide the empty list to use the substitutions
-          stored in this element, as expected.
-        @return A string containing an XML fragment representation
-          off this element and its descendants.
-        """
-        cxml = []
-        for child in self.children():
-            cxml.append(child.xml(substitutions or self.substitutions(), cleanup=cleanup))
-        return "".join(cxml)
-
-    def template_format(self):
-        ret = []
-        for child in self.children():
-            ret.append(child.template_format())
-        return "".join(ret)
-
     def tag_length(self):
         return 0
 
@@ -1092,144 +868,6 @@ class RootNode(BXmlNode):
             children_length += child.length()
 
         return self.tag_length() + children_length
-
-    @memoize
-    def substitutions_xml(self):
-        """
-        @return A list of strings that
-          contain the substitutions for this root node.
-        """
-        sub_decl = []
-        sub_def = []
-        ofs = self.tag_and_children_length()
-        sub_count = self.unpack_dword(ofs)
-        ofs += 4
-        for _ in xrange(sub_count):
-            size = self.unpack_word(ofs)
-            type_ = self.unpack_byte(ofs + 0x2)
-            sub_decl.append((size, type_))
-            ofs += 4
-        for (size, type_) in sub_decl:
-            value = None
-            #[0] = parse_null_type_node,
-            if type_ == 0x0:
-                value = None
-                sub_def.append(value)
-            #[1] = parse_wstring_type_node,
-            elif type_ == 0x1:
-                s = self.unpack_wstring(ofs, size / 2)
-                value = s.replace("<", "&gt;").replace(">", "&lt;")
-                sub_def.append(value)
-            #[2] = parse_string_type_node,
-            elif type_ == 0x2:
-                s = self.unpack_string(ofs, size)
-                value = s.decode("utf8").replace("<", "&gt;").replace(">", "&lt;")
-                sub_def.append(value)
-            #[3] = parse_signed_byte_type_node,
-            elif type_ == 0x3:
-                sub_def.append(self.unpack_int8(ofs))
-            #[4] = parse_unsigned_byte_type_node,
-            elif type_ == 0x4:
-                sub_def.append(self.unpack_byte(ofs))
-            #[5] = parse_signed_word_type_node,
-            elif type_ == 0x5:
-                sub_def.append(self.unpack_int16(ofs))
-            #[6] = parse_unsigned_word_type_node,
-            elif type_ == 0x6:
-                sub_def.append(self.unpack_word(ofs))
-            #[7] = parse_signed_dword_type_node,
-            elif type_ == 0x7:
-                sub_def.append(self.unpack_int32(ofs))
-            #[8] = parse_unsigned_dword_type_node,
-            elif type_ == 0x8:
-                sub_def.append(self.unpack_dword(ofs))
-            #[9] = parse_signed_qword_type_node,
-            elif type_ == 0x9:
-                sub_def.append(self.unpack_int64(ofs))
-            #[10] = parse_unsigned_qword_type_node,
-            elif type_ == 0xA:
-                sub_def.append(self.unpack_qword(ofs))
-            #[11] = parse_float_type_node,
-            elif type_ == 0xB:
-                sub_def.append(self.unpack_float(ofs))
-            #[12] = parse_double_type_node,
-            elif type_ == 0xC:
-                sub_def.append(self.unpack_double(ofs))
-            #[13] = parse_boolean_type_node,
-            elif type_ == 0xD:
-                sub_def.append(str(self.unpack_word(ofs) > 1))
-            #[14] = parse_binary_type_node,
-            elif type_ == 0xE:
-                sub_def.append(self.unpack_binary(ofs, size))
-            #[15] = parse_guid_type_node,
-            elif type_ == 0xF:
-                sub_def.append(self.unpack_guid(ofs))
-            #[16] = parse_size_type_node,
-            elif type_ == 0x10:
-                if size == 0x4:
-                    sub_def.append(self.unpack_dword(ofs))
-                elif size == 0x8:
-                    sub_def.append(self.unpack_qword(ofs))
-                else:
-                    raise "Unexpected size for SizeTypeNode: %s" % hex(size)
-            #[17] = parse_filetime_type_node,
-            elif type_ == 0x11:
-                sub_def.append(self.unpack_filetime(ofs))
-            #[18] = parse_systemtime_type_node,
-            elif type_ == 0x12:
-                sub_def.append(self.unpack_systemtime(ofs))
-            #[19] = parse_sid_type_node,  -- SIDTypeNode, 0x13
-            elif type_ == 0x13:
-                version = self.unpack_byte(ofs)
-                num_elements = self.unpack_byte(ofs + 1)
-                id_high = self.unpack_dword_be(ofs)
-                id_low = self.unpack_word_be(ofs)
-                value = "S-%d-%d" % (version, (id_high << 16) ^ id_low)
-                for i in xrange(num_elements):
-                    val = self.unpack_dword(ofs + 8 + (4 * i))
-                    value += "-%d" % val
-                sub_def.append(value)
-            #[20] = parse_hex32_type_node,  -- Hex32TypeNoe, 0x14
-            elif type_ == 0x14:
-                value = "0x"
-                for c in self.unpack_binary(ofs, size)[::-1]:
-                    value += "%02x" % ord(c)
-                sub_def.append(value)
-            #[21] = parse_hex64_type_node,  -- Hex64TypeNode, 0x15
-            elif type_ == 0x15:
-                value = "0x"
-                for c in self.unpack_binary(ofs, size)[::-1]:
-                    value += "%02x" % ord(c)
-                sub_def.append(value)
-            #[33] = parse_bxml_type_node,  -- BXmlTypeNode, 0x21
-            elif type_ == 0x21:
-                root = RootNode(self._buf, self.offset() + ofs, self._chunk, self)
-                return root.xml()
-            #[129] = TODO, -- WstringArrayTypeNode, 0x81
-            elif type_ == 0x81:
-                ret = []
-                strings = []
-                bin = self.unpack_binary(ofs, size)
-                for apart in bin.split("\x00\x00\x00"):
-                    for bpart in apart.split("\x00\x00"):
-                        if len(bpart) % 2 == 1:
-                            strings.append((bpart + "\x00").decode("utf-16").rstrip("\x00"))
-                        else:
-                            strings.append(bpart.decode("utf-16").rstrip("\x00"))
-                if strings[-1].strip("\x00") == "":
-                    strings = strings[:-1]
-                for (index, string) in enumerate(strings):
-                    if string == "":
-                        ret.append("<string index=\"%d\" isNull=\"True\" />\n" % \
-                                       (index))
-                    else:
-                        ret.append("<string index=\"%d\">%s</string>\n" % \
-                                       (index, string.rstrip("\x00")))
-                sub_def.append("".join(ret))
-            else:
-                raise "Unexpected type encountered: %s" % hex(type_)
-            ofs += size
-        return sub_def
 
     @memoize
     def substitutions_2(self):
@@ -1425,10 +1063,6 @@ class VariantTypeNode(BXmlNode):
             (self.__class__.__name__, hex(self.offset()),
              hex(self.length()), self.string())
 
-    def xml(self):
-        raise NotImplementedError("__xml__ not implemented for %r" % \
-                                      (self))
-
     def tag_length(self):
         raise NotImplementedError("tag_length not implemented for %r" % \
                                       (self))
@@ -1455,12 +1089,6 @@ class NullTypeNode(object):  # but satisfies the contract of VariantTypeNode, BX
 
     def __str__(self):
         return "NullTypeNode"
-
-    def xml(self):
-        return ""
-
-    def template_format(self):
-        return ""
 
     def string(self):
         return ""
@@ -1493,19 +1121,6 @@ class WstringTypeNode(VariantTypeNode):
             self.declare_field("wstring", "_string", 0x0,
                                length=(self._length / 2))
 
-    def xml(self):
-        # ensure this is a str, not unicode
-        try:
-            return str(self.string().replace("<", "&gt;").replace(">", "&lt;"))
-        except UnicodeEncodeError:
-            try:
-                return self.string().encode("utf-8", "xmlcharrefreplace").replace("<", "&gt;").replace(">", "&lt;")
-            except (UnicodeEncodeError, UnicodeDecodeError):
-                return str(self.string().replace("<", "&gt;").replace(">", "&lt;"))
-
-    def template_format(self):
-        return self.xml([])
-
     def tag_length(self):
         if self._length is None:
             return (2 + (self.string_length() * 2))
@@ -1529,12 +1144,6 @@ class StringTypeNode(VariantTypeNode):
         else:
             self.declare_field("string", "_string", 0x0, length=self._length)
 
-    def xml(self):
-        return str(self.string().replace("<", "&gt;").replace(">", "&lt;"))
-
-    def template_format(self):
-        return self.xml([])
-
     def tag_length(self):
         if self._length is None:
             return (2 + (self.string_length()))
@@ -1553,12 +1162,6 @@ class SignedByteTypeNode(VariantTypeNode):
                                                  parent, length=length)
         self.declare_field("int8", "byte", 0x0)
 
-    def xml(self):
-        return self.string()
-
-    def template_format(self):
-        return self.xml([])
-
     def tag_length(self):
         return 1
 
@@ -1576,12 +1179,6 @@ class UnsignedByteTypeNode(VariantTypeNode):
                                                    length=length)
         self.declare_field("byte", "byte", 0x0)
 
-    def xml(self):
-        return self.string()
-
-    def template_format(self):
-        return self.xml([])
-
     def tag_length(self):
         return 1
 
@@ -1597,12 +1194,6 @@ class SignedWordTypeNode(VariantTypeNode):
         super(SignedWordTypeNode, self).__init__(buf, offset, chunk,
                                                  parent, length=length)
         self.declare_field("int16", "word", 0x0)
-
-    def xml(self):
-        return self.string()
-
-    def template_format(self):
-        return self.xml([])
 
     def tag_length(self):
         return 2
@@ -1621,12 +1212,6 @@ class UnsignedWordTypeNode(VariantTypeNode):
                                                    length=length)
         self.declare_field("word", "word", 0x0)
 
-    def xml(self):
-        return self.string()
-
-    def template_format(self):
-        return self.xml([])
-
     def tag_length(self):
         return 2
 
@@ -1642,12 +1227,6 @@ class SignedDwordTypeNode(VariantTypeNode):
         super(SignedDwordTypeNode, self).__init__(buf, offset, chunk,
                                                   parent, length=length)
         self.declare_field("int32", "dword", 0x0)
-
-    def xml(self):
-        return self.string()
-
-    def template_format(self):
-        return self.xml([])
 
     def tag_length(self):
         return 4
@@ -1666,12 +1245,6 @@ class UnsignedDwordTypeNode(VariantTypeNode):
                                                     length=length)
         self.declare_field("dword", "dword", 0x0)
 
-    def xml(self):
-        return self.string()
-
-    def template_format(self):
-        return self.xml([])
-
     def tag_length(self):
         return 4
 
@@ -1687,12 +1260,6 @@ class SignedQwordTypeNode(VariantTypeNode):
         super(SignedQwordTypeNode, self).__init__(buf, offset, chunk,
                                                   parent, length=length)
         self.declare_field("int64", "qword", 0x0)
-
-    def xml(self):
-        return self.string()
-
-    def template_format(self):
-        return self.xml([])
 
     def tag_length(self):
         return 8
@@ -1711,12 +1278,6 @@ class UnsignedQwordTypeNode(VariantTypeNode):
                                                     length=length)
         self.declare_field("qword", "qword", 0x0)
 
-    def xml(self):
-        return self.string()
-
-    def template_format(self):
-        return self.xml([])
-
     def tag_length(self):
         return 8
 
@@ -1732,12 +1293,6 @@ class FloatTypeNode(VariantTypeNode):
         super(FloatTypeNode, self).__init__(buf, offset, chunk,
                                             parent, length=length)
         self.declare_field("float", "float", 0x0)
-
-    def xml(self):
-        return self.string()
-
-    def template_format(self):
-        return self.xml([])
 
     def tag_length(self):
         return 4
@@ -1755,12 +1310,6 @@ class DoubleTypeNode(VariantTypeNode):
                                              parent, length=length)
         self.declare_field("double", "double", 0x0)
 
-    def xml(self):
-        return self.string()
-
-    def template_format(self):
-        return self.xml([])
-
     def tag_length(self):
         return 8
 
@@ -1776,12 +1325,6 @@ class BooleanTypeNode(VariantTypeNode):
         super(BooleanTypeNode, self).__init__(buf, offset, chunk,
                                               parent, length=length)
         self.declare_field("int32", "int32", 0x0)
-
-    def xml(self):
-        return self.string()
-
-    def template_format(self):
-        return self.xml([])
 
     def tag_length(self):
         return 4
@@ -1807,12 +1350,6 @@ class BinaryTypeNode(VariantTypeNode):
         else:
             self.declare_field("binary", "binary", 0x0, length=self._length)
 
-    def xml(self):
-        return self.string()
-
-    def template_format(self):
-        return self.xml([])
-
     def tag_length(self):
         if self._length is None:
             return (4 + self.size())
@@ -1830,12 +1367,6 @@ class GuidTypeNode(VariantTypeNode):
         super(GuidTypeNode, self).__init__(buf, offset, chunk,
                                            parent, length=length)
         self.declare_field("guid", "guid", 0x0)
-
-    def xml(self):
-        return self.string()
-
-    def template_format(self):
-        return self.xml([])
 
     def tag_length(self):
         return 16
@@ -1860,12 +1391,6 @@ class SizeTypeNode(VariantTypeNode):
         else:
             self.declare_field("qword", "num", 0x0)
 
-    def xml(self):
-        return self.string()
-
-    def template_format(self):
-        return self.xml([])
-
     def tag_length(self):
         if self._length is None:
             return 8
@@ -1884,15 +1409,6 @@ class FiletimeTypeNode(VariantTypeNode):
                                                parent, length=length)
         self.declare_field("filetime", "filetime", 0x0)
 
-    def xml(self):
-        return self.string()
-
-    def template_format(self):
-        return self.xml([])
-
-    def tag_length(self):
-        return 8
-
     def string(self):
         return self.filetime().isoformat("T") + "Z"
 
@@ -1905,12 +1421,6 @@ class SystemtimeTypeNode(VariantTypeNode):
         super(SystemtimeTypeNode, self).__init__(buf, offset, chunk,
                                                  parent, length=length)
         self.declare_field("systemtime", "systemtime", 0x0)
-
-    def xml(self):
-        return self.string()
-
-    def template_format(self):
-        return self.xml([])
 
     def tag_length(self):
         return 16
@@ -1946,12 +1456,6 @@ class SIDTypeNode(VariantTypeNode):
             ret += "-%d" % (elem)
         return ret
 
-    def xml(self):
-        return self.string()
-
-    def template_format(self):
-        return self.xml([])
-
     def tag_length(self):
         return 8 + 4 * self.num_elements()
 
@@ -1967,12 +1471,6 @@ class Hex32TypeNode(VariantTypeNode):
         super(Hex32TypeNode, self).__init__(buf, offset, chunk,
                                             parent, length=length)
         self.declare_field("binary", "hex", 0x0, length=0x4)
-
-    def xml(self):
-        return self.string()
-
-    def template_format(self):
-        return self.xml([])
 
     def tag_length(self):
         return 4
@@ -1993,12 +1491,6 @@ class Hex64TypeNode(VariantTypeNode):
                                             parent, length=length)
         self.declare_field("binary", "hex", 0x0, length=0x8)
 
-    def xml(self):
-        return self.string()
-
-    def template_format(self):
-        return self.xml([])
-
     def tag_length(self):
         return 8
 
@@ -2017,13 +1509,6 @@ class BXmlTypeNode(VariantTypeNode):
         super(BXmlTypeNode, self).__init__(buf, offset, chunk,
                                            parent, length=length)
         self._root = RootNode(buf, offset, chunk, self)
-
-    def xml(self):
-        return self._root.xml([])
-
-    def template_format(self):
-        # TODO(wb): this may be incorrect. self._root.template_format()?
-        return self.xml([])
 
     def tag_length(self):
         return self._length or self._root.length()
@@ -2049,30 +1534,6 @@ class WstringArrayTypeNode(VariantTypeNode):
         else:
             self.declare_field("binary", "binary", 0x0,
                                length=(self._length))
-
-    def xml(self):
-        ret = ""
-        bin = self.binary()
-        strings = []
-        for apart in bin.split("\x00\x00\x00"):
-            for bpart in apart.split("\x00\x00"):
-                if len(bpart) % 2 == 1:
-                    strings.append((bpart + "\x00").decode("utf-16"))
-                else:
-                    strings.append(bpart.decode("utf-16"))
-        if strings[-1].strip("\x00") == "":
-            strings = strings[:-1]
-        for (index, string) in enumerate(strings):
-            if string == "":
-                ret += "<string index=\"%d\" isNull=\"True\" />\n" % \
-                    (index)
-            else:
-                ret += "<string index=\"%d\">%s</string>\n" % \
-                    (index, string.rstrip("\x00"))
-        return ret
-
-    def template_format(self):
-        return self.xml([])
 
     def tag_length(self):
         if self._length is None:
