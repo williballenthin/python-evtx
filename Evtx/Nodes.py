@@ -1096,7 +1096,7 @@ class RootNode(BXmlNode):
     @memoize
     def substitutions_xml(self):
         """
-        @return A list of VariantTypeNode subclass instances that
+        @return A list of strings that
           contain the substitutions for this root node.
         """
         sub_decl = []

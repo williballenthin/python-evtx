@@ -489,6 +489,9 @@ def make_template_xml_view(root_node):
     You'd probably cache the results of this call at the
       Chunk level.
     """
+    def escape_format_chars(s):
+        return s.replace("{", "{{").replace("}", "}}")
+
     def rec(node, acc):
         if isinstance(node, EndOfStreamNode):
             pass  # intended
@@ -515,7 +518,7 @@ def make_template_xml_view(root_node):
         elif isinstance(node, CloseElementNode):
             pass  # intended
         elif isinstance(node, ValueNode):
-            acc.append(node.children()[0].string())
+            acc.append(escape_format_chars(node.children()[0].string()))
         elif isinstance(node, AttributeNode):
             pass  # intended
         elif isinstance(node, CDataSectionNode):
@@ -532,11 +535,11 @@ def make_template_xml_view(root_node):
             raise UnexpectedElementException("TemplateInstanceNode")
         elif isinstance(node, NormalSubstitutionNode):
             acc.append("{")
-            acc.append("%d" % node.index())
+            acc.append("%d" % (node.index()))
             acc.append("}")
         elif isinstance(node, ConditionalSubstitutionNode):
             acc.append("{")
-            acc.append("%d" % node.index())
+            acc.append("%d" % (node.index()))
             acc.append("}")
         elif isinstance(node, StreamStartNode):
             pass  # intended
