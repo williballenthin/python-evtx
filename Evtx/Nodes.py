@@ -17,7 +17,7 @@
 #   limitations under the License.
 #
 #   Version v0.1.1
-
+import re
 import itertools
 import base64
 
@@ -1118,12 +1118,12 @@ class RootNode(BXmlNode):
             #[1] = parse_wstring_type_node,
             elif type_ == 0x1:
                 s = self.unpack_wstring(ofs, size / 2)
-                value = s.decode("utf-16le").replace("<", "&gt;").replace(">", "&lt;")
+                value = s.replace("<", "&gt;").replace(">", "&lt;")
                 sub_def.append(value)
             #[2] = parse_string_type_node,
             elif type_ == 0x2:
                 s = self.unpack_string(ofs, size)
-                value = s.decode("utf-16le").replace("<", "&gt;").replace(">", "&lt;")
+                value = s.decode("utf8").replace("<", "&gt;").replace(">", "&lt;")
                 sub_def.append(value)
             #[3] = parse_signed_byte_type_node,
             elif type_ == 0x3:
@@ -1232,6 +1232,137 @@ class RootNode(BXmlNode):
         return sub_def
 
     @memoize
+    def substitutions_2(self):
+        """
+        @return A list of strings that
+          contain the substitutions for this root node.
+        """
+        sub_decl = []
+        sub_def = []
+        ofs = self.tag_and_children_length()
+        sub_count = self.unpack_dword(ofs)
+        ofs += 4
+        for _ in xrange(sub_count):
+            size = self.unpack_word(ofs)
+            type_ = self.unpack_byte(ofs + 0x2)
+            sub_decl.append((size, type_))
+            ofs += 4
+        for (size, type_) in sub_decl:
+            value = None
+            #[0] = parse_null_type_node,
+            if type_ == 0x0:
+                value = None
+                sub_def.append(value)
+            #[1] = parse_wstring_type_node,
+            elif type_ == 0x1:
+                s = self.unpack_wstring(ofs, size / 2)
+                value = s.replace("<", "&gt;").replace(">", "&lt;")
+                sub_def.append(value)
+            #[2] = parse_string_type_node,
+            elif type_ == 0x2:
+                s = self.unpack_string(ofs, size)
+                value = s.decode("utf8").replace("<", "&gt;").replace(">", "&lt;")
+                sub_def.append(value)
+            #[3] = parse_signed_byte_type_node,
+            elif type_ == 0x3:
+                sub_def.append(self.unpack_int8(ofs))
+            #[4] = parse_unsigned_byte_type_node,
+            elif type_ == 0x4:
+                sub_def.append(self.unpack_byte(ofs))
+            #[5] = parse_signed_word_type_node,
+            elif type_ == 0x5:
+                sub_def.append(self.unpack_int16(ofs))
+            #[6] = parse_unsigned_word_type_node,
+            elif type_ == 0x6:
+                sub_def.append(self.unpack_word(ofs))
+            #[7] = parse_signed_dword_type_node,
+            elif type_ == 0x7:
+                sub_def.append(self.unpack_int32(ofs))
+            #[8] = parse_unsigned_dword_type_node,
+            elif type_ == 0x8:
+                sub_def.append(self.unpack_dword(ofs))
+            #[9] = parse_signed_qword_type_node,
+            elif type_ == 0x9:
+                sub_def.append(self.unpack_int64(ofs))
+            #[10] = parse_unsigned_qword_type_node,
+            elif type_ == 0xA:
+                sub_def.append(self.unpack_qword(ofs))
+            #[11] = parse_float_type_node,
+            elif type_ == 0xB:
+                sub_def.append(self.unpack_float(ofs))
+            #[12] = parse_double_type_node,
+            elif type_ == 0xC:
+                sub_def.append(self.unpack_double(ofs))
+            #[13] = parse_boolean_type_node,
+            elif type_ == 0xD:
+                sub_def.append(str(self.unpack_word(ofs) > 1))
+            #[14] = parse_binary_type_node,
+            elif type_ == 0xE:
+                sub_def.append(base64.b64encode(self.unpack_binary(ofs, size)))
+            #[15] = parse_guid_type_node,
+            elif type_ == 0xF:
+                sub_def.append(self.unpack_guid(ofs))
+            #[16] = parse_size_type_node,
+            elif type_ == 0x10:
+                if size == 0x4:
+                    sub_def.append(self.unpack_dword(ofs))
+                elif size == 0x8:
+                    sub_def.append(self.unpack_qword(ofs))
+                else:
+                    raise "Unexpected size for SizeTypeNode: %s" % hex(size)
+            #[17] = parse_filetime_type_node,
+            elif type_ == 0x11:
+                sub_def.append(self.unpack_filetime(ofs))
+            #[18] = parse_systemtime_type_node,
+            elif type_ == 0x12:
+                sub_def.append(self.unpack_systemtime(ofs))
+            #[19] = parse_sid_type_node,  -- SIDTypeNode, 0x13
+            elif type_ == 0x13:
+                version = self.unpack_byte(ofs)
+                num_elements = self.unpack_byte(ofs + 1)
+                id_high = self.unpack_dword_be(ofs)
+                id_low = self.unpack_word_be(ofs)
+                value = "S-%d-%d" % (version, (id_high << 16) ^ id_low)
+                for i in xrange(num_elements):
+                    val = self.unpack_dword(ofs + 8 + (4 * i))
+                    value += "-%d" % val
+                sub_def.append(value)
+            #[20] = parse_hex32_type_node,  -- Hex32TypeNoe, 0x14
+            elif type_ == 0x14:
+                value = "0x"
+                for c in self.unpack_binary(ofs, size)[::-1]:
+                    value += "%02x" % ord(c)
+                sub_def.append(value)
+            #[21] = parse_hex64_type_node,  -- Hex64TypeNode, 0x15
+            elif type_ == 0x15:
+                value = "0x"
+                for c in self.unpack_binary(ofs, size)[::-1]:
+                    value += "%02x" % ord(c)
+                sub_def.append(value)
+            #[33] = parse_bxml_type_node,  -- BXmlTypeNode, 0x21
+            elif type_ == 0x21:
+                sub_def.append(RootNode(self._buf, self.offset() + ofs,
+                                        self._chunk, self))
+            #[129] = TODO, -- WstringArrayTypeNode, 0x81
+            elif type_ == 0x81:
+                """
+                TODO(wb): this is not perfect, because it
+                            skips empty strings.
+                """
+                bin = self.unpack_binary(ofs, size)
+                acc = []
+                for string in map(lambda s: s.decode("utf-16"),
+                                   re.findall("((?:[^\x00].)+)", bin)):
+                    acc.append("<string>")
+                    acc.append(string)
+                    acc.append("</string>\n")
+                sub_def.append("".join(acc))
+            else:
+                raise "Unexpected type encountered: %s" % hex(type_)
+            ofs += size
+        return sub_def
+
+    @memoize
     def substitutions(self):
         """
         @return A list of VariantTypeNode subclass instances that
@@ -1319,6 +1450,7 @@ class NullTypeNode(object):  # but satisfies the contract of VariantTypeNode, BX
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
         super(NullTypeNode, self).__init__()
+        self._offset = offset
         self._length = length
 
     def __str__(self):
@@ -1331,7 +1463,7 @@ class NullTypeNode(object):  # but satisfies the contract of VariantTypeNode, BX
         return ""
 
     def string(self):
-        return "NULL"
+        return ""
 
     def length(self):
         return self._length or 0
@@ -1341,6 +1473,9 @@ class NullTypeNode(object):  # but satisfies the contract of VariantTypeNode, BX
 
     def children(self):
         return []
+
+    def offset(self):
+        return self._offset
 
 
 class WstringTypeNode(VariantTypeNode):
@@ -1896,6 +2031,9 @@ class BXmlTypeNode(VariantTypeNode):
     def string(self):
         return str(self._root)
 
+    def root(self):
+        return self._root
+
 
 class WstringArrayTypeNode(VariantTypeNode):
     """
@@ -1940,6 +2078,18 @@ class WstringArrayTypeNode(VariantTypeNode):
         if self._length is None:
             return (2 + self.binary_length())
         return self._length
+
+    def string(self):
+        """
+        TODO(wb): this is not perfect, because it skips empty strings.
+        """
+        acc = []
+        for string in  map(lambda s: s.decode("utf-16"),
+                           re.findall("((?:[^\x00].)+)", self.binary())):
+            acc.append("<string>")
+            acc.append(string)
+            acc.append("</string>\n")
+        return "".join(acc)
 
 node_dispatch_table = [
     EndOfStreamNode,

@@ -481,7 +481,7 @@ class UnexpectedElementException(Exception):
         super(UnexpectedElementException, self).__init__(msg)
 
 
-def make_template_xml_view(root_node):
+def make_template_xml_view(root_node, cache=None):
     """
     Given a RootNode, parse only the template/children
       and not the substitutions.
@@ -489,6 +489,9 @@ def make_template_xml_view(root_node):
     You'd probably cache the results of this call at the
       Chunk level.
     """
+    if cache is None:
+        cache = {}
+
     def escape_format_chars(s):
         return s.replace("{", "{{").replace("}", "}}")
 
@@ -545,11 +548,24 @@ def make_template_xml_view(root_node):
             pass  # intended
 
     acc = []
+    # we are going to hardcode this here, because our cache
+    #  is fragile, and it would be better to break early,
+    #  than give bad results
     for child in root_node.children():
-        if isinstance(child, TemplateInstanceNode):
-            templ_off = child.template_offset() + child._chunk.offset()
-            node = TemplateNode(child._buf, templ_off,
-                                child._chunk, child)
+        if not isinstance(child, TemplateInstanceNode):
+            continue
+        template_instance = child
+        templ_off = template_instance.template_offset() + \
+            template_instance._chunk.offset()
+        if templ_off in cache:
+            acc.append(cache[templ_off])
+        else:
+            node = TemplateNode(template_instance._buf, templ_off,
+                                template_instance._chunk, template_instance)
+            sub_acc = []
             for c in node.children():
-                rec(c, acc)
+                rec(c, sub_acc)
+            sub_templ = "".join(sub_acc)
+            cache[templ_off] = sub_templ
+            acc.append(sub_templ)
     return "".join(acc)

@@ -44,8 +44,8 @@ def describe_root(record, root, indent=0, suppress_values=False):
         ret = ""
         if isinstance(node, TemplateInstanceNode):
             if node.is_resident_template():
-                ret += "%s\n" % (format_node(node, extra="resident=True, length=%s" % (hex(node.template().data_length())), indent=indent))
-                ret += rec(node.template(), indent=indent + 1)
+                ret += "%s\n" % (format_node(node, extra="resident=True, length=%s" % (hex(node.template().node().data_length())), indent=indent))
+                ret += rec(node.template().node(), indent=indent + 1)
             else:
                 ret += "%s\n" % (format_node(node, extra="resident=False", indent=indent))
         else:
