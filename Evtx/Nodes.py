@@ -719,6 +719,7 @@ class TemplateInstanceNode(BXmlNode):
 
     @memoize
     def find_end_of_stream(self):
+        # TODO(wb), FIXME. what is template!?!
         return self.template().node().find_end_of_stream()
 
 
@@ -869,6 +870,12 @@ class RootNode(BXmlNode):
 
         return self.tag_length() + children_length
 
+    def fast_template_instance(self):
+        ofs = self.offset()
+        if self.unpack_byte(0x0) & 0x0F == 0xF:
+            ofs += 4
+        return TemplateInstanceNode(self._buf, ofs, self._chunk, self)
+
     @memoize
     def fast_substitutions(self):
         """
@@ -883,6 +890,7 @@ class RootNode(BXmlNode):
         """
         sub_decl = []
         sub_def = []
+        # TODO(wb) remove this! no references to children!
         ofs = self.tag_and_children_length()
         sub_count = self.unpack_dword(ofs)
         ofs += 4
@@ -1417,6 +1425,9 @@ class FiletimeTypeNode(VariantTypeNode):
 
     def string(self):
         return self.filetime().isoformat("T") + "Z"
+
+    def tag_length(self):
+        return 8
 
 
 class SystemtimeTypeNode(VariantTypeNode):

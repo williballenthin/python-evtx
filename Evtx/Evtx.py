@@ -404,6 +404,7 @@ class ChunkHeader(Block):
         if self._templates is None:
             self._load_templates()
 
+        # TODO(wb): remove this indirection and just use TemplateNodes
         node = TemplateNode(self._buf, self._offset + offset,
                                 self, parent or self)
         template = Template(node)
@@ -548,24 +549,20 @@ def make_template_xml_view(root_node, cache=None):
             pass  # intended
 
     acc = []
-    # we are going to hardcode this here, because our cache
-    #  is fragile, and it would be better to break early,
-    #  than give bad results
-    for child in root_node.children():
-        if not isinstance(child, TemplateInstanceNode):
-            continue
-        template_instance = child
-        templ_off = template_instance.template_offset() + \
-            template_instance._chunk.offset()
-        if templ_off in cache:
-            acc.append(cache[templ_off])
-        else:
-            node = TemplateNode(template_instance._buf, templ_off,
-                                template_instance._chunk, template_instance)
-            sub_acc = []
-            for c in node.children():
-                rec(c, sub_acc)
-            sub_templ = "".join(sub_acc)
-            cache[templ_off] = sub_templ
-            acc.append(sub_templ)
+    # TODO(wb): we _really_ want to avoid iterating .children() here
+    #   instead directly access TemplateInstanceNode
+    template_instance = root_node.fast_template_instance()
+    templ_off = template_instance.template_offset() + \
+        template_instance._chunk.offset()
+    if templ_off in cache:
+        acc.append(cache[templ_off])
+    else:
+        node = TemplateNode(template_instance._buf, templ_off,
+                            template_instance._chunk, template_instance)
+        sub_acc = []
+        for c in node.children():
+            rec(c, sub_acc)
+        sub_templ = "".join(sub_acc)
+        cache[templ_off] = sub_templ
+        acc.append(sub_templ)
     return "".join(acc)
