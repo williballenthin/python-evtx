@@ -17,15 +17,13 @@
 #   limitations under the License.
 #
 #   Version v0.1.1
-
-
-import sys
 import mmap
 import contextlib
 
 import argparse
 
 from Evtx.Evtx import FileHeader
+from Evtx.Views import evtx_file_xml_view
 
 
 def main():
@@ -43,10 +41,9 @@ def main():
             fh = FileHeader(buf, 0x0)
             print "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>"
             print "<Events>"
-            for chunk in fh.chunks():
-                for record in chunk.records():
-                    print record.root().xml([], cleanup=args.cleanup).encode("utf-8")
-            print "</Events>"            
+            for xml, record in evtx_file_xml_view(fh):
+                print xml
+            print "</Events>"
 
 if __name__ == "__main__":
     main()

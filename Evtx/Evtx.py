@@ -29,21 +29,6 @@ from BinaryParser import warning
 from Nodes import NameStringNode
 from Nodes import TemplateNode
 from Nodes import RootNode
-from Nodes import EndOfStreamNode
-from Nodes import OpenStartElementNode
-from Nodes import CloseStartElementNode
-from Nodes import CloseEmptyElementNode
-from Nodes import CloseElementNode
-from Nodes import ValueNode
-from Nodes import AttributeNode
-from Nodes import CDataSectionNode
-from Nodes import EntityReferenceNode
-from Nodes import ProcessingInstructionTargetNode
-from Nodes import ProcessingInstructionDataNode
-from Nodes import TemplateInstanceNode
-from Nodes import NormalSubstitutionNode
-from Nodes import ConditionalSubstitutionNode
-from Nodes import StreamStartNode
 
 
 class InvalidRecordException(ParseException):
@@ -134,6 +119,10 @@ class Evtx(object):
           the record is not found.
         """
         return self._fh.get_record(record_num)
+
+    @ensure_contexted
+    def get_file_header(self):
+        return self._fh
 
 
 class FileHeader(Block):
@@ -473,92 +462,3 @@ class Record(Block):
           up this record.
         """
         return self._buf[self.offset():self.offset() + self.size()]
-
-
-class UnexpectedElementException(Exception):
-    def __init__(self, msg):
-        super(UnexpectedElementException, self).__init__(msg)
-
-
-def make_template_xml_view(root_node, cache=None):
-    """
-    Given a RootNode, parse only the template/children
-      and not the substitutions.
-    Return a string that is a Python format string.
-    You'd probably cache the results of this call at the
-      Chunk level.
-    """
-    if cache is None:
-        cache = {}
-
-    def escape_format_chars(s):
-        return s.replace("{", "{{").replace("}", "}}")
-
-    def rec(node, acc):
-        if isinstance(node, EndOfStreamNode):
-            pass  # intended
-        elif isinstance(node, OpenStartElementNode):
-            acc.append("<")
-            acc.append(node.tag_name())
-            for child in node.children():
-                if isinstance(child, AttributeNode):
-                    acc.append(" ")
-                    acc.append(child.attribute_name().string())
-                    acc.append("=\"")
-                    rec(child.attribute_value(), acc)
-                    acc.append("\"")
-            acc.append(">")
-            for child in node.children():
-                rec(child, acc)
-            acc.append("</")
-            acc.append(node.tag_name())
-            acc.append(">\n")
-        elif isinstance(node, CloseStartElementNode):
-            pass  # intended
-        elif isinstance(node, CloseEmptyElementNode):
-            pass  # intended
-        elif isinstance(node, CloseElementNode):
-            pass  # intended
-        elif isinstance(node, ValueNode):
-            acc.append(escape_format_chars(node.children()[0].string()))
-        elif isinstance(node, AttributeNode):
-            pass  # intended
-        elif isinstance(node, CDataSectionNode):
-            acc.append("<![CDATA[")
-            acc.append(node.cdata())
-            acc.append("]]>")
-        elif isinstance(node, EntityReferenceNode):
-            acc.append(node.entity_reference())
-        elif isinstance(node, ProcessingInstructionTargetNode):
-            acc.append(node.processing_instruction_target())
-        elif isinstance(node, ProcessingInstructionDataNode):
-            acc.append(node.string())
-        elif isinstance(node, TemplateInstanceNode):
-            raise UnexpectedElementException("TemplateInstanceNode")
-        elif isinstance(node, NormalSubstitutionNode):
-            acc.append("{")
-            acc.append("%d" % (node.index()))
-            acc.append("}")
-        elif isinstance(node, ConditionalSubstitutionNode):
-            acc.append("{")
-            acc.append("%d" % (node.index()))
-            acc.append("}")
-        elif isinstance(node, StreamStartNode):
-            pass  # intended
-
-    acc = []
-    template_instance = root_node.fast_template_instance()
-    templ_off = template_instance.template_offset() + \
-        template_instance._chunk.offset()
-    if templ_off in cache:
-        acc.append(cache[templ_off])
-    else:
-        node = TemplateNode(template_instance._buf, templ_off,
-                            template_instance._chunk, template_instance)
-        sub_acc = []
-        for c in node.children():
-            rec(c, sub_acc)
-        sub_templ = "".join(sub_acc)
-        cache[templ_off] = sub_templ
-        acc.append(sub_templ)
-    return "".join(acc)

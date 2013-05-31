@@ -17,33 +17,13 @@
 #   limitations under the License.
 #
 #   Version v0.1.1
-import sys
 import mmap
 import contextlib
 
 import argparse
 
-from Evtx.Nodes import RootNode
 from Evtx.Evtx import FileHeader
-from Evtx.Evtx import make_template_xml_view
-
-
-def build_record_xml(record, cache=None):
-    if cache is None:
-        cache = {}
-
-    def rec(root_node):
-        f = make_template_xml_view(root_node, cache=cache)
-        subs_strs = []
-        for sub in root_node.fast_substitutions():
-            if isinstance(sub, basestring):
-                subs_strs.append(sub.encode("ascii", "xmlcharrefreplace"))
-            elif isinstance(sub, RootNode):
-                subs_strs.append(rec(sub))
-            else:
-                subs_strs.append(str(sub))
-        return f.format(*subs_strs)
-    return rec(record.root())
+from Evtx.Views import evtx_file_xml_view
 
 
 def main():
@@ -57,11 +37,8 @@ def main():
         with contextlib.closing(mmap.mmap(f.fileno(), 0,
                                           access=mmap.ACCESS_READ)) as buf:
             fh = FileHeader(buf, 0x0)
-            for chunk in fh.chunks():
-                cache = {}
-                for record in chunk.records():
-                    record_str = build_record_xml(record, cache=cache)
-                    print record_str.encode("ascii", "xmlcharrefreplace")
+            for xml, record in evtx_file_xml_view(fh):
+                print xml
 
 
 if __name__ == "__main__":

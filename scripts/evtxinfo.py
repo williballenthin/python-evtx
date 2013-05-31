@@ -29,7 +29,7 @@ from Evtx.Evtx import FileHeader
 
 def main():
     with open(sys.argv[1], 'r') as f:
-        with contextlib.closing(mmap.mmap(f.fileno(), 0, 
+        with contextlib.closing(mmap.mmap(f.fileno(), 0,
                                           access=mmap.ACCESS_READ)) as buf:
             fh = FileHeader(buf, 0x0)
 
@@ -45,7 +45,7 @@ def main():
             if fh.is_full():
                 full_string = "yes"
             print "Log is full     : %s" % (full_string)
-            print "Current chunk   : %d of %d" % (fh.current_chunk_number(), 
+            print "Current chunk   : %d of %d" % (fh.current_chunk_number(),
                                                   fh.chunk_count())
             print "Oldest chunk    : %d" % (fh.oldest_chunk() + 1)
             print "Next record#    : %d" % (fh.next_record_number())
@@ -54,7 +54,7 @@ def main():
                 checksum_string = "pass"
             print "Check sum       : %s" % (checksum_string)
             print ""
-            
+
             if fh.is_dirty():
                 chunk_count = sum([1 for c in fh.chunks() if c.verify()])
 
@@ -97,7 +97,7 @@ def main():
                     data_checksum_string = "pass"
 
                 print "%s  %4d   %8d  %8d    %8d  %8d   %s   %s" % \
-                    (note_string, 
+                    (note_string,
                      i,
                      chunk.file_first_record_number(),
                      chunk.file_last_record_number(),
@@ -108,4 +108,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

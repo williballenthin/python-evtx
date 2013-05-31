@@ -23,6 +23,7 @@ import sys
 import mmap
 import contextlib
 from Evtx.Evtx import FileHeader
+from Evtx.Views import evtx_record_xml_view
 
 
 def main():
@@ -33,13 +34,12 @@ def main():
             for chunk in fh.chunks():
                 for record in chunk.records():
                     try:
-                        record.root().xml([]).encode("utf-8")
+                        evtx_record_xml_view(record).encode("utf-8")
                     except Exception as e:
                         print str(e)
                         print repr(e)
-                        print record.root().xml([]).encode("utf-8")
+                        print evtx_record_xml_view(record).encode("utf-8")
                         return
 
 if __name__ == "__main__":
     main()
-

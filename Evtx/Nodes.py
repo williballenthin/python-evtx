@@ -1592,9 +1592,6 @@ class WstringArrayTypeNode(VariantTypeNode):
         return self._length
 
     def string(self):
-        """
-        TODO(wb): this is not perfect, because it skips empty strings.
-        """
         bin = self.binary()
         acc = []
         while len(bin) > 0:

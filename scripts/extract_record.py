@@ -7,7 +7,7 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="Parse the EVTX log entries from an file that match the given EID.")
+        description="Write the raw data for a EVTX record to STDOUT")
     parser.add_argument("evtx", type=str,
                         help="Path to the Windows EVTX file")
     parser.add_argument("record", type=int,
