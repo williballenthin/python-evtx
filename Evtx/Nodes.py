@@ -1,7 +1,7 @@
 #!/usr/bin/python
 #    This file is part of python-evtx.
 #
-#   Copyright 2012, 2013 Willi Ballenthin <william.ballenthin@mandiant.com>
+#   Copyright 2012, 2013 Willi Ballenthin william.ballenthin@mandiant.com>
 #                    while at Mandiant <http://www.mandiant.com>
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
@@ -83,11 +83,6 @@ class BXmlNode(Block):
         return hex_dump(self._buf[self.offset():self.offset() + self.length()],
                         start_addr=self.offset())
 
-    def flags(self):
-        # TODO(wb): it doesn't sense for this to be here if VariantTypeNode
-        #  will descend from this.
-        return self.token() >> 4
-
     def tag_length(self):
         """
         This method must be implemented and overridden for all BXmlNodes.
@@ -96,11 +91,6 @@ class BXmlNode(Block):
         """
         raise NotImplementedError("tag_length not implemented for %r") % \
             (self)
-
-    def verify(self):
-        # TODO(wb): it doesn't sense for this to be here if VariantTypeNode
-        #  will descend from this.
-        return True
 
     def _children(self, max_children=None,
                   end_tokens=[SYSTEM_TOKENS.EndOfStreamToken]):
@@ -230,6 +220,9 @@ class EndOfStreamNode(BXmlNode):
         return "EndOfStreamNode(offset=%s, length=%s, token=%s)" % \
             (hex(self.offset()), hex(self.length()), 0x00)
 
+    def flags(self):
+        return self.token() >> 4
+
     def tag_length(self):
         return 1
 
@@ -283,6 +276,9 @@ class OpenStartElementNode(BXmlNode):
                 return True
         return False
 
+    def flags(self):
+        return self.token() >> 4
+
     @memoize
     def tag_name(self):
         return self._chunk.strings()[self.string_offset()].string()
@@ -318,6 +314,9 @@ class CloseStartElementNode(BXmlNode):
         return "CloseStartElementNode(offset=%s, length=%s, token=%s)" % \
             (hex(self.offset()), hex(self.length()), hex(self.token()))
 
+    def flags(self):
+        return self.token() >> 4
+
     def tag_length(self):
         return 1
 
@@ -348,6 +347,9 @@ class CloseEmptyElementNode(BXmlNode):
         return "CloseEmptyElementNode(offset=%s, length=%s, token=%s)" % \
             (hex(self.offset()), hex(self.length()), hex(0x03))
 
+    def flags(self):
+        return self.token() >> 4
+
     def tag_length(self):
         return 1
 
@@ -375,6 +377,9 @@ class CloseElementNode(BXmlNode):
     def __str__(self):
         return "CloseElementNode(offset=%s, length=%s, token=%s)" % \
             (hex(self.offset()), hex(self.length()), hex(self.token()))
+
+    def flags(self):
+        return self.token() >> 4
 
     def tag_length(self):
         return 1
@@ -448,6 +453,9 @@ class ValueNode(BXmlNode):
             (hex(self.offset()), hex(self.length()),
              hex(self.token()), self.value().string())
 
+    def flags(self):
+        return self.token() >> 4
+
     def value(self):
         return self.children()[0]
 
@@ -490,6 +498,9 @@ class AttributeNode(BXmlNode):
         return "AttributeNode(offset=%s, length=%s, token=%s, name=%s, value=%s)" % \
             (hex(self.offset()), hex(self.length()), hex(self.token()),
              self.attribute_name(), self.attribute_value())
+
+    def flags(self):
+        return self.token() >> 4
 
     def attribute_name(self):
         """
@@ -535,6 +546,9 @@ class CDataSectionNode(BXmlNode):
     def __str__(self):
         return "CDataSectionNode(offset=%s, length=%s, token=%s)" % \
             (hex(self.offset()), hex(self.length()), 0x07)
+
+    def flags(self):
+        return self.token() >> 4
 
     def tag_length(self):
         return 0x3 + self.string_length()
@@ -583,15 +597,15 @@ class EntityReferenceNode(BXmlNode):
         return "&%s;" % \
             (self._chunk.strings()[self.string_offset()].string())
 
+    def flags(self):
+        return self.token() >> 4
+
     def tag_length(self):
         return self._tag_length
 
     def children(self):
         # TODO(wb): it may be possible for this element to have children.
         return []
-
-    def flags(self):
-        return self.token() >> 4
 
 
 class ProcessingInstructionTargetNode(BXmlNode):
@@ -623,15 +637,15 @@ class ProcessingInstructionTargetNode(BXmlNode):
         return "<?%s" % \
             (self._chunk.strings()[self.string_offset()].string())
 
+    def flags(self):
+        return self.token() >> 4
+
     def tag_length(self):
         return self._tag_length
 
     def children(self):
         # TODO(wb): it may be possible for this element to have children.
         return []
-
-    def flags(self):
-        return self.token() >> 4
 
 
 class ProcessingInstructionDataNode(BXmlNode):
@@ -659,6 +673,9 @@ class ProcessingInstructionDataNode(BXmlNode):
         return "ProcessingInstructionDataNode(offset=%s, length=%s, token=%s)" % \
             (hex(self.offset()), hex(self.length()), hex(0x0B))
 
+    def flags(self):
+        return self.token() >> 4
+
     def string(self):
         if self.string_length() > 0:
             return " %s?>" % (self._string)
@@ -671,9 +688,6 @@ class ProcessingInstructionDataNode(BXmlNode):
     def children(self):
         # TODO(wb): it may be possible for this element to have children.
         return []
-
-    def flags(self):
-        return self.token() >> 4
 
 
 class TemplateInstanceNode(BXmlNode):
@@ -692,7 +706,7 @@ class TemplateInstanceNode(BXmlNode):
         if self.is_resident_template():
             new_template = self._chunk.add_template(self.template_offset(),
                                                     parent=self)
-            self._data_length += new_template.node().length()
+            self._data_length += new_template.length()
 
     def __repr__(self):
         return "TemplateInstanceNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
@@ -701,6 +715,9 @@ class TemplateInstanceNode(BXmlNode):
     def __str__(self):
         return "TemplateInstanceNode(offset=%s, length=%s, token=%s)" % \
             (hex(self.offset()), hex(self.length()), hex(0x0C))
+
+    def flags(self):
+        return self.token() >> 4
 
     def is_resident_template(self):
         return self.template_offset() > self.offset() - self._chunk._offset
@@ -719,8 +736,7 @@ class TemplateInstanceNode(BXmlNode):
 
     @memoize
     def find_end_of_stream(self):
-        # TODO(wb), FIXME. what is template!?!
-        return self.template().node().find_end_of_stream()
+        return self.template().find_end_of_stream()
 
 
 class NormalSubstitutionNode(BXmlNode):
@@ -730,7 +746,8 @@ class NormalSubstitutionNode(BXmlNode):
     This is a "normal substitution" token.
     """
     def __init__(self, buf, offset, chunk, parent):
-        super(NormalSubstitutionNode, self).__init__(buf, offset, chunk, parent)
+        super(NormalSubstitutionNode, self).__init__(buf, offset,
+                                                     chunk, parent)
         self.declare_field("byte", "token", 0x0)
         self.declare_field("word", "index")
         self.declare_field("byte", "type")
@@ -743,6 +760,9 @@ class NormalSubstitutionNode(BXmlNode):
         return "NormalSubstitutionNode(offset=%s, length=%s, token=%s, index=%d, type=%d)" % \
             (hex(self.offset()), hex(self.length()), hex(self.token()),
              self.index(), self.type())
+
+    def flags(self):
+        return self.token() >> 4
 
     def tag_length(self):
         return 0x4
@@ -763,7 +783,8 @@ class ConditionalSubstitutionNode(BXmlNode):
     The binary XML node for the system token 0x0E.
     """
     def __init__(self, buf, offset, chunk, parent):
-        super(ConditionalSubstitutionNode, self).__init__(buf, offset, chunk, parent)
+        super(ConditionalSubstitutionNode, self).__init__(buf, offset,
+                                                          chunk, parent)
         self.declare_field("byte", "token", 0x0)
         self.declare_field("word", "index")
         self.declare_field("byte", "type")
@@ -779,6 +800,9 @@ class ConditionalSubstitutionNode(BXmlNode):
     def should_suppress(self, substitutions):
         sub = substitutions[self.index()]
         return type(sub) is NullTypeNode
+
+    def flags(self):
+        return self.token() >> 4
 
     def tag_length(self):
         return 0x4
@@ -820,6 +844,9 @@ class StreamStartNode(BXmlNode):
             self.unknown0() == 0x1 and \
             self.unknown1() == 0x1
 
+    def flags(self):
+        return self.token() >> 4
+
     def tag_length(self):
         return 4
 
@@ -853,8 +880,6 @@ class RootNode(BXmlNode):
         """
         @return The template instances which make up this node.
         """
-        # TODO(wb): I really don't know if this is correct.
-        # TODO(wb): Can we have more than one TemplateInstance here?
         return self._children(end_tokens=[SYSTEM_TOKENS.EndOfStreamToken])
 
     def tag_and_children_length(self):
@@ -890,7 +915,6 @@ class RootNode(BXmlNode):
         """
         sub_decl = []
         sub_def = []
-        # TODO(wb) remove this! no references to children!
         ofs = self.tag_and_children_length()
         sub_count = self.unpack_dword(ofs)
         ofs += 4
@@ -913,7 +937,9 @@ class RootNode(BXmlNode):
             #[2] = parse_string_type_node,
             elif type_ == 0x2:
                 s = self.unpack_string(ofs, size)
-                value = s.decode("utf8").replace("<", "&gt;").replace(">", "&lt;")
+                value = s.decode("utf8")
+                value = value.replace("<", "&gt;")
+                value = value.replace(">", "&lt;")
                 sub_def.append(value)
             #[3] = parse_signed_byte_type_node,
             elif type_ == 0x3:
@@ -997,17 +1023,25 @@ class RootNode(BXmlNode):
                                         self._chunk, self))
             #[129] = TODO, -- WstringArrayTypeNode, 0x81
             elif type_ == 0x81:
-                """
-                TODO(wb): this is not perfect, because it
-                            skips empty strings.
-                """
                 bin = self.unpack_binary(ofs, size)
                 acc = []
-                for string in map(lambda s: s.decode("utf-16"),
-                                   re.findall("((?:[^\x00].)+)", bin)):
-                    acc.append("<string>")
-                    acc.append(string)
-                    acc.append("</string>\n")
+                while len(bin) > 0:
+                    match = re.search("((?:[^\x00].)+)", bin)
+                    if match:
+                        frag = match.group()
+                        acc.append("<string>")
+                        acc.append(frag.decode("utf16"))
+                        acc.append("</string>\n")
+                        bin = bin[len(frag) + 2:]
+                        if len(bin) == 0:
+                            break
+                    frag = re.search("(\x00*)", bin).group()
+                    if len(frag) % 2 == 0:
+                        for _ in xrange(len(frag) // 2):
+                            acc.append("<string></string>\n")
+                    else:
+                        raise "Error parsing uneven substring of NULLs"
+                    bin = bin[len(frag):]
                 sub_def.append("".join(acc))
             else:
                 raise "Unexpected type encountered: %s" % hex(type_)
@@ -1561,13 +1595,27 @@ class WstringArrayTypeNode(VariantTypeNode):
         """
         TODO(wb): this is not perfect, because it skips empty strings.
         """
+        bin = self.binary()
         acc = []
-        for string in  map(lambda s: s.decode("utf-16"),
-                           re.findall("((?:[^\x00].)+)", self.binary())):
-            acc.append("<string>")
-            acc.append(string)
-            acc.append("</string>\n")
+        while len(bin) > 0:
+            match = re.search("((?:[^\x00].)+)", bin)
+            if match:
+                frag = match.group()
+                acc.append("<string>")
+                acc.append(frag.decode("utf16"))
+                acc.append("</string>\n")
+                bin = bin[len(frag) + 2:]
+                if len(bin) == 0:
+                    break
+            frag = re.search("(\x00*)", bin).group()
+            if len(frag) % 2 == 0:
+                for _ in xrange(len(frag) // 2):
+                    acc.append("<string></string>\n")
+            else:
+                raise "Error parsing uneven substring of NULLs"
+            bin = bin[len(frag):]
         return "".join(acc)
+
 
 node_dispatch_table = [
     EndOfStreamNode,

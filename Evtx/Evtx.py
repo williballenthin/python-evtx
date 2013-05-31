@@ -391,7 +391,7 @@ class ChunkHeader(Block):
                     ofs = 0
                     continue
                 template = self.add_template(ofs)
-                ofs = template.node().next_offset()
+                ofs = template.next_offset()
 
     def add_template(self, offset, parent=None):
         """
@@ -399,17 +399,15 @@ class ChunkHeader(Block):
            to a template to load into this Chunk.
         @param parent (Optional) The parent of the newly created
            TemplateNode instance. (Default: this chunk).
-        @return Newly added Template instance.
+        @return Newly added TemplateNode instance.
         """
         if self._templates is None:
             self._load_templates()
 
-        # TODO(wb): remove this indirection and just use TemplateNodes
         node = TemplateNode(self._buf, self._offset + offset,
                                 self, parent or self)
-        template = Template(node)
-        self._templates[offset] = Template(node)
-        return template
+        self._templates[offset] = node
+        return node
 
     def templates(self):
         """
@@ -549,8 +547,6 @@ def make_template_xml_view(root_node, cache=None):
             pass  # intended
 
     acc = []
-    # TODO(wb): we _really_ want to avoid iterating .children() here
-    #   instead directly access TemplateInstanceNode
     template_instance = root_node.fast_template_instance()
     templ_off = template_instance.template_offset() + \
         template_instance._chunk.offset()
