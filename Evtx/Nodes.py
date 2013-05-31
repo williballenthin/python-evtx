@@ -924,7 +924,6 @@ class RootNode(BXmlNode):
             sub_decl.append((size, type_))
             ofs += 4
         for (size, type_) in sub_decl:
-            value = None
             #[0] = parse_null_type_node,
             if type_ == 0x0:
                 value = None
@@ -1081,7 +1080,6 @@ class RootNode(BXmlNode):
 
     @memoize
     def length(self):
-        ret = 0
         ofs = self.tag_and_children_length()
         sub_count = self.unpack_dword(ofs)
         ofs += 4
