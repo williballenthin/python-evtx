@@ -1,0 +1,749 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Evtx.Views</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="Evtx-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="www.williballenthin.com/evtx/doc/">python-evtx</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="Evtx-module.html">Package&nbsp;Evtx</a> ::
+        Module&nbsp;Views
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="Evtx.Views-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="Evtx.Views-module.html">Module Evtx.Views</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno">  1</tt>  <tt class="py-line"><tt class="py-comment">#!/usr/bin/python</tt> </tt>
+<a name="L2"></a><tt class="py-lineno">  2</tt>  <tt class="py-line"><tt class="py-comment">#    This file is part of python-evtx.</tt> </tt>
+<a name="L3"></a><tt class="py-lineno">  3</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L4"></a><tt class="py-lineno">  4</tt>  <tt class="py-line"><tt class="py-comment">#   Copyright 2012, 2013 Willi Ballenthin &lt;william.ballenthin@mandiant.com&gt;</tt> </tt>
+<a name="L5"></a><tt class="py-lineno">  5</tt>  <tt class="py-line"><tt class="py-comment">#                    while at Mandiant &lt;http://www.mandiant.com&gt;</tt> </tt>
+<a name="L6"></a><tt class="py-lineno">  6</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L7"></a><tt class="py-lineno">  7</tt>  <tt class="py-line"><tt class="py-comment">#   Licensed under the Apache License, Version 2.0 (the "License");</tt> </tt>
+<a name="L8"></a><tt class="py-lineno">  8</tt>  <tt class="py-line"><tt class="py-comment">#   you may not use this file except in compliance with the License.</tt> </tt>
+<a name="L9"></a><tt class="py-lineno">  9</tt>  <tt class="py-line"><tt class="py-comment">#   You may obtain a copy of the License at</tt> </tt>
+<a name="L10"></a><tt class="py-lineno"> 10</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L11"></a><tt class="py-lineno"> 11</tt>  <tt class="py-line"><tt class="py-comment">#       http://www.apache.org/licenses/LICENSE-2.0</tt> </tt>
+<a name="L12"></a><tt class="py-lineno"> 12</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L13"></a><tt class="py-lineno"> 13</tt>  <tt class="py-line"><tt class="py-comment">#   Unless required by applicable law or agreed to in writing, software</tt> </tt>
+<a name="L14"></a><tt class="py-lineno"> 14</tt>  <tt class="py-line"><tt class="py-comment">#   distributed under the License is distributed on an "AS IS" BASIS,</tt> </tt>
+<a name="L15"></a><tt class="py-lineno"> 15</tt>  <tt class="py-line"><tt class="py-comment">#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</tt> </tt>
+<a name="L16"></a><tt class="py-lineno"> 16</tt>  <tt class="py-line"><tt class="py-comment">#   See the License for the specific language governing permissions and</tt> </tt>
+<a name="L17"></a><tt class="py-lineno"> 17</tt>  <tt class="py-line"><tt class="py-comment">#   limitations under the License.</tt> </tt>
+<a name="L18"></a><tt class="py-lineno"> 18</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L19"></a><tt class="py-lineno"> 19</tt>  <tt class="py-line"><tt class="py-comment">#   Version v.0.3.0</tt> </tt>
+<a name="L20"></a><tt class="py-lineno"> 20</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-0" class="py-name" targets="Module Evtx.Nodes=Evtx.Nodes-module.html"><a title="Evtx.Nodes" class="py-name" href="#" onclick="return doclink('link-0', 'Nodes', 'link-0');">Nodes</a></tt> <tt class="py-keyword">import</tt> <tt id="link-1" class="py-name" targets="Class Evtx.Nodes.RootNode=Evtx.Nodes.RootNode-class.html"><a title="Evtx.Nodes.RootNode" class="py-name" href="#" onclick="return doclink('link-1', 'RootNode', 'link-1');">RootNode</a></tt> </tt>
+<a name="L21"></a><tt class="py-lineno"> 21</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-2" class="py-name"><a title="Evtx.Nodes" class="py-name" href="#" onclick="return doclink('link-2', 'Nodes', 'link-0');">Nodes</a></tt> <tt class="py-keyword">import</tt> <tt id="link-3" class="py-name" targets="Class Evtx.Nodes.TemplateNode=Evtx.Nodes.TemplateNode-class.html"><a title="Evtx.Nodes.TemplateNode" class="py-name" href="#" onclick="return doclink('link-3', 'TemplateNode', 'link-3');">TemplateNode</a></tt> </tt>
+<a name="L22"></a><tt class="py-lineno"> 22</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-4" class="py-name"><a title="Evtx.Nodes" class="py-name" href="#" onclick="return doclink('link-4', 'Nodes', 'link-0');">Nodes</a></tt> <tt class="py-keyword">import</tt> <tt id="link-5" class="py-name" targets="Class Evtx.Nodes.EndOfStreamNode=Evtx.Nodes.EndOfStreamNode-class.html"><a title="Evtx.Nodes.EndOfStreamNode" class="py-name" href="#" onclick="return doclink('link-5', 'EndOfStreamNode', 'link-5');">EndOfStreamNode</a></tt> </tt>
+<a name="L23"></a><tt class="py-lineno"> 23</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-6" class="py-name"><a title="Evtx.Nodes" class="py-name" href="#" onclick="return doclink('link-6', 'Nodes', 'link-0');">Nodes</a></tt> <tt class="py-keyword">import</tt> <tt id="link-7" class="py-name" targets="Class Evtx.Nodes.OpenStartElementNode=Evtx.Nodes.OpenStartElementNode-class.html"><a title="Evtx.Nodes.OpenStartElementNode" class="py-name" href="#" onclick="return doclink('link-7', 'OpenStartElementNode', 'link-7');">OpenStartElementNode</a></tt> </tt>
+<a name="L24"></a><tt class="py-lineno"> 24</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-8" class="py-name"><a title="Evtx.Nodes" class="py-name" href="#" onclick="return doclink('link-8', 'Nodes', 'link-0');">Nodes</a></tt> <tt class="py-keyword">import</tt> <tt id="link-9" class="py-name" targets="Class Evtx.Nodes.CloseStartElementNode=Evtx.Nodes.CloseStartElementNode-class.html"><a title="Evtx.Nodes.CloseStartElementNode" class="py-name" href="#" onclick="return doclink('link-9', 'CloseStartElementNode', 'link-9');">CloseStartElementNode</a></tt> </tt>
+<a name="L25"></a><tt class="py-lineno"> 25</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-10" class="py-name"><a title="Evtx.Nodes" class="py-name" href="#" onclick="return doclink('link-10', 'Nodes', 'link-0');">Nodes</a></tt> <tt class="py-keyword">import</tt> <tt id="link-11" class="py-name" targets="Class Evtx.Nodes.CloseEmptyElementNode=Evtx.Nodes.CloseEmptyElementNode-class.html"><a title="Evtx.Nodes.CloseEmptyElementNode" class="py-name" href="#" onclick="return doclink('link-11', 'CloseEmptyElementNode', 'link-11');">CloseEmptyElementNode</a></tt> </tt>
+<a name="L26"></a><tt class="py-lineno"> 26</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-12" class="py-name"><a title="Evtx.Nodes" class="py-name" href="#" onclick="return doclink('link-12', 'Nodes', 'link-0');">Nodes</a></tt> <tt class="py-keyword">import</tt> <tt id="link-13" class="py-name" targets="Class Evtx.Nodes.CloseElementNode=Evtx.Nodes.CloseElementNode-class.html"><a title="Evtx.Nodes.CloseElementNode" class="py-name" href="#" onclick="return doclink('link-13', 'CloseElementNode', 'link-13');">CloseElementNode</a></tt> </tt>
+<a name="L27"></a><tt class="py-lineno"> 27</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-14" class="py-name"><a title="Evtx.Nodes" class="py-name" href="#" onclick="return doclink('link-14', 'Nodes', 'link-0');">Nodes</a></tt> <tt class="py-keyword">import</tt> <tt id="link-15" class="py-name" targets="Class Evtx.Nodes.ValueNode=Evtx.Nodes.ValueNode-class.html"><a title="Evtx.Nodes.ValueNode" class="py-name" href="#" onclick="return doclink('link-15', 'ValueNode', 'link-15');">ValueNode</a></tt> </tt>
+<a name="L28"></a><tt class="py-lineno"> 28</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-16" class="py-name"><a title="Evtx.Nodes" class="py-name" href="#" onclick="return doclink('link-16', 'Nodes', 'link-0');">Nodes</a></tt> <tt class="py-keyword">import</tt> <tt id="link-17" class="py-name" targets="Class Evtx.Nodes.AttributeNode=Evtx.Nodes.AttributeNode-class.html"><a title="Evtx.Nodes.AttributeNode" class="py-name" href="#" onclick="return doclink('link-17', 'AttributeNode', 'link-17');">AttributeNode</a></tt> </tt>
+<a name="L29"></a><tt class="py-lineno"> 29</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-18" class="py-name"><a title="Evtx.Nodes" class="py-name" href="#" onclick="return doclink('link-18', 'Nodes', 'link-0');">Nodes</a></tt> <tt class="py-keyword">import</tt> <tt id="link-19" class="py-name" targets="Class Evtx.Nodes.CDataSectionNode=Evtx.Nodes.CDataSectionNode-class.html"><a title="Evtx.Nodes.CDataSectionNode" class="py-name" href="#" onclick="return doclink('link-19', 'CDataSectionNode', 'link-19');">CDataSectionNode</a></tt> </tt>
+<a name="L30"></a><tt class="py-lineno"> 30</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-20" class="py-name"><a title="Evtx.Nodes" class="py-name" href="#" onclick="return doclink('link-20', 'Nodes', 'link-0');">Nodes</a></tt> <tt class="py-keyword">import</tt> <tt id="link-21" class="py-name" targets="Class Evtx.Nodes.EntityReferenceNode=Evtx.Nodes.EntityReferenceNode-class.html"><a title="Evtx.Nodes.EntityReferenceNode" class="py-name" href="#" onclick="return doclink('link-21', 'EntityReferenceNode', 'link-21');">EntityReferenceNode</a></tt> </tt>
+<a name="L31"></a><tt class="py-lineno"> 31</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-22" class="py-name"><a title="Evtx.Nodes" class="py-name" href="#" onclick="return doclink('link-22', 'Nodes', 'link-0');">Nodes</a></tt> <tt class="py-keyword">import</tt> <tt id="link-23" class="py-name" targets="Class Evtx.Nodes.ProcessingInstructionTargetNode=Evtx.Nodes.ProcessingInstructionTargetNode-class.html"><a title="Evtx.Nodes.ProcessingInstructionTargetNode" class="py-name" href="#" onclick="return doclink('link-23', 'ProcessingInstructionTargetNode', 'link-23');">ProcessingInstructionTargetNode</a></tt> </tt>
+<a name="L32"></a><tt class="py-lineno"> 32</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-24" class="py-name"><a title="Evtx.Nodes" class="py-name" href="#" onclick="return doclink('link-24', 'Nodes', 'link-0');">Nodes</a></tt> <tt class="py-keyword">import</tt> <tt id="link-25" class="py-name" targets="Class Evtx.Nodes.ProcessingInstructionDataNode=Evtx.Nodes.ProcessingInstructionDataNode-class.html"><a title="Evtx.Nodes.ProcessingInstructionDataNode" class="py-name" href="#" onclick="return doclink('link-25', 'ProcessingInstructionDataNode', 'link-25');">ProcessingInstructionDataNode</a></tt> </tt>
+<a name="L33"></a><tt class="py-lineno"> 33</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-26" class="py-name"><a title="Evtx.Nodes" class="py-name" href="#" onclick="return doclink('link-26', 'Nodes', 'link-0');">Nodes</a></tt> <tt class="py-keyword">import</tt> <tt id="link-27" class="py-name" targets="Class Evtx.Nodes.TemplateInstanceNode=Evtx.Nodes.TemplateInstanceNode-class.html"><a title="Evtx.Nodes.TemplateInstanceNode" class="py-name" href="#" onclick="return doclink('link-27', 'TemplateInstanceNode', 'link-27');">TemplateInstanceNode</a></tt> </tt>
+<a name="L34"></a><tt class="py-lineno"> 34</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-28" class="py-name"><a title="Evtx.Nodes" class="py-name" href="#" onclick="return doclink('link-28', 'Nodes', 'link-0');">Nodes</a></tt> <tt class="py-keyword">import</tt> <tt id="link-29" class="py-name" targets="Class Evtx.Nodes.NormalSubstitutionNode=Evtx.Nodes.NormalSubstitutionNode-class.html"><a title="Evtx.Nodes.NormalSubstitutionNode" class="py-name" href="#" onclick="return doclink('link-29', 'NormalSubstitutionNode', 'link-29');">NormalSubstitutionNode</a></tt> </tt>
+<a name="L35"></a><tt class="py-lineno"> 35</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-30" class="py-name"><a title="Evtx.Nodes" class="py-name" href="#" onclick="return doclink('link-30', 'Nodes', 'link-0');">Nodes</a></tt> <tt class="py-keyword">import</tt> <tt id="link-31" class="py-name" targets="Class Evtx.Nodes.ConditionalSubstitutionNode=Evtx.Nodes.ConditionalSubstitutionNode-class.html"><a title="Evtx.Nodes.ConditionalSubstitutionNode" class="py-name" href="#" onclick="return doclink('link-31', 'ConditionalSubstitutionNode', 'link-31');">ConditionalSubstitutionNode</a></tt> </tt>
+<a name="L36"></a><tt class="py-lineno"> 36</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-32" class="py-name"><a title="Evtx.Nodes" class="py-name" href="#" onclick="return doclink('link-32', 'Nodes', 'link-0');">Nodes</a></tt> <tt class="py-keyword">import</tt> <tt id="link-33" class="py-name" targets="Class Evtx.Nodes.StreamStartNode=Evtx.Nodes.StreamStartNode-class.html"><a title="Evtx.Nodes.StreamStartNode" class="py-name" href="#" onclick="return doclink('link-33', 'StreamStartNode', 'link-33');">StreamStartNode</a></tt> </tt>
+<a name="L37"></a><tt class="py-lineno"> 37</tt>  <tt class="py-line"> </tt>
+<a name="L38"></a><tt class="py-lineno"> 38</tt>  <tt class="py-line"> </tt>
+<a name="UnexpectedElementException"></a><div id="UnexpectedElementException-def"><a name="L39"></a><tt class="py-lineno"> 39</tt> <a class="py-toggle" href="#" id="UnexpectedElementException-toggle" onclick="return toggle('UnexpectedElementException');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="Evtx.Views.UnexpectedElementException-class.html">UnexpectedElementException</a><tt class="py-op">(</tt><tt class="py-base-class">Exception</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="UnexpectedElementException-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="UnexpectedElementException-expanded"><a name="UnexpectedElementException.__init__"></a><div id="UnexpectedElementException.__init__-def"><a name="L40"></a><tt class="py-lineno"> 40</tt> <a class="py-toggle" href="#" id="UnexpectedElementException.__init__-toggle" onclick="return toggle('UnexpectedElementException.__init__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="Evtx.Views.UnexpectedElementException-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">msg</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="UnexpectedElementException.__init__-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="UnexpectedElementException.__init__-expanded"><a name="L41"></a><tt class="py-lineno"> 41</tt>  <tt class="py-line">        <tt class="py-name">super</tt><tt class="py-op">(</tt><tt id="link-34" class="py-name" targets="Class Evtx.Views.UnexpectedElementException=Evtx.Views.UnexpectedElementException-class.html"><a title="Evtx.Views.UnexpectedElementException" class="py-name" href="#" onclick="return doclink('link-34', 'UnexpectedElementException', 'link-34');">UnexpectedElementException</a></tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt id="link-35" class="py-name" targets="Method Evtx.BinaryParser.BinaryParserException.__init__()=Evtx.BinaryParser.BinaryParserException-class.html#__init__,Method Evtx.BinaryParser.Block.__init__()=Evtx.BinaryParser.Block-class.html#__init__,Method Evtx.BinaryParser.OverrunBufferException.__init__()=Evtx.BinaryParser.OverrunBufferException-class.html#__init__,Method Evtx.BinaryParser.ParseException.__init__()=Evtx.BinaryParser.ParseException-class.html#__init__,Method Evtx.BinaryParser.memoize.__init__()=Evtx.BinaryParser.memoize-class.html#__init__,Method Evtx.Evtx.ChunkHeader.__init__()=Evtx.Evtx.ChunkHeader-class.html#__init__,Method Evtx.Evtx.Evtx.__init__()=Evtx.Evtx.Evtx-class.html#__init__,Method Evtx.Evtx.FileHeader.__init__()=Evtx.Evtx.FileHeader-class.html#__init__,Method Evtx.Evtx.InvalidRecordException.__init__()=Evtx.Evtx.InvalidRecordException-class.html#__init__,Method Evtx.Evtx.Record.__init__()=Evtx.Evtx.Record-class.html#__init__,Method Evtx.Evtx.Template.__init__()=Evtx.Evtx.Template-class.html#__init__,Method Evtx.Nodes.AttributeNode.__init__()=Evtx.Nodes.AttributeNode-class.html#__init__,Method Evtx.Nodes.BXmlNode.__init__()=Evtx.Nodes.BXmlNode-class.html#__init__,Method Evtx.Nodes.BXmlTypeNode.__init__()=Evtx.Nodes.BXmlTypeNode-class.html#__init__,Method Evtx.Nodes.BinaryTypeNode.__init__()=Evtx.Nodes.BinaryTypeNode-class.html#__init__,Method Evtx.Nodes.BooleanTypeNode.__init__()=Evtx.Nodes.BooleanTypeNode-class.html#__init__,Method Evtx.Nodes.CDataSectionNode.__init__()=Evtx.Nodes.CDataSectionNode-class.html#__init__,Method Evtx.Nodes.CloseElementNode.__init__()=Evtx.Nodes.CloseElementNode-class.html#__init__,Method Evtx.Nodes.CloseEmptyElementNode.__init__()=Evtx.Nodes.CloseEmptyElementNode-class.html#__init__,Method Evtx.Nodes.CloseStartElementNode.__init__()=Evtx.Nodes.CloseStartElementNode-class.html#__init__,Method Evtx.Nodes.ConditionalSubstitutionNode.__init__()=Evtx.Nodes.ConditionalSubstitutionNode-class.html#__init__,Method Evtx.Nodes.DoubleTypeNode.__init__()=Evtx.Nodes.DoubleTypeNode-class.html#__init__,Method Evtx.Nodes.EndOfStreamNode.__init__()=Evtx.Nodes.EndOfStreamNode-class.html#__init__,Method Evtx.Nodes.EntityReferenceNode.__init__()=Evtx.Nodes.EntityReferenceNode-class.html#__init__,Method Evtx.Nodes.FiletimeTypeNode.__init__()=Evtx.Nodes.FiletimeTypeNode-class.html#__init__,Method Evtx.Nodes.FloatTypeNode.__init__()=Evtx.Nodes.FloatTypeNode-class.html#__init__,Method Evtx.Nodes.GuidTypeNode.__init__()=Evtx.Nodes.GuidTypeNode-class.html#__init__,Method Evtx.Nodes.Hex32TypeNode.__init__()=Evtx.Nodes.Hex32TypeNode-class.html#__init__,Method Evtx.Nodes.Hex64TypeNode.__init__()=Evtx.Nodes.Hex64TypeNode-class.html#__init__,Method Evtx.Nodes.NameStringNode.__init__()=Evtx.Nodes.NameStringNode-class.html#__init__,Method Evtx.Nodes.NormalSubstitutionNode.__init__()=Evtx.Nodes.NormalSubstitutionNode-class.html#__init__,Method Evtx.Nodes.NullTypeNode.__init__()=Evtx.Nodes.NullTypeNode-class.html#__init__,Method Evtx.Nodes.OpenStartElementNode.__init__()=Evtx.Nodes.OpenStartElementNode-class.html#__init__,Method Evtx.Nodes.ProcessingInstructionDataNode.__init__()=Evtx.Nodes.ProcessingInstructionDataNode-class.html#__init__,Method Evtx.Nodes.ProcessingInstructionTargetNode.__init__()=Evtx.Nodes.ProcessingInstructionTargetNode-class.html#__init__,Method Evtx.Nodes.RootNode.__init__()=Evtx.Nodes.RootNode-class.html#__init__,Method Evtx.Nodes.SIDTypeNode.__init__()=Evtx.Nodes.SIDTypeNode-class.html#__init__,Method Evtx.Nodes.SignedByteTypeNode.__init__()=Evtx.Nodes.SignedByteTypeNode-class.html#__init__,Method Evtx.Nodes.SignedDwordTypeNode.__init__()=Evtx.Nodes.SignedDwordTypeNode-class.html#__init__,Method Evtx.Nodes.SignedQwordTypeNode.__init__()=Evtx.Nodes.SignedQwordTypeNode-class.html#__init__,Method Evtx.Nodes.SignedWordTypeNode.__init__()=Evtx.Nodes.SignedWordTypeNode-class.html#__init__,Method Evtx.Nodes.SizeTypeNode.__init__()=Evtx.Nodes.SizeTypeNode-class.html#__init__,Method Evtx.Nodes.StreamStartNode.__init__()=Evtx.Nodes.StreamStartNode-class.html#__init__,Method Evtx.Nodes.StringTypeNode.__init__()=Evtx.Nodes.StringTypeNode-class.html#__init__,Method Evtx.Nodes.SuppressConditionalSubstitution.__init__()=Evtx.Nodes.SuppressConditionalSubstitution-class.html#__init__,Method Evtx.Nodes.SystemtimeTypeNode.__init__()=Evtx.Nodes.SystemtimeTypeNode-class.html#__init__,Method Evtx.Nodes.TemplateInstanceNode.__init__()=Evtx.Nodes.TemplateInstanceNode-class.html#__init__,Method Evtx.Nodes.TemplateNode.__init__()=Evtx.Nodes.TemplateNode-class.html#__init__,Method Evtx.Nodes.UnsignedByteTypeNode.__init__()=Evtx.Nodes.UnsignedByteTypeNode-class.html#__init__,Method Evtx.Nodes.UnsignedDwordTypeNode.__init__()=Evtx.Nodes.UnsignedDwordTypeNode-class.html#__init__,Method Evtx.Nodes.UnsignedQwordTypeNode.__init__()=Evtx.Nodes.UnsignedQwordTypeNode-class.html#__init__,Method Evtx.Nodes.UnsignedWordTypeNode.__init__()=Evtx.Nodes.UnsignedWordTypeNode-class.html#__init__,Method Evtx.Nodes.ValueNode.__init__()=Evtx.Nodes.ValueNode-class.html#__init__,Method Evtx.Nodes.VariantTypeNode.__init__()=Evtx.Nodes.VariantTypeNode-class.html#__init__,Method Evtx.Nodes.WstringArrayTypeNode.__init__()=Evtx.Nodes.WstringArrayTypeNode-class.html#__init__,Method Evtx.Nodes.WstringTypeNode.__init__()=Evtx.Nodes.WstringTypeNode-class.html#__init__,Method Evtx.Views.UnexpectedElementException.__init__()=Evtx.Views.UnexpectedElementException-class.html#__init__"><a title="Evtx.BinaryParser.BinaryParserException.__init__
+Evtx.BinaryParser.Block.__init__
+Evtx.BinaryParser.OverrunBufferException.__init__
+Evtx.BinaryParser.ParseException.__init__
+Evtx.BinaryParser.memoize.__init__
+Evtx.Evtx.ChunkHeader.__init__
+Evtx.Evtx.Evtx.__init__
+Evtx.Evtx.FileHeader.__init__
+Evtx.Evtx.InvalidRecordException.__init__
+Evtx.Evtx.Record.__init__
+Evtx.Evtx.Template.__init__
+Evtx.Nodes.AttributeNode.__init__
+Evtx.Nodes.BXmlNode.__init__
+Evtx.Nodes.BXmlTypeNode.__init__
+Evtx.Nodes.BinaryTypeNode.__init__
+Evtx.Nodes.BooleanTypeNode.__init__
+Evtx.Nodes.CDataSectionNode.__init__
+Evtx.Nodes.CloseElementNode.__init__
+Evtx.Nodes.CloseEmptyElementNode.__init__
+Evtx.Nodes.CloseStartElementNode.__init__
+Evtx.Nodes.ConditionalSubstitutionNode.__init__
+Evtx.Nodes.DoubleTypeNode.__init__
+Evtx.Nodes.EndOfStreamNode.__init__
+Evtx.Nodes.EntityReferenceNode.__init__
+Evtx.Nodes.FiletimeTypeNode.__init__
+Evtx.Nodes.FloatTypeNode.__init__
+Evtx.Nodes.GuidTypeNode.__init__
+Evtx.Nodes.Hex32TypeNode.__init__
+Evtx.Nodes.Hex64TypeNode.__init__
+Evtx.Nodes.NameStringNode.__init__
+Evtx.Nodes.NormalSubstitutionNode.__init__
+Evtx.Nodes.NullTypeNode.__init__
+Evtx.Nodes.OpenStartElementNode.__init__
+Evtx.Nodes.ProcessingInstructionDataNode.__init__
+Evtx.Nodes.ProcessingInstructionTargetNode.__init__
+Evtx.Nodes.RootNode.__init__
+Evtx.Nodes.SIDTypeNode.__init__
+Evtx.Nodes.SignedByteTypeNode.__init__
+Evtx.Nodes.SignedDwordTypeNode.__init__
+Evtx.Nodes.SignedQwordTypeNode.__init__
+Evtx.Nodes.SignedWordTypeNode.__init__
+Evtx.Nodes.SizeTypeNode.__init__
+Evtx.Nodes.StreamStartNode.__init__
+Evtx.Nodes.StringTypeNode.__init__
+Evtx.Nodes.SuppressConditionalSubstitution.__init__
+Evtx.Nodes.SystemtimeTypeNode.__init__
+Evtx.Nodes.TemplateInstanceNode.__init__
+Evtx.Nodes.TemplateNode.__init__
+Evtx.Nodes.UnsignedByteTypeNode.__init__
+Evtx.Nodes.UnsignedDwordTypeNode.__init__
+Evtx.Nodes.UnsignedQwordTypeNode.__init__
+Evtx.Nodes.UnsignedWordTypeNode.__init__
+Evtx.Nodes.ValueNode.__init__
+Evtx.Nodes.VariantTypeNode.__init__
+Evtx.Nodes.WstringArrayTypeNode.__init__
+Evtx.Nodes.WstringTypeNode.__init__
+Evtx.Views.UnexpectedElementException.__init__" class="py-name" href="#" onclick="return doclink('link-35', '__init__', 'link-35');">__init__</a></tt><tt class="py-op">(</tt><tt class="py-name">msg</tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L42"></a><tt class="py-lineno"> 42</tt>  <tt class="py-line"> </tt>
+<a name="L43"></a><tt class="py-lineno"> 43</tt>  <tt class="py-line"> </tt>
+<a name="_make_template_xml_view"></a><div id="_make_template_xml_view-def"><a name="L44"></a><tt class="py-lineno"> 44</tt> <a class="py-toggle" href="#" id="_make_template_xml_view-toggle" onclick="return toggle('_make_template_xml_view');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="Evtx.Views-module.html#_make_template_xml_view">_make_template_xml_view</a><tt class="py-op">(</tt><tt class="py-param">root_node</tt><tt class="py-op">,</tt> <tt class="py-param">cache</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="_make_template_xml_view-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="_make_template_xml_view-expanded"><a name="L45"></a><tt class="py-lineno"> 45</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L46"></a><tt class="py-lineno"> 46</tt>  <tt class="py-line"><tt class="py-docstring">    Given a RootNode, parse only the template/children</tt> </tt>
+<a name="L47"></a><tt class="py-lineno"> 47</tt>  <tt class="py-line"><tt class="py-docstring">      and not the substitutions.</tt> </tt>
+<a name="L48"></a><tt class="py-lineno"> 48</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L49"></a><tt class="py-lineno"> 49</tt>  <tt class="py-line"><tt class="py-docstring">    Note, the cache should be local to the Evtx.Chunk.</tt> </tt>
+<a name="L50"></a><tt class="py-lineno"> 50</tt>  <tt class="py-line"><tt class="py-docstring">      Do not share caches across Chunks.</tt> </tt>
+<a name="L51"></a><tt class="py-lineno"> 51</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L52"></a><tt class="py-lineno"> 52</tt>  <tt class="py-line"><tt class="py-docstring">    @type root_node: Nodes.RootNode</tt> </tt>
+<a name="L53"></a><tt class="py-lineno"> 53</tt>  <tt class="py-line"><tt class="py-docstring">    @type cache: dict of {int: TemplateNode}</tt> </tt>
+<a name="L54"></a><tt class="py-lineno"> 54</tt>  <tt class="py-line"><tt class="py-docstring">    @rtype: str</tt> </tt>
+<a name="L55"></a><tt class="py-lineno"> 55</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L56"></a><tt class="py-lineno"> 56</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-name">cache</tt> <tt class="py-keyword">is</tt> <tt class="py-name">None</tt><tt class="py-op">:</tt> </tt>
+<a name="L57"></a><tt class="py-lineno"> 57</tt>  <tt class="py-line">        <tt class="py-name">cache</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
+<a name="L58"></a><tt class="py-lineno"> 58</tt>  <tt class="py-line"> </tt>
+<a name="L59"></a><tt class="py-lineno"> 59</tt>  <tt class="py-line">    <tt class="py-keyword">def</tt> <tt class="py-def-name">escape_format_chars</tt><tt class="py-op">(</tt><tt class="py-param">s</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L60"></a><tt class="py-lineno"> 60</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">s</tt><tt class="py-op">.</tt><tt class="py-name">replace</tt><tt class="py-op">(</tt><tt class="py-string">"{"</tt><tt class="py-op">,</tt> <tt class="py-string">"{{"</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">replace</tt><tt class="py-op">(</tt><tt class="py-string">"}"</tt><tt class="py-op">,</tt> <tt class="py-string">"}}"</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L61"></a><tt class="py-lineno"> 61</tt>  <tt class="py-line"> </tt>
+<a name="L62"></a><tt class="py-lineno"> 62</tt>  <tt class="py-line">    <tt class="py-keyword">def</tt> <tt class="py-def-name">rec</tt><tt class="py-op">(</tt><tt class="py-param">node</tt><tt class="py-op">,</tt> <tt class="py-param">acc</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L63"></a><tt class="py-lineno"> 63</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-36" class="py-name" targets="Method Evtx.Evtx.Template.node()=Evtx.Evtx.Template-class.html#node"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-36', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-37" class="py-name"><a title="Evtx.Nodes.EndOfStreamNode" class="py-name" href="#" onclick="return doclink('link-37', 'EndOfStreamNode', 'link-5');">EndOfStreamNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L64"></a><tt class="py-lineno"> 64</tt>  <tt class="py-line">            <tt class="py-keyword">pass</tt>  <tt class="py-comment"># intended</tt> </tt>
+<a name="L65"></a><tt class="py-lineno"> 65</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-38" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-38', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-39" class="py-name"><a title="Evtx.Nodes.OpenStartElementNode" class="py-name" href="#" onclick="return doclink('link-39', 'OpenStartElementNode', 'link-7');">OpenStartElementNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L66"></a><tt class="py-lineno"> 66</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">"&lt;"</tt><tt class="py-op">)</tt> </tt>
+<a name="L67"></a><tt class="py-lineno"> 67</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt id="link-40" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-40', 'node', 'link-36');">node</a></tt><tt class="py-op">.</tt><tt id="link-41" class="py-name" targets="Method Evtx.Nodes.OpenStartElementNode.tag_name()=Evtx.Nodes.OpenStartElementNode-class.html#tag_name"><a title="Evtx.Nodes.OpenStartElementNode.tag_name" class="py-name" href="#" onclick="return doclink('link-41', 'tag_name', 'link-41');">tag_name</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L68"></a><tt class="py-lineno"> 68</tt>  <tt class="py-line">            <tt class="py-keyword">for</tt> <tt class="py-name">child</tt> <tt class="py-keyword">in</tt> <tt id="link-42" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-42', 'node', 'link-36');">node</a></tt><tt class="py-op">.</tt><tt id="link-43" class="py-name" targets="Method Evtx.Nodes.AttributeNode.children()=Evtx.Nodes.AttributeNode-class.html#children,Method Evtx.Nodes.BXmlNode.children()=Evtx.Nodes.BXmlNode-class.html#children,Method Evtx.Nodes.CDataSectionNode.children()=Evtx.Nodes.CDataSectionNode-class.html#children,Method Evtx.Nodes.CloseElementNode.children()=Evtx.Nodes.CloseElementNode-class.html#children,Method Evtx.Nodes.CloseEmptyElementNode.children()=Evtx.Nodes.CloseEmptyElementNode-class.html#children,Method Evtx.Nodes.CloseStartElementNode.children()=Evtx.Nodes.CloseStartElementNode-class.html#children,Method Evtx.Nodes.ConditionalSubstitutionNode.children()=Evtx.Nodes.ConditionalSubstitutionNode-class.html#children,Method Evtx.Nodes.EndOfStreamNode.children()=Evtx.Nodes.EndOfStreamNode-class.html#children,Method Evtx.Nodes.EntityReferenceNode.children()=Evtx.Nodes.EntityReferenceNode-class.html#children,Method Evtx.Nodes.NormalSubstitutionNode.children()=Evtx.Nodes.NormalSubstitutionNode-class.html#children,Method Evtx.Nodes.NullTypeNode.children()=Evtx.Nodes.NullTypeNode-class.html#children,Method Evtx.Nodes.OpenStartElementNode.children()=Evtx.Nodes.OpenStartElementNode-class.html#children,Method Evtx.Nodes.ProcessingInstructionDataNode.children()=Evtx.Nodes.ProcessingInstructionDataNode-class.html#children,Method Evtx.Nodes.ProcessingInstructionTargetNode.children()=Evtx.Nodes.ProcessingInstructionTargetNode-class.html#children,Method Evtx.Nodes.RootNode.children()=Evtx.Nodes.RootNode-class.html#children,Method Evtx.Nodes.StreamStartNode.children()=Evtx.Nodes.StreamStartNode-class.html#children,Method Evtx.Nodes.TemplateInstanceNode.children()=Evtx.Nodes.TemplateInstanceNode-class.html#children,Method Evtx.Nodes.ValueNode.children()=Evtx.Nodes.ValueNode-class.html#children,Method Evtx.Nodes.VariantTypeNode.children()=Evtx.Nodes.VariantTypeNode-class.html#children"><a title="Evtx.Nodes.AttributeNode.children
+Evtx.Nodes.BXmlNode.children
+Evtx.Nodes.CDataSectionNode.children
+Evtx.Nodes.CloseElementNode.children
+Evtx.Nodes.CloseEmptyElementNode.children
+Evtx.Nodes.CloseStartElementNode.children
+Evtx.Nodes.ConditionalSubstitutionNode.children
+Evtx.Nodes.EndOfStreamNode.children
+Evtx.Nodes.EntityReferenceNode.children
+Evtx.Nodes.NormalSubstitutionNode.children
+Evtx.Nodes.NullTypeNode.children
+Evtx.Nodes.OpenStartElementNode.children
+Evtx.Nodes.ProcessingInstructionDataNode.children
+Evtx.Nodes.ProcessingInstructionTargetNode.children
+Evtx.Nodes.RootNode.children
+Evtx.Nodes.StreamStartNode.children
+Evtx.Nodes.TemplateInstanceNode.children
+Evtx.Nodes.ValueNode.children
+Evtx.Nodes.VariantTypeNode.children" class="py-name" href="#" onclick="return doclink('link-43', 'children', 'link-43');">children</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L69"></a><tt class="py-lineno"> 69</tt>  <tt class="py-line">                <tt class="py-keyword">if</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt class="py-name">child</tt><tt class="py-op">,</tt> <tt id="link-44" class="py-name"><a title="Evtx.Nodes.AttributeNode" class="py-name" href="#" onclick="return doclink('link-44', 'AttributeNode', 'link-17');">AttributeNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L70"></a><tt class="py-lineno"> 70</tt>  <tt class="py-line">                    <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">" "</tt><tt class="py-op">)</tt> </tt>
+<a name="L71"></a><tt class="py-lineno"> 71</tt>  <tt class="py-line">                    <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">child</tt><tt class="py-op">.</tt><tt id="link-45" class="py-name" targets="Method Evtx.Nodes.AttributeNode.attribute_name()=Evtx.Nodes.AttributeNode-class.html#attribute_name"><a title="Evtx.Nodes.AttributeNode.attribute_name" class="py-name" href="#" onclick="return doclink('link-45', 'attribute_name', 'link-45');">attribute_name</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt id="link-46" class="py-name" targets="Method Evtx.Nodes.BXmlTypeNode.string()=Evtx.Nodes.BXmlTypeNode-class.html#string,Method Evtx.Nodes.BinaryTypeNode.string()=Evtx.Nodes.BinaryTypeNode-class.html#string,Method Evtx.Nodes.BooleanTypeNode.string()=Evtx.Nodes.BooleanTypeNode-class.html#string,Method Evtx.Nodes.DoubleTypeNode.string()=Evtx.Nodes.DoubleTypeNode-class.html#string,Method Evtx.Nodes.FiletimeTypeNode.string()=Evtx.Nodes.FiletimeTypeNode-class.html#string,Method Evtx.Nodes.FloatTypeNode.string()=Evtx.Nodes.FloatTypeNode-class.html#string,Method Evtx.Nodes.GuidTypeNode.string()=Evtx.Nodes.GuidTypeNode-class.html#string,Method Evtx.Nodes.Hex32TypeNode.string()=Evtx.Nodes.Hex32TypeNode-class.html#string,Method Evtx.Nodes.Hex64TypeNode.string()=Evtx.Nodes.Hex64TypeNode-class.html#string,Method Evtx.Nodes.NameStringNode.string()=Evtx.Nodes.NameStringNode-class.html#string,Method Evtx.Nodes.NullTypeNode.string()=Evtx.Nodes.NullTypeNode-class.html#string,Method Evtx.Nodes.ProcessingInstructionDataNode.string()=Evtx.Nodes.ProcessingInstructionDataNode-class.html#string,Method Evtx.Nodes.SIDTypeNode.string()=Evtx.Nodes.SIDTypeNode-class.html#string,Method Evtx.Nodes.SignedByteTypeNode.string()=Evtx.Nodes.SignedByteTypeNode-class.html#string,Method Evtx.Nodes.SignedDwordTypeNode.string()=Evtx.Nodes.SignedDwordTypeNode-class.html#string,Method Evtx.Nodes.SignedQwordTypeNode.string()=Evtx.Nodes.SignedQwordTypeNode-class.html#string,Method Evtx.Nodes.SignedWordTypeNode.string()=Evtx.Nodes.SignedWordTypeNode-class.html#string,Method Evtx.Nodes.SizeTypeNode.string()=Evtx.Nodes.SizeTypeNode-class.html#string,Method Evtx.Nodes.StringTypeNode.string()=Evtx.Nodes.StringTypeNode-class.html#string,Method Evtx.Nodes.SystemtimeTypeNode.string()=Evtx.Nodes.SystemtimeTypeNode-class.html#string,Method Evtx.Nodes.UnsignedByteTypeNode.string()=Evtx.Nodes.UnsignedByteTypeNode-class.html#string,Method Evtx.Nodes.UnsignedDwordTypeNode.string()=Evtx.Nodes.UnsignedDwordTypeNode-class.html#string,Method Evtx.Nodes.UnsignedQwordTypeNode.string()=Evtx.Nodes.UnsignedQwordTypeNode-class.html#string,Method Evtx.Nodes.UnsignedWordTypeNode.string()=Evtx.Nodes.UnsignedWordTypeNode-class.html#string,Method Evtx.Nodes.VariantTypeNode.string()=Evtx.Nodes.VariantTypeNode-class.html#string,Method Evtx.Nodes.WstringArrayTypeNode.string()=Evtx.Nodes.WstringArrayTypeNode-class.html#string,Method Evtx.Nodes.WstringTypeNode.string()=Evtx.Nodes.WstringTypeNode-class.html#string"><a title="Evtx.Nodes.BXmlTypeNode.string
+Evtx.Nodes.BinaryTypeNode.string
+Evtx.Nodes.BooleanTypeNode.string
+Evtx.Nodes.DoubleTypeNode.string
+Evtx.Nodes.FiletimeTypeNode.string
+Evtx.Nodes.FloatTypeNode.string
+Evtx.Nodes.GuidTypeNode.string
+Evtx.Nodes.Hex32TypeNode.string
+Evtx.Nodes.Hex64TypeNode.string
+Evtx.Nodes.NameStringNode.string
+Evtx.Nodes.NullTypeNode.string
+Evtx.Nodes.ProcessingInstructionDataNode.string
+Evtx.Nodes.SIDTypeNode.string
+Evtx.Nodes.SignedByteTypeNode.string
+Evtx.Nodes.SignedDwordTypeNode.string
+Evtx.Nodes.SignedQwordTypeNode.string
+Evtx.Nodes.SignedWordTypeNode.string
+Evtx.Nodes.SizeTypeNode.string
+Evtx.Nodes.StringTypeNode.string
+Evtx.Nodes.SystemtimeTypeNode.string
+Evtx.Nodes.UnsignedByteTypeNode.string
+Evtx.Nodes.UnsignedDwordTypeNode.string
+Evtx.Nodes.UnsignedQwordTypeNode.string
+Evtx.Nodes.UnsignedWordTypeNode.string
+Evtx.Nodes.VariantTypeNode.string
+Evtx.Nodes.WstringArrayTypeNode.string
+Evtx.Nodes.WstringTypeNode.string" class="py-name" href="#" onclick="return doclink('link-46', 'string', 'link-46');">string</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L72"></a><tt class="py-lineno"> 72</tt>  <tt class="py-line">                    <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">"=\""</tt><tt class="py-op">)</tt> </tt>
+<a name="L73"></a><tt class="py-lineno"> 73</tt>  <tt class="py-line">                    <tt class="py-name">rec</tt><tt class="py-op">(</tt><tt class="py-name">child</tt><tt class="py-op">.</tt><tt id="link-47" class="py-name" targets="Method Evtx.Nodes.AttributeNode.attribute_value()=Evtx.Nodes.AttributeNode-class.html#attribute_value"><a title="Evtx.Nodes.AttributeNode.attribute_value" class="py-name" href="#" onclick="return doclink('link-47', 'attribute_value', 'link-47');">attribute_value</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">acc</tt><tt class="py-op">)</tt> </tt>
+<a name="L74"></a><tt class="py-lineno"> 74</tt>  <tt class="py-line">                    <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">"\""</tt><tt class="py-op">)</tt> </tt>
+<a name="L75"></a><tt class="py-lineno"> 75</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">"&gt;"</tt><tt class="py-op">)</tt> </tt>
+<a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line">            <tt class="py-keyword">for</tt> <tt class="py-name">child</tt> <tt class="py-keyword">in</tt> <tt id="link-48" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-48', 'node', 'link-36');">node</a></tt><tt class="py-op">.</tt><tt id="link-49" class="py-name"><a title="Evtx.Nodes.AttributeNode.children
+Evtx.Nodes.BXmlNode.children
+Evtx.Nodes.CDataSectionNode.children
+Evtx.Nodes.CloseElementNode.children
+Evtx.Nodes.CloseEmptyElementNode.children
+Evtx.Nodes.CloseStartElementNode.children
+Evtx.Nodes.ConditionalSubstitutionNode.children
+Evtx.Nodes.EndOfStreamNode.children
+Evtx.Nodes.EntityReferenceNode.children
+Evtx.Nodes.NormalSubstitutionNode.children
+Evtx.Nodes.NullTypeNode.children
+Evtx.Nodes.OpenStartElementNode.children
+Evtx.Nodes.ProcessingInstructionDataNode.children
+Evtx.Nodes.ProcessingInstructionTargetNode.children
+Evtx.Nodes.RootNode.children
+Evtx.Nodes.StreamStartNode.children
+Evtx.Nodes.TemplateInstanceNode.children
+Evtx.Nodes.ValueNode.children
+Evtx.Nodes.VariantTypeNode.children" class="py-name" href="#" onclick="return doclink('link-49', 'children', 'link-43');">children</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L77"></a><tt class="py-lineno"> 77</tt>  <tt class="py-line">                <tt class="py-name">rec</tt><tt class="py-op">(</tt><tt class="py-name">child</tt><tt class="py-op">,</tt> <tt class="py-name">acc</tt><tt class="py-op">)</tt> </tt>
+<a name="L78"></a><tt class="py-lineno"> 78</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">"&lt;/"</tt><tt class="py-op">)</tt> </tt>
+<a name="L79"></a><tt class="py-lineno"> 79</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt id="link-50" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-50', 'node', 'link-36');">node</a></tt><tt class="py-op">.</tt><tt id="link-51" class="py-name"><a title="Evtx.Nodes.OpenStartElementNode.tag_name" class="py-name" href="#" onclick="return doclink('link-51', 'tag_name', 'link-41');">tag_name</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L80"></a><tt class="py-lineno"> 80</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">"&gt;\n"</tt><tt class="py-op">)</tt> </tt>
+<a name="L81"></a><tt class="py-lineno"> 81</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-52" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-52', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-53" class="py-name"><a title="Evtx.Nodes.CloseStartElementNode" class="py-name" href="#" onclick="return doclink('link-53', 'CloseStartElementNode', 'link-9');">CloseStartElementNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L82"></a><tt class="py-lineno"> 82</tt>  <tt class="py-line">            <tt class="py-keyword">pass</tt>  <tt class="py-comment"># intended</tt> </tt>
+<a name="L83"></a><tt class="py-lineno"> 83</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-54" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-54', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-55" class="py-name"><a title="Evtx.Nodes.CloseEmptyElementNode" class="py-name" href="#" onclick="return doclink('link-55', 'CloseEmptyElementNode', 'link-11');">CloseEmptyElementNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L84"></a><tt class="py-lineno"> 84</tt>  <tt class="py-line">            <tt class="py-keyword">pass</tt>  <tt class="py-comment"># intended</tt> </tt>
+<a name="L85"></a><tt class="py-lineno"> 85</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-56" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-56', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-57" class="py-name"><a title="Evtx.Nodes.CloseElementNode" class="py-name" href="#" onclick="return doclink('link-57', 'CloseElementNode', 'link-13');">CloseElementNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L86"></a><tt class="py-lineno"> 86</tt>  <tt class="py-line">            <tt class="py-keyword">pass</tt>  <tt class="py-comment"># intended</tt> </tt>
+<a name="L87"></a><tt class="py-lineno"> 87</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-58" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-58', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-59" class="py-name"><a title="Evtx.Nodes.ValueNode" class="py-name" href="#" onclick="return doclink('link-59', 'ValueNode', 'link-15');">ValueNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L88"></a><tt class="py-lineno"> 88</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">escape_format_chars</tt><tt class="py-op">(</tt><tt id="link-60" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-60', 'node', 'link-36');">node</a></tt><tt class="py-op">.</tt><tt id="link-61" class="py-name"><a title="Evtx.Nodes.AttributeNode.children
+Evtx.Nodes.BXmlNode.children
+Evtx.Nodes.CDataSectionNode.children
+Evtx.Nodes.CloseElementNode.children
+Evtx.Nodes.CloseEmptyElementNode.children
+Evtx.Nodes.CloseStartElementNode.children
+Evtx.Nodes.ConditionalSubstitutionNode.children
+Evtx.Nodes.EndOfStreamNode.children
+Evtx.Nodes.EntityReferenceNode.children
+Evtx.Nodes.NormalSubstitutionNode.children
+Evtx.Nodes.NullTypeNode.children
+Evtx.Nodes.OpenStartElementNode.children
+Evtx.Nodes.ProcessingInstructionDataNode.children
+Evtx.Nodes.ProcessingInstructionTargetNode.children
+Evtx.Nodes.RootNode.children
+Evtx.Nodes.StreamStartNode.children
+Evtx.Nodes.TemplateInstanceNode.children
+Evtx.Nodes.ValueNode.children
+Evtx.Nodes.VariantTypeNode.children" class="py-name" href="#" onclick="return doclink('link-61', 'children', 'link-43');">children</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">.</tt><tt id="link-62" class="py-name"><a title="Evtx.Nodes.BXmlTypeNode.string
+Evtx.Nodes.BinaryTypeNode.string
+Evtx.Nodes.BooleanTypeNode.string
+Evtx.Nodes.DoubleTypeNode.string
+Evtx.Nodes.FiletimeTypeNode.string
+Evtx.Nodes.FloatTypeNode.string
+Evtx.Nodes.GuidTypeNode.string
+Evtx.Nodes.Hex32TypeNode.string
+Evtx.Nodes.Hex64TypeNode.string
+Evtx.Nodes.NameStringNode.string
+Evtx.Nodes.NullTypeNode.string
+Evtx.Nodes.ProcessingInstructionDataNode.string
+Evtx.Nodes.SIDTypeNode.string
+Evtx.Nodes.SignedByteTypeNode.string
+Evtx.Nodes.SignedDwordTypeNode.string
+Evtx.Nodes.SignedQwordTypeNode.string
+Evtx.Nodes.SignedWordTypeNode.string
+Evtx.Nodes.SizeTypeNode.string
+Evtx.Nodes.StringTypeNode.string
+Evtx.Nodes.SystemtimeTypeNode.string
+Evtx.Nodes.UnsignedByteTypeNode.string
+Evtx.Nodes.UnsignedDwordTypeNode.string
+Evtx.Nodes.UnsignedQwordTypeNode.string
+Evtx.Nodes.UnsignedWordTypeNode.string
+Evtx.Nodes.VariantTypeNode.string
+Evtx.Nodes.WstringArrayTypeNode.string
+Evtx.Nodes.WstringTypeNode.string" class="py-name" href="#" onclick="return doclink('link-62', 'string', 'link-46');">string</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L89"></a><tt class="py-lineno"> 89</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-63" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-63', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-64" class="py-name"><a title="Evtx.Nodes.AttributeNode" class="py-name" href="#" onclick="return doclink('link-64', 'AttributeNode', 'link-17');">AttributeNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L90"></a><tt class="py-lineno"> 90</tt>  <tt class="py-line">            <tt class="py-keyword">pass</tt>  <tt class="py-comment"># intended</tt> </tt>
+<a name="L91"></a><tt class="py-lineno"> 91</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-65" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-65', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-66" class="py-name"><a title="Evtx.Nodes.CDataSectionNode" class="py-name" href="#" onclick="return doclink('link-66', 'CDataSectionNode', 'link-19');">CDataSectionNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L92"></a><tt class="py-lineno"> 92</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">"&lt;![CDATA["</tt><tt class="py-op">)</tt> </tt>
+<a name="L93"></a><tt class="py-lineno"> 93</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt id="link-67" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-67', 'node', 'link-36');">node</a></tt><tt class="py-op">.</tt><tt class="py-name">cdata</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L94"></a><tt class="py-lineno"> 94</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">"]]&gt;"</tt><tt class="py-op">)</tt> </tt>
+<a name="L95"></a><tt class="py-lineno"> 95</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-68" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-68', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-69" class="py-name"><a title="Evtx.Nodes.EntityReferenceNode" class="py-name" href="#" onclick="return doclink('link-69', 'EntityReferenceNode', 'link-21');">EntityReferenceNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L96"></a><tt class="py-lineno"> 96</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt id="link-70" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-70', 'node', 'link-36');">node</a></tt><tt class="py-op">.</tt><tt id="link-71" class="py-name" targets="Method Evtx.Nodes.EntityReferenceNode.entity_reference()=Evtx.Nodes.EntityReferenceNode-class.html#entity_reference"><a title="Evtx.Nodes.EntityReferenceNode.entity_reference" class="py-name" href="#" onclick="return doclink('link-71', 'entity_reference', 'link-71');">entity_reference</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L97"></a><tt class="py-lineno"> 97</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-72" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-72', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-73" class="py-name"><a title="Evtx.Nodes.ProcessingInstructionTargetNode" class="py-name" href="#" onclick="return doclink('link-73', 'ProcessingInstructionTargetNode', 'link-23');">ProcessingInstructionTargetNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L98"></a><tt class="py-lineno"> 98</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt id="link-74" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-74', 'node', 'link-36');">node</a></tt><tt class="py-op">.</tt><tt id="link-75" class="py-name" targets="Method Evtx.Nodes.ProcessingInstructionTargetNode.processing_instruction_target()=Evtx.Nodes.ProcessingInstructionTargetNode-class.html#processing_instruction_target"><a title="Evtx.Nodes.ProcessingInstructionTargetNode.processing_instruction_target" class="py-name" href="#" onclick="return doclink('link-75', 'processing_instruction_target', 'link-75');">processing_instruction_target</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L99"></a><tt class="py-lineno"> 99</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-76" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-76', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-77" class="py-name"><a title="Evtx.Nodes.ProcessingInstructionDataNode" class="py-name" href="#" onclick="return doclink('link-77', 'ProcessingInstructionDataNode', 'link-25');">ProcessingInstructionDataNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L100"></a><tt class="py-lineno">100</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt id="link-78" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-78', 'node', 'link-36');">node</a></tt><tt class="py-op">.</tt><tt id="link-79" class="py-name"><a title="Evtx.Nodes.BXmlTypeNode.string
+Evtx.Nodes.BinaryTypeNode.string
+Evtx.Nodes.BooleanTypeNode.string
+Evtx.Nodes.DoubleTypeNode.string
+Evtx.Nodes.FiletimeTypeNode.string
+Evtx.Nodes.FloatTypeNode.string
+Evtx.Nodes.GuidTypeNode.string
+Evtx.Nodes.Hex32TypeNode.string
+Evtx.Nodes.Hex64TypeNode.string
+Evtx.Nodes.NameStringNode.string
+Evtx.Nodes.NullTypeNode.string
+Evtx.Nodes.ProcessingInstructionDataNode.string
+Evtx.Nodes.SIDTypeNode.string
+Evtx.Nodes.SignedByteTypeNode.string
+Evtx.Nodes.SignedDwordTypeNode.string
+Evtx.Nodes.SignedQwordTypeNode.string
+Evtx.Nodes.SignedWordTypeNode.string
+Evtx.Nodes.SizeTypeNode.string
+Evtx.Nodes.StringTypeNode.string
+Evtx.Nodes.SystemtimeTypeNode.string
+Evtx.Nodes.UnsignedByteTypeNode.string
+Evtx.Nodes.UnsignedDwordTypeNode.string
+Evtx.Nodes.UnsignedQwordTypeNode.string
+Evtx.Nodes.UnsignedWordTypeNode.string
+Evtx.Nodes.VariantTypeNode.string
+Evtx.Nodes.WstringArrayTypeNode.string
+Evtx.Nodes.WstringTypeNode.string" class="py-name" href="#" onclick="return doclink('link-79', 'string', 'link-46');">string</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L101"></a><tt class="py-lineno">101</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-80" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-80', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-81" class="py-name"><a title="Evtx.Nodes.TemplateInstanceNode" class="py-name" href="#" onclick="return doclink('link-81', 'TemplateInstanceNode', 'link-27');">TemplateInstanceNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L102"></a><tt class="py-lineno">102</tt>  <tt class="py-line">            <tt class="py-keyword">raise</tt> <tt id="link-82" class="py-name"><a title="Evtx.Views.UnexpectedElementException" class="py-name" href="#" onclick="return doclink('link-82', 'UnexpectedElementException', 'link-34');">UnexpectedElementException</a></tt><tt class="py-op">(</tt><tt class="py-string">"TemplateInstanceNode"</tt><tt class="py-op">)</tt> </tt>
+<a name="L103"></a><tt class="py-lineno">103</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-83" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-83', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-84" class="py-name"><a title="Evtx.Nodes.NormalSubstitutionNode" class="py-name" href="#" onclick="return doclink('link-84', 'NormalSubstitutionNode', 'link-29');">NormalSubstitutionNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L104"></a><tt class="py-lineno">104</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">"{"</tt><tt class="py-op">)</tt> </tt>
+<a name="L105"></a><tt class="py-lineno">105</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">"%d"</tt> <tt class="py-op">%</tt> <tt class="py-op">(</tt><tt id="link-85" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-85', 'node', 'link-36');">node</a></tt><tt class="py-op">.</tt><tt class="py-name">index</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L106"></a><tt class="py-lineno">106</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">"}"</tt><tt class="py-op">)</tt> </tt>
+<a name="L107"></a><tt class="py-lineno">107</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-86" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-86', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-87" class="py-name"><a title="Evtx.Nodes.ConditionalSubstitutionNode" class="py-name" href="#" onclick="return doclink('link-87', 'ConditionalSubstitutionNode', 'link-31');">ConditionalSubstitutionNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L108"></a><tt class="py-lineno">108</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">"{"</tt><tt class="py-op">)</tt> </tt>
+<a name="L109"></a><tt class="py-lineno">109</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">"%d"</tt> <tt class="py-op">%</tt> <tt class="py-op">(</tt><tt id="link-88" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-88', 'node', 'link-36');">node</a></tt><tt class="py-op">.</tt><tt class="py-name">index</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L110"></a><tt class="py-lineno">110</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">"}"</tt><tt class="py-op">)</tt> </tt>
+<a name="L111"></a><tt class="py-lineno">111</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-89" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-89', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-90" class="py-name"><a title="Evtx.Nodes.StreamStartNode" class="py-name" href="#" onclick="return doclink('link-90', 'StreamStartNode', 'link-33');">StreamStartNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L112"></a><tt class="py-lineno">112</tt>  <tt class="py-line">            <tt class="py-keyword">pass</tt>  <tt class="py-comment"># intended</tt> </tt>
+</div><a name="L113"></a><tt class="py-lineno">113</tt>  <tt class="py-line"> </tt>
+<a name="L114"></a><tt class="py-lineno">114</tt>  <tt class="py-line">    <tt class="py-name">acc</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt> </tt>
+<a name="L115"></a><tt class="py-lineno">115</tt>  <tt class="py-line">    <tt class="py-name">template_instance</tt> <tt class="py-op">=</tt> <tt class="py-name">root_node</tt><tt class="py-op">.</tt><tt id="link-91" class="py-name" targets="Method Evtx.Nodes.RootNode.fast_template_instance()=Evtx.Nodes.RootNode-class.html#fast_template_instance"><a title="Evtx.Nodes.RootNode.fast_template_instance" class="py-name" href="#" onclick="return doclink('link-91', 'fast_template_instance', 'link-91');">fast_template_instance</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L116"></a><tt class="py-lineno">116</tt>  <tt class="py-line">    <tt class="py-name">templ_off</tt> <tt class="py-op">=</tt> <tt class="py-name">template_instance</tt><tt class="py-op">.</tt><tt class="py-name">template_offset</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> <tt class="py-op">+</tt> \ </tt>
+<a name="L117"></a><tt class="py-lineno">117</tt>  <tt class="py-line">        <tt class="py-name">template_instance</tt><tt class="py-op">.</tt><tt class="py-name">_chunk</tt><tt class="py-op">.</tt><tt id="link-92" class="py-name" targets="Method Evtx.BinaryParser.Block.offset()=Evtx.BinaryParser.Block-class.html#offset,Method Evtx.Nodes.NullTypeNode.offset()=Evtx.Nodes.NullTypeNode-class.html#offset"><a title="Evtx.BinaryParser.Block.offset
+Evtx.Nodes.NullTypeNode.offset" class="py-name" href="#" onclick="return doclink('link-92', 'offset', 'link-92');">offset</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L118"></a><tt class="py-lineno">118</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-name">templ_off</tt> <tt class="py-keyword">in</tt> <tt class="py-name">cache</tt><tt class="py-op">:</tt> </tt>
+<a name="L119"></a><tt class="py-lineno">119</tt>  <tt class="py-line">        <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">cache</tt><tt class="py-op">[</tt><tt class="py-name">templ_off</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L120"></a><tt class="py-lineno">120</tt>  <tt class="py-line">    <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L121"></a><tt class="py-lineno">121</tt>  <tt class="py-line">        <tt id="link-93" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-93', 'node', 'link-36');">node</a></tt> <tt class="py-op">=</tt> <tt id="link-94" class="py-name"><a title="Evtx.Nodes.TemplateNode" class="py-name" href="#" onclick="return doclink('link-94', 'TemplateNode', 'link-3');">TemplateNode</a></tt><tt class="py-op">(</tt><tt class="py-name">template_instance</tt><tt class="py-op">.</tt><tt class="py-name">_buf</tt><tt class="py-op">,</tt> <tt class="py-name">templ_off</tt><tt class="py-op">,</tt> </tt>
+<a name="L122"></a><tt class="py-lineno">122</tt>  <tt class="py-line">                            <tt class="py-name">template_instance</tt><tt class="py-op">.</tt><tt class="py-name">_chunk</tt><tt class="py-op">,</tt> <tt class="py-name">template_instance</tt><tt class="py-op">)</tt> </tt>
+<a name="L123"></a><tt class="py-lineno">123</tt>  <tt class="py-line">        <tt class="py-name">sub_acc</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt> </tt>
+<a name="L124"></a><tt class="py-lineno">124</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">c</tt> <tt class="py-keyword">in</tt> <tt id="link-95" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-95', 'node', 'link-36');">node</a></tt><tt class="py-op">.</tt><tt id="link-96" class="py-name"><a title="Evtx.Nodes.AttributeNode.children
+Evtx.Nodes.BXmlNode.children
+Evtx.Nodes.CDataSectionNode.children
+Evtx.Nodes.CloseElementNode.children
+Evtx.Nodes.CloseEmptyElementNode.children
+Evtx.Nodes.CloseStartElementNode.children
+Evtx.Nodes.ConditionalSubstitutionNode.children
+Evtx.Nodes.EndOfStreamNode.children
+Evtx.Nodes.EntityReferenceNode.children
+Evtx.Nodes.NormalSubstitutionNode.children
+Evtx.Nodes.NullTypeNode.children
+Evtx.Nodes.OpenStartElementNode.children
+Evtx.Nodes.ProcessingInstructionDataNode.children
+Evtx.Nodes.ProcessingInstructionTargetNode.children
+Evtx.Nodes.RootNode.children
+Evtx.Nodes.StreamStartNode.children
+Evtx.Nodes.TemplateInstanceNode.children
+Evtx.Nodes.ValueNode.children
+Evtx.Nodes.VariantTypeNode.children" class="py-name" href="#" onclick="return doclink('link-96', 'children', 'link-43');">children</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L125"></a><tt class="py-lineno">125</tt>  <tt class="py-line">            <tt class="py-name">rec</tt><tt class="py-op">(</tt><tt class="py-name">c</tt><tt class="py-op">,</tt> <tt class="py-name">sub_acc</tt><tt class="py-op">)</tt> </tt>
+<a name="L126"></a><tt class="py-lineno">126</tt>  <tt class="py-line">        <tt class="py-name">sub_templ</tt> <tt class="py-op">=</tt> <tt class="py-string">""</tt><tt class="py-op">.</tt><tt class="py-name">join</tt><tt class="py-op">(</tt><tt class="py-name">sub_acc</tt><tt class="py-op">)</tt> </tt>
+<a name="L127"></a><tt class="py-lineno">127</tt>  <tt class="py-line">        <tt class="py-name">cache</tt><tt class="py-op">[</tt><tt class="py-name">templ_off</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">sub_templ</tt> </tt>
+<a name="L128"></a><tt class="py-lineno">128</tt>  <tt class="py-line">        <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">sub_templ</tt><tt class="py-op">)</tt> </tt>
+<a name="L129"></a><tt class="py-lineno">129</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-string">""</tt><tt class="py-op">.</tt><tt class="py-name">join</tt><tt class="py-op">(</tt><tt class="py-name">acc</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L130"></a><tt class="py-lineno">130</tt>  <tt class="py-line"> </tt>
+<a name="L131"></a><tt class="py-lineno">131</tt>  <tt class="py-line"> </tt>
+<a name="_build_record_xml"></a><div id="_build_record_xml-def"><a name="L132"></a><tt class="py-lineno">132</tt> <a class="py-toggle" href="#" id="_build_record_xml-toggle" onclick="return toggle('_build_record_xml');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="Evtx.Views-module.html#_build_record_xml">_build_record_xml</a><tt class="py-op">(</tt><tt class="py-param">record</tt><tt class="py-op">,</tt> <tt class="py-param">cache</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="_build_record_xml-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="_build_record_xml-expanded"><a name="L133"></a><tt class="py-lineno">133</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L134"></a><tt class="py-lineno">134</tt>  <tt class="py-line"><tt class="py-docstring">    Note, the cache should be local to the Evtx.Chunk.</tt> </tt>
+<a name="L135"></a><tt class="py-lineno">135</tt>  <tt class="py-line"><tt class="py-docstring">      Do not share caches across Chunks.</tt> </tt>
+<a name="L136"></a><tt class="py-lineno">136</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L137"></a><tt class="py-lineno">137</tt>  <tt class="py-line"><tt class="py-docstring">    @type record: Evtx.Record</tt> </tt>
+<a name="L138"></a><tt class="py-lineno">138</tt>  <tt class="py-line"><tt class="py-docstring">    @type cache: dict of {int: TemplateNode}</tt> </tt>
+<a name="L139"></a><tt class="py-lineno">139</tt>  <tt class="py-line"><tt class="py-docstring">    @rtype: str</tt> </tt>
+<a name="L140"></a><tt class="py-lineno">140</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L141"></a><tt class="py-lineno">141</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-name">cache</tt> <tt class="py-keyword">is</tt> <tt class="py-name">None</tt><tt class="py-op">:</tt> </tt>
+<a name="L142"></a><tt class="py-lineno">142</tt>  <tt class="py-line">        <tt class="py-name">cache</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
+<a name="L143"></a><tt class="py-lineno">143</tt>  <tt class="py-line"> </tt>
+<a name="L144"></a><tt class="py-lineno">144</tt>  <tt class="py-line">    <tt class="py-keyword">def</tt> <tt class="py-def-name">rec</tt><tt class="py-op">(</tt><tt class="py-param">root_node</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L145"></a><tt class="py-lineno">145</tt>  <tt class="py-line">        <tt class="py-name">f</tt> <tt class="py-op">=</tt> <tt id="link-97" class="py-name" targets="Function Evtx.Views._make_template_xml_view()=Evtx.Views-module.html#_make_template_xml_view"><a title="Evtx.Views._make_template_xml_view" class="py-name" href="#" onclick="return doclink('link-97', '_make_template_xml_view', 'link-97');">_make_template_xml_view</a></tt><tt class="py-op">(</tt><tt class="py-name">root_node</tt><tt class="py-op">,</tt> <tt class="py-name">cache</tt><tt class="py-op">=</tt><tt class="py-name">cache</tt><tt class="py-op">)</tt> </tt>
+<a name="L146"></a><tt class="py-lineno">146</tt>  <tt class="py-line">        <tt class="py-name">subs_strs</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt> </tt>
+<a name="L147"></a><tt class="py-lineno">147</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">sub</tt> <tt class="py-keyword">in</tt> <tt class="py-name">root_node</tt><tt class="py-op">.</tt><tt id="link-98" class="py-name" targets="Method Evtx.Nodes.RootNode.fast_substitutions()=Evtx.Nodes.RootNode-class.html#fast_substitutions"><a title="Evtx.Nodes.RootNode.fast_substitutions" class="py-name" href="#" onclick="return doclink('link-98', 'fast_substitutions', 'link-98');">fast_substitutions</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L148"></a><tt class="py-lineno">148</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt class="py-name">sub</tt><tt class="py-op">,</tt> <tt class="py-name">basestring</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L149"></a><tt class="py-lineno">149</tt>  <tt class="py-line">                <tt class="py-name">subs_strs</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">sub</tt><tt class="py-op">.</tt><tt class="py-name">encode</tt><tt class="py-op">(</tt><tt class="py-string">"ascii"</tt><tt class="py-op">,</tt> <tt class="py-string">"xmlcharrefreplace"</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L150"></a><tt class="py-lineno">150</tt>  <tt class="py-line">            <tt class="py-keyword">elif</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt class="py-name">sub</tt><tt class="py-op">,</tt> <tt id="link-99" class="py-name"><a title="Evtx.Nodes.RootNode" class="py-name" href="#" onclick="return doclink('link-99', 'RootNode', 'link-1');">RootNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L151"></a><tt class="py-lineno">151</tt>  <tt class="py-line">                <tt class="py-name">subs_strs</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">rec</tt><tt class="py-op">(</tt><tt class="py-name">sub</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L152"></a><tt class="py-lineno">152</tt>  <tt class="py-line">            <tt class="py-keyword">elif</tt> <tt class="py-name">sub</tt> <tt class="py-keyword">is</tt> <tt class="py-name">None</tt><tt class="py-op">:</tt> </tt>
+<a name="L153"></a><tt class="py-lineno">153</tt>  <tt class="py-line">                <tt class="py-name">subs_strs</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">""</tt><tt class="py-op">)</tt> </tt>
+<a name="L154"></a><tt class="py-lineno">154</tt>  <tt class="py-line">            <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L155"></a><tt class="py-lineno">155</tt>  <tt class="py-line">                <tt class="py-name">subs_strs</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">sub</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L156"></a><tt class="py-lineno">156</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">f</tt><tt class="py-op">.</tt><tt class="py-name">format</tt><tt class="py-op">(</tt><tt class="py-op">*</tt><tt class="py-name">subs_strs</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L157"></a><tt class="py-lineno">157</tt>  <tt class="py-line">    <tt class="py-name">xml</tt> <tt class="py-op">=</tt> <tt class="py-name">rec</tt><tt class="py-op">(</tt><tt class="py-name">record</tt><tt class="py-op">.</tt><tt id="link-100" class="py-name" targets="Method Evtx.Evtx.Record.root()=Evtx.Evtx.Record-class.html#root,Method Evtx.Nodes.BXmlTypeNode.root()=Evtx.Nodes.BXmlTypeNode-class.html#root"><a title="Evtx.Evtx.Record.root
+Evtx.Nodes.BXmlTypeNode.root" class="py-name" href="#" onclick="return doclink('link-100', 'root', 'link-100');">root</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L158"></a><tt class="py-lineno">158</tt>  <tt class="py-line">    <tt class="py-name">xml</tt> <tt class="py-op">=</tt> <tt class="py-name">xml</tt><tt class="py-op">.</tt><tt class="py-name">replace</tt><tt class="py-op">(</tt><tt class="py-string">"&amp;"</tt><tt class="py-op">,</tt> <tt class="py-string">"&amp;amp;"</tt><tt class="py-op">)</tt> </tt>
+<a name="L159"></a><tt class="py-lineno">159</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">xml</tt> </tt>
+</div><a name="L160"></a><tt class="py-lineno">160</tt>  <tt class="py-line"> </tt>
+<a name="L161"></a><tt class="py-lineno">161</tt>  <tt class="py-line"> </tt>
+<a name="evtx_record_xml_view"></a><div id="evtx_record_xml_view-def"><a name="L162"></a><tt class="py-lineno">162</tt> <a class="py-toggle" href="#" id="evtx_record_xml_view-toggle" onclick="return toggle('evtx_record_xml_view');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="Evtx.Views-module.html#evtx_record_xml_view">evtx_record_xml_view</a><tt class="py-op">(</tt><tt class="py-param">record</tt><tt class="py-op">,</tt> <tt class="py-param">cache</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="evtx_record_xml_view-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="evtx_record_xml_view-expanded"><a name="L163"></a><tt class="py-lineno">163</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L164"></a><tt class="py-lineno">164</tt>  <tt class="py-line"><tt class="py-docstring">    Generate an UTF-8 XML representation of an EVTX record.</tt> </tt>
+<a name="L165"></a><tt class="py-lineno">165</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L166"></a><tt class="py-lineno">166</tt>  <tt class="py-line"><tt class="py-docstring">    Note, the cache should be local to the Evtx.Chunk.</tt> </tt>
+<a name="L167"></a><tt class="py-lineno">167</tt>  <tt class="py-line"><tt class="py-docstring">      Do not share caches across Chunks.</tt> </tt>
+<a name="L168"></a><tt class="py-lineno">168</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L169"></a><tt class="py-lineno">169</tt>  <tt class="py-line"><tt class="py-docstring">    @type record: Evtx.Record</tt> </tt>
+<a name="L170"></a><tt class="py-lineno">170</tt>  <tt class="py-line"><tt class="py-docstring">    @type cache: dict of {int: TemplateNode}</tt> </tt>
+<a name="L171"></a><tt class="py-lineno">171</tt>  <tt class="py-line"><tt class="py-docstring">    @rtype: str</tt> </tt>
+<a name="L172"></a><tt class="py-lineno">172</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L173"></a><tt class="py-lineno">173</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-name">cache</tt> <tt class="py-keyword">is</tt> <tt class="py-name">None</tt><tt class="py-op">:</tt> </tt>
+<a name="L174"></a><tt class="py-lineno">174</tt>  <tt class="py-line">        <tt class="py-name">cache</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
+<a name="L175"></a><tt class="py-lineno">175</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt id="link-101" class="py-name" targets="Function Evtx.Views._build_record_xml()=Evtx.Views-module.html#_build_record_xml"><a title="Evtx.Views._build_record_xml" class="py-name" href="#" onclick="return doclink('link-101', '_build_record_xml', 'link-101');">_build_record_xml</a></tt><tt class="py-op">(</tt><tt class="py-name">record</tt><tt class="py-op">,</tt> <tt class="py-name">cache</tt><tt class="py-op">=</tt><tt class="py-name">cache</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">encode</tt><tt class="py-op">(</tt><tt class="py-string">"utf8"</tt><tt class="py-op">,</tt> <tt class="py-string">"xmlcharrefreplace"</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L176"></a><tt class="py-lineno">176</tt>  <tt class="py-line"> </tt>
+<a name="L177"></a><tt class="py-lineno">177</tt>  <tt class="py-line"> </tt>
+<a name="evtx_chunk_xml_view"></a><div id="evtx_chunk_xml_view-def"><a name="L178"></a><tt class="py-lineno">178</tt> <a class="py-toggle" href="#" id="evtx_chunk_xml_view-toggle" onclick="return toggle('evtx_chunk_xml_view');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="Evtx.Views-module.html#evtx_chunk_xml_view">evtx_chunk_xml_view</a><tt class="py-op">(</tt><tt class="py-param">chunk</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="evtx_chunk_xml_view-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="evtx_chunk_xml_view-expanded"><a name="L179"></a><tt class="py-lineno">179</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L180"></a><tt class="py-lineno">180</tt>  <tt class="py-line"><tt class="py-docstring">    Generate UTF-8 XML representations of the records in an EVTX chunk.</tt> </tt>
+<a name="L181"></a><tt class="py-lineno">181</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L182"></a><tt class="py-lineno">182</tt>  <tt class="py-line"><tt class="py-docstring">    Does not include the XML &lt;?xml... header.</tt> </tt>
+<a name="L183"></a><tt class="py-lineno">183</tt>  <tt class="py-line"><tt class="py-docstring">    Records are ordered by chunk.records()</tt> </tt>
+<a name="L184"></a><tt class="py-lineno">184</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L185"></a><tt class="py-lineno">185</tt>  <tt class="py-line"><tt class="py-docstring">    @type chunk: Evtx.Chunk</tt> </tt>
+<a name="L186"></a><tt class="py-lineno">186</tt>  <tt class="py-line"><tt class="py-docstring">    @rtype: generator of str, Evtx.Record</tt> </tt>
+<a name="L187"></a><tt class="py-lineno">187</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L188"></a><tt class="py-lineno">188</tt>  <tt class="py-line">    <tt class="py-name">cache</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
+<a name="L189"></a><tt class="py-lineno">189</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">record</tt> <tt class="py-keyword">in</tt> <tt class="py-name">chunk</tt><tt class="py-op">.</tt><tt id="link-102" class="py-name" targets="Method Evtx.Evtx.ChunkHeader.records()=Evtx.Evtx.ChunkHeader-class.html#records,Method Evtx.Evtx.Evtx.records()=Evtx.Evtx.Evtx-class.html#records"><a title="Evtx.Evtx.ChunkHeader.records
+Evtx.Evtx.Evtx.records" class="py-name" href="#" onclick="return doclink('link-102', 'records', 'link-102');">records</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L190"></a><tt class="py-lineno">190</tt>  <tt class="py-line">        <tt class="py-name">record_str</tt> <tt class="py-op">=</tt> <tt id="link-103" class="py-name"><a title="Evtx.Views._build_record_xml" class="py-name" href="#" onclick="return doclink('link-103', '_build_record_xml', 'link-101');">_build_record_xml</a></tt><tt class="py-op">(</tt><tt class="py-name">record</tt><tt class="py-op">,</tt> <tt class="py-name">cache</tt><tt class="py-op">=</tt><tt class="py-name">cache</tt><tt class="py-op">)</tt> </tt>
+<a name="L191"></a><tt class="py-lineno">191</tt>  <tt class="py-line">        <tt class="py-keyword">yield</tt> <tt class="py-name">record_str</tt><tt class="py-op">.</tt><tt class="py-name">encode</tt><tt class="py-op">(</tt><tt class="py-string">"utf8"</tt><tt class="py-op">,</tt> <tt class="py-string">"xmlcharrefreplace"</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">record</tt> </tt>
+</div><a name="L192"></a><tt class="py-lineno">192</tt>  <tt class="py-line"> </tt>
+<a name="L193"></a><tt class="py-lineno">193</tt>  <tt class="py-line"> </tt>
+<a name="evtx_file_xml_view"></a><div id="evtx_file_xml_view-def"><a name="L194"></a><tt class="py-lineno">194</tt> <a class="py-toggle" href="#" id="evtx_file_xml_view-toggle" onclick="return toggle('evtx_file_xml_view');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="Evtx.Views-module.html#evtx_file_xml_view">evtx_file_xml_view</a><tt class="py-op">(</tt><tt class="py-param">file_header</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="evtx_file_xml_view-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="evtx_file_xml_view-expanded"><a name="L195"></a><tt class="py-lineno">195</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L196"></a><tt class="py-lineno">196</tt>  <tt class="py-line"><tt class="py-docstring">    Generate UTF-8 XML representations of the records in an EVTX file.</tt> </tt>
+<a name="L197"></a><tt class="py-lineno">197</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L198"></a><tt class="py-lineno">198</tt>  <tt class="py-line"><tt class="py-docstring">    Does not include the XML &lt;?xml... header.</tt> </tt>
+<a name="L199"></a><tt class="py-lineno">199</tt>  <tt class="py-line"><tt class="py-docstring">    Records are ordered by file_header.chunks(), and then by chunk.records()</tt> </tt>
+<a name="L200"></a><tt class="py-lineno">200</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L201"></a><tt class="py-lineno">201</tt>  <tt class="py-line"><tt class="py-docstring">    @type file_header: Evtx.FileHeader</tt> </tt>
+<a name="L202"></a><tt class="py-lineno">202</tt>  <tt class="py-line"><tt class="py-docstring">    @rtype: generator of str, Evtx.Record</tt> </tt>
+<a name="L203"></a><tt class="py-lineno">203</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L204"></a><tt class="py-lineno">204</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">chunk</tt> <tt class="py-keyword">in</tt> <tt class="py-name">file_header</tt><tt class="py-op">.</tt><tt id="link-104" class="py-name" targets="Method Evtx.Evtx.Evtx.chunks()=Evtx.Evtx.Evtx-class.html#chunks,Method Evtx.Evtx.FileHeader.chunks()=Evtx.Evtx.FileHeader-class.html#chunks"><a title="Evtx.Evtx.Evtx.chunks
+Evtx.Evtx.FileHeader.chunks" class="py-name" href="#" onclick="return doclink('link-104', 'chunks', 'link-104');">chunks</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L205"></a><tt class="py-lineno">205</tt>  <tt class="py-line">        <tt class="py-name">cache</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
+<a name="L206"></a><tt class="py-lineno">206</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">record</tt> <tt class="py-keyword">in</tt> <tt class="py-name">chunk</tt><tt class="py-op">.</tt><tt id="link-105" class="py-name"><a title="Evtx.Evtx.ChunkHeader.records
+Evtx.Evtx.Evtx.records" class="py-name" href="#" onclick="return doclink('link-105', 'records', 'link-102');">records</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L207"></a><tt class="py-lineno">207</tt>  <tt class="py-line">            <tt class="py-name">record_str</tt> <tt class="py-op">=</tt> <tt id="link-106" class="py-name"><a title="Evtx.Views._build_record_xml" class="py-name" href="#" onclick="return doclink('link-106', '_build_record_xml', 'link-101');">_build_record_xml</a></tt><tt class="py-op">(</tt><tt class="py-name">record</tt><tt class="py-op">,</tt> <tt class="py-name">cache</tt><tt class="py-op">=</tt><tt class="py-name">cache</tt><tt class="py-op">)</tt> </tt>
+<a name="L208"></a><tt class="py-lineno">208</tt>  <tt class="py-line">            <tt class="py-keyword">yield</tt> <tt class="py-name">record_str</tt><tt class="py-op">.</tt><tt class="py-name">encode</tt><tt class="py-op">(</tt><tt class="py-string">"utf8"</tt><tt class="py-op">,</tt> <tt class="py-string">"xmlcharrefreplace"</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">record</tt> </tt>
+</div><a name="L209"></a><tt class="py-lineno">209</tt>  <tt class="py-line"> </tt>
+<a name="L210"></a><tt class="py-lineno">210</tt>  <tt class="py-line"> </tt>
+<a name="evtx_template_readable_view"></a><div id="evtx_template_readable_view-def"><a name="L211"></a><tt class="py-lineno">211</tt> <a class="py-toggle" href="#" id="evtx_template_readable_view-toggle" onclick="return toggle('evtx_template_readable_view');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="Evtx.Views-module.html#evtx_template_readable_view">evtx_template_readable_view</a><tt class="py-op">(</tt><tt class="py-param">template_node</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="evtx_template_readable_view-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="evtx_template_readable_view-expanded"><a name="L212"></a><tt class="py-lineno">212</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L213"></a><tt class="py-lineno">213</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L214"></a><tt class="py-lineno">214</tt>  <tt class="py-line">    <tt class="py-keyword">def</tt> <tt class="py-def-name">rec</tt><tt class="py-op">(</tt><tt class="py-param">node</tt><tt class="py-op">,</tt> <tt class="py-param">acc</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L215"></a><tt class="py-lineno">215</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-107" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-107', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-108" class="py-name"><a title="Evtx.Nodes.EndOfStreamNode" class="py-name" href="#" onclick="return doclink('link-108', 'EndOfStreamNode', 'link-5');">EndOfStreamNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L216"></a><tt class="py-lineno">216</tt>  <tt class="py-line">            <tt class="py-keyword">pass</tt>  <tt class="py-comment"># intended</tt> </tt>
+<a name="L217"></a><tt class="py-lineno">217</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-109" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-109', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-110" class="py-name"><a title="Evtx.Nodes.OpenStartElementNode" class="py-name" href="#" onclick="return doclink('link-110', 'OpenStartElementNode', 'link-7');">OpenStartElementNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L218"></a><tt class="py-lineno">218</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">"&lt;"</tt><tt class="py-op">)</tt> </tt>
+<a name="L219"></a><tt class="py-lineno">219</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt id="link-111" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-111', 'node', 'link-36');">node</a></tt><tt class="py-op">.</tt><tt id="link-112" class="py-name"><a title="Evtx.Nodes.OpenStartElementNode.tag_name" class="py-name" href="#" onclick="return doclink('link-112', 'tag_name', 'link-41');">tag_name</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L220"></a><tt class="py-lineno">220</tt>  <tt class="py-line">            <tt class="py-keyword">for</tt> <tt class="py-name">child</tt> <tt class="py-keyword">in</tt> <tt id="link-113" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-113', 'node', 'link-36');">node</a></tt><tt class="py-op">.</tt><tt id="link-114" class="py-name"><a title="Evtx.Nodes.AttributeNode.children
+Evtx.Nodes.BXmlNode.children
+Evtx.Nodes.CDataSectionNode.children
+Evtx.Nodes.CloseElementNode.children
+Evtx.Nodes.CloseEmptyElementNode.children
+Evtx.Nodes.CloseStartElementNode.children
+Evtx.Nodes.ConditionalSubstitutionNode.children
+Evtx.Nodes.EndOfStreamNode.children
+Evtx.Nodes.EntityReferenceNode.children
+Evtx.Nodes.NormalSubstitutionNode.children
+Evtx.Nodes.NullTypeNode.children
+Evtx.Nodes.OpenStartElementNode.children
+Evtx.Nodes.ProcessingInstructionDataNode.children
+Evtx.Nodes.ProcessingInstructionTargetNode.children
+Evtx.Nodes.RootNode.children
+Evtx.Nodes.StreamStartNode.children
+Evtx.Nodes.TemplateInstanceNode.children
+Evtx.Nodes.ValueNode.children
+Evtx.Nodes.VariantTypeNode.children" class="py-name" href="#" onclick="return doclink('link-114', 'children', 'link-43');">children</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L221"></a><tt class="py-lineno">221</tt>  <tt class="py-line">                <tt class="py-keyword">if</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt class="py-name">child</tt><tt class="py-op">,</tt> <tt id="link-115" class="py-name"><a title="Evtx.Nodes.AttributeNode" class="py-name" href="#" onclick="return doclink('link-115', 'AttributeNode', 'link-17');">AttributeNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L222"></a><tt class="py-lineno">222</tt>  <tt class="py-line">                    <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">" "</tt><tt class="py-op">)</tt> </tt>
+<a name="L223"></a><tt class="py-lineno">223</tt>  <tt class="py-line">                    <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">child</tt><tt class="py-op">.</tt><tt id="link-116" class="py-name"><a title="Evtx.Nodes.AttributeNode.attribute_name" class="py-name" href="#" onclick="return doclink('link-116', 'attribute_name', 'link-45');">attribute_name</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt id="link-117" class="py-name"><a title="Evtx.Nodes.BXmlTypeNode.string
+Evtx.Nodes.BinaryTypeNode.string
+Evtx.Nodes.BooleanTypeNode.string
+Evtx.Nodes.DoubleTypeNode.string
+Evtx.Nodes.FiletimeTypeNode.string
+Evtx.Nodes.FloatTypeNode.string
+Evtx.Nodes.GuidTypeNode.string
+Evtx.Nodes.Hex32TypeNode.string
+Evtx.Nodes.Hex64TypeNode.string
+Evtx.Nodes.NameStringNode.string
+Evtx.Nodes.NullTypeNode.string
+Evtx.Nodes.ProcessingInstructionDataNode.string
+Evtx.Nodes.SIDTypeNode.string
+Evtx.Nodes.SignedByteTypeNode.string
+Evtx.Nodes.SignedDwordTypeNode.string
+Evtx.Nodes.SignedQwordTypeNode.string
+Evtx.Nodes.SignedWordTypeNode.string
+Evtx.Nodes.SizeTypeNode.string
+Evtx.Nodes.StringTypeNode.string
+Evtx.Nodes.SystemtimeTypeNode.string
+Evtx.Nodes.UnsignedByteTypeNode.string
+Evtx.Nodes.UnsignedDwordTypeNode.string
+Evtx.Nodes.UnsignedQwordTypeNode.string
+Evtx.Nodes.UnsignedWordTypeNode.string
+Evtx.Nodes.VariantTypeNode.string
+Evtx.Nodes.WstringArrayTypeNode.string
+Evtx.Nodes.WstringTypeNode.string" class="py-name" href="#" onclick="return doclink('link-117', 'string', 'link-46');">string</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L224"></a><tt class="py-lineno">224</tt>  <tt class="py-line">                    <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">"=\""</tt><tt class="py-op">)</tt> </tt>
+<a name="L225"></a><tt class="py-lineno">225</tt>  <tt class="py-line">                    <tt class="py-name">rec</tt><tt class="py-op">(</tt><tt class="py-name">child</tt><tt class="py-op">.</tt><tt id="link-118" class="py-name"><a title="Evtx.Nodes.AttributeNode.attribute_value" class="py-name" href="#" onclick="return doclink('link-118', 'attribute_value', 'link-47');">attribute_value</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">acc</tt><tt class="py-op">)</tt> </tt>
+<a name="L226"></a><tt class="py-lineno">226</tt>  <tt class="py-line">                    <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">"\""</tt><tt class="py-op">)</tt> </tt>
+<a name="L227"></a><tt class="py-lineno">227</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">"&gt;"</tt><tt class="py-op">)</tt> </tt>
+<a name="L228"></a><tt class="py-lineno">228</tt>  <tt class="py-line">            <tt class="py-keyword">for</tt> <tt class="py-name">child</tt> <tt class="py-keyword">in</tt> <tt id="link-119" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-119', 'node', 'link-36');">node</a></tt><tt class="py-op">.</tt><tt id="link-120" class="py-name"><a title="Evtx.Nodes.AttributeNode.children
+Evtx.Nodes.BXmlNode.children
+Evtx.Nodes.CDataSectionNode.children
+Evtx.Nodes.CloseElementNode.children
+Evtx.Nodes.CloseEmptyElementNode.children
+Evtx.Nodes.CloseStartElementNode.children
+Evtx.Nodes.ConditionalSubstitutionNode.children
+Evtx.Nodes.EndOfStreamNode.children
+Evtx.Nodes.EntityReferenceNode.children
+Evtx.Nodes.NormalSubstitutionNode.children
+Evtx.Nodes.NullTypeNode.children
+Evtx.Nodes.OpenStartElementNode.children
+Evtx.Nodes.ProcessingInstructionDataNode.children
+Evtx.Nodes.ProcessingInstructionTargetNode.children
+Evtx.Nodes.RootNode.children
+Evtx.Nodes.StreamStartNode.children
+Evtx.Nodes.TemplateInstanceNode.children
+Evtx.Nodes.ValueNode.children
+Evtx.Nodes.VariantTypeNode.children" class="py-name" href="#" onclick="return doclink('link-120', 'children', 'link-43');">children</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L229"></a><tt class="py-lineno">229</tt>  <tt class="py-line">                <tt class="py-name">rec</tt><tt class="py-op">(</tt><tt class="py-name">child</tt><tt class="py-op">,</tt> <tt class="py-name">acc</tt><tt class="py-op">)</tt> </tt>
+<a name="L230"></a><tt class="py-lineno">230</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">"&lt;/"</tt><tt class="py-op">)</tt> </tt>
+<a name="L231"></a><tt class="py-lineno">231</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt id="link-121" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-121', 'node', 'link-36');">node</a></tt><tt class="py-op">.</tt><tt id="link-122" class="py-name"><a title="Evtx.Nodes.OpenStartElementNode.tag_name" class="py-name" href="#" onclick="return doclink('link-122', 'tag_name', 'link-41');">tag_name</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L232"></a><tt class="py-lineno">232</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">"&gt;\n"</tt><tt class="py-op">)</tt> </tt>
+<a name="L233"></a><tt class="py-lineno">233</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-123" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-123', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-124" class="py-name"><a title="Evtx.Nodes.CloseStartElementNode" class="py-name" href="#" onclick="return doclink('link-124', 'CloseStartElementNode', 'link-9');">CloseStartElementNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L234"></a><tt class="py-lineno">234</tt>  <tt class="py-line">            <tt class="py-keyword">pass</tt>  <tt class="py-comment"># intended</tt> </tt>
+<a name="L235"></a><tt class="py-lineno">235</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-125" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-125', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-126" class="py-name"><a title="Evtx.Nodes.CloseEmptyElementNode" class="py-name" href="#" onclick="return doclink('link-126', 'CloseEmptyElementNode', 'link-11');">CloseEmptyElementNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L236"></a><tt class="py-lineno">236</tt>  <tt class="py-line">            <tt class="py-keyword">pass</tt>  <tt class="py-comment"># intended</tt> </tt>
+<a name="L237"></a><tt class="py-lineno">237</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-127" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-127', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-128" class="py-name"><a title="Evtx.Nodes.CloseElementNode" class="py-name" href="#" onclick="return doclink('link-128', 'CloseElementNode', 'link-13');">CloseElementNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L238"></a><tt class="py-lineno">238</tt>  <tt class="py-line">            <tt class="py-keyword">pass</tt>  <tt class="py-comment"># intended</tt> </tt>
+<a name="L239"></a><tt class="py-lineno">239</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-129" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-129', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-130" class="py-name"><a title="Evtx.Nodes.ValueNode" class="py-name" href="#" onclick="return doclink('link-130', 'ValueNode', 'link-15');">ValueNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L240"></a><tt class="py-lineno">240</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt id="link-131" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-131', 'node', 'link-36');">node</a></tt><tt class="py-op">.</tt><tt id="link-132" class="py-name"><a title="Evtx.Nodes.AttributeNode.children
+Evtx.Nodes.BXmlNode.children
+Evtx.Nodes.CDataSectionNode.children
+Evtx.Nodes.CloseElementNode.children
+Evtx.Nodes.CloseEmptyElementNode.children
+Evtx.Nodes.CloseStartElementNode.children
+Evtx.Nodes.ConditionalSubstitutionNode.children
+Evtx.Nodes.EndOfStreamNode.children
+Evtx.Nodes.EntityReferenceNode.children
+Evtx.Nodes.NormalSubstitutionNode.children
+Evtx.Nodes.NullTypeNode.children
+Evtx.Nodes.OpenStartElementNode.children
+Evtx.Nodes.ProcessingInstructionDataNode.children
+Evtx.Nodes.ProcessingInstructionTargetNode.children
+Evtx.Nodes.RootNode.children
+Evtx.Nodes.StreamStartNode.children
+Evtx.Nodes.TemplateInstanceNode.children
+Evtx.Nodes.ValueNode.children
+Evtx.Nodes.VariantTypeNode.children" class="py-name" href="#" onclick="return doclink('link-132', 'children', 'link-43');">children</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">.</tt><tt id="link-133" class="py-name"><a title="Evtx.Nodes.BXmlTypeNode.string
+Evtx.Nodes.BinaryTypeNode.string
+Evtx.Nodes.BooleanTypeNode.string
+Evtx.Nodes.DoubleTypeNode.string
+Evtx.Nodes.FiletimeTypeNode.string
+Evtx.Nodes.FloatTypeNode.string
+Evtx.Nodes.GuidTypeNode.string
+Evtx.Nodes.Hex32TypeNode.string
+Evtx.Nodes.Hex64TypeNode.string
+Evtx.Nodes.NameStringNode.string
+Evtx.Nodes.NullTypeNode.string
+Evtx.Nodes.ProcessingInstructionDataNode.string
+Evtx.Nodes.SIDTypeNode.string
+Evtx.Nodes.SignedByteTypeNode.string
+Evtx.Nodes.SignedDwordTypeNode.string
+Evtx.Nodes.SignedQwordTypeNode.string
+Evtx.Nodes.SignedWordTypeNode.string
+Evtx.Nodes.SizeTypeNode.string
+Evtx.Nodes.StringTypeNode.string
+Evtx.Nodes.SystemtimeTypeNode.string
+Evtx.Nodes.UnsignedByteTypeNode.string
+Evtx.Nodes.UnsignedDwordTypeNode.string
+Evtx.Nodes.UnsignedQwordTypeNode.string
+Evtx.Nodes.UnsignedWordTypeNode.string
+Evtx.Nodes.VariantTypeNode.string
+Evtx.Nodes.WstringArrayTypeNode.string
+Evtx.Nodes.WstringTypeNode.string" class="py-name" href="#" onclick="return doclink('link-133', 'string', 'link-46');">string</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L241"></a><tt class="py-lineno">241</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-134" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-134', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-135" class="py-name"><a title="Evtx.Nodes.AttributeNode" class="py-name" href="#" onclick="return doclink('link-135', 'AttributeNode', 'link-17');">AttributeNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L242"></a><tt class="py-lineno">242</tt>  <tt class="py-line">            <tt class="py-keyword">pass</tt>  <tt class="py-comment"># intended</tt> </tt>
+<a name="L243"></a><tt class="py-lineno">243</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-136" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-136', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-137" class="py-name"><a title="Evtx.Nodes.CDataSectionNode" class="py-name" href="#" onclick="return doclink('link-137', 'CDataSectionNode', 'link-19');">CDataSectionNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L244"></a><tt class="py-lineno">244</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">"&lt;![CDATA["</tt><tt class="py-op">)</tt> </tt>
+<a name="L245"></a><tt class="py-lineno">245</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt id="link-138" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-138', 'node', 'link-36');">node</a></tt><tt class="py-op">.</tt><tt class="py-name">cdata</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L246"></a><tt class="py-lineno">246</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">"]]&gt;"</tt><tt class="py-op">)</tt> </tt>
+<a name="L247"></a><tt class="py-lineno">247</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-139" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-139', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-140" class="py-name"><a title="Evtx.Nodes.EntityReferenceNode" class="py-name" href="#" onclick="return doclink('link-140', 'EntityReferenceNode', 'link-21');">EntityReferenceNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L248"></a><tt class="py-lineno">248</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt id="link-141" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-141', 'node', 'link-36');">node</a></tt><tt class="py-op">.</tt><tt id="link-142" class="py-name"><a title="Evtx.Nodes.EntityReferenceNode.entity_reference" class="py-name" href="#" onclick="return doclink('link-142', 'entity_reference', 'link-71');">entity_reference</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L249"></a><tt class="py-lineno">249</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-143" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-143', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-144" class="py-name"><a title="Evtx.Nodes.ProcessingInstructionTargetNode" class="py-name" href="#" onclick="return doclink('link-144', 'ProcessingInstructionTargetNode', 'link-23');">ProcessingInstructionTargetNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L250"></a><tt class="py-lineno">250</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt id="link-145" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-145', 'node', 'link-36');">node</a></tt><tt class="py-op">.</tt><tt id="link-146" class="py-name"><a title="Evtx.Nodes.ProcessingInstructionTargetNode.processing_instruction_target" class="py-name" href="#" onclick="return doclink('link-146', 'processing_instruction_target', 'link-75');">processing_instruction_target</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L251"></a><tt class="py-lineno">251</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-147" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-147', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-148" class="py-name"><a title="Evtx.Nodes.ProcessingInstructionDataNode" class="py-name" href="#" onclick="return doclink('link-148', 'ProcessingInstructionDataNode', 'link-25');">ProcessingInstructionDataNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L252"></a><tt class="py-lineno">252</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt id="link-149" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-149', 'node', 'link-36');">node</a></tt><tt class="py-op">.</tt><tt id="link-150" class="py-name"><a title="Evtx.Nodes.BXmlTypeNode.string
+Evtx.Nodes.BinaryTypeNode.string
+Evtx.Nodes.BooleanTypeNode.string
+Evtx.Nodes.DoubleTypeNode.string
+Evtx.Nodes.FiletimeTypeNode.string
+Evtx.Nodes.FloatTypeNode.string
+Evtx.Nodes.GuidTypeNode.string
+Evtx.Nodes.Hex32TypeNode.string
+Evtx.Nodes.Hex64TypeNode.string
+Evtx.Nodes.NameStringNode.string
+Evtx.Nodes.NullTypeNode.string
+Evtx.Nodes.ProcessingInstructionDataNode.string
+Evtx.Nodes.SIDTypeNode.string
+Evtx.Nodes.SignedByteTypeNode.string
+Evtx.Nodes.SignedDwordTypeNode.string
+Evtx.Nodes.SignedQwordTypeNode.string
+Evtx.Nodes.SignedWordTypeNode.string
+Evtx.Nodes.SizeTypeNode.string
+Evtx.Nodes.StringTypeNode.string
+Evtx.Nodes.SystemtimeTypeNode.string
+Evtx.Nodes.UnsignedByteTypeNode.string
+Evtx.Nodes.UnsignedDwordTypeNode.string
+Evtx.Nodes.UnsignedQwordTypeNode.string
+Evtx.Nodes.UnsignedWordTypeNode.string
+Evtx.Nodes.VariantTypeNode.string
+Evtx.Nodes.WstringArrayTypeNode.string
+Evtx.Nodes.WstringTypeNode.string" class="py-name" href="#" onclick="return doclink('link-150', 'string', 'link-46');">string</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L253"></a><tt class="py-lineno">253</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-151" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-151', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-152" class="py-name"><a title="Evtx.Nodes.TemplateInstanceNode" class="py-name" href="#" onclick="return doclink('link-152', 'TemplateInstanceNode', 'link-27');">TemplateInstanceNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L254"></a><tt class="py-lineno">254</tt>  <tt class="py-line">            <tt class="py-keyword">raise</tt> <tt id="link-153" class="py-name"><a title="Evtx.Views.UnexpectedElementException" class="py-name" href="#" onclick="return doclink('link-153', 'UnexpectedElementException', 'link-34');">UnexpectedElementException</a></tt><tt class="py-op">(</tt><tt class="py-string">"TemplateInstanceNode"</tt><tt class="py-op">)</tt> </tt>
+<a name="L255"></a><tt class="py-lineno">255</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-154" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-154', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-155" class="py-name"><a title="Evtx.Nodes.NormalSubstitutionNode" class="py-name" href="#" onclick="return doclink('link-155', 'NormalSubstitutionNode', 'link-29');">NormalSubstitutionNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L256"></a><tt class="py-lineno">256</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">"[Normal Substitution(index=%d, type=%d)]"</tt> <tt class="py-op">%</tt> \ </tt>
+<a name="L257"></a><tt class="py-lineno">257</tt>  <tt class="py-line">                           <tt class="py-op">(</tt><tt id="link-156" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-156', 'node', 'link-36');">node</a></tt><tt class="py-op">.</tt><tt class="py-name">index</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt id="link-157" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-157', 'node', 'link-36');">node</a></tt><tt class="py-op">.</tt><tt class="py-name">type</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L258"></a><tt class="py-lineno">258</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-158" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-158', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-159" class="py-name"><a title="Evtx.Nodes.ConditionalSubstitutionNode" class="py-name" href="#" onclick="return doclink('link-159', 'ConditionalSubstitutionNode', 'link-31');">ConditionalSubstitutionNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L259"></a><tt class="py-lineno">259</tt>  <tt class="py-line">            <tt class="py-name">acc</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">"[Condititional Substitution(index=%d, type=%d)]"</tt> <tt class="py-op">%</tt> \ </tt>
+<a name="L260"></a><tt class="py-lineno">260</tt>  <tt class="py-line">                           <tt class="py-op">(</tt><tt id="link-160" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-160', 'node', 'link-36');">node</a></tt><tt class="py-op">.</tt><tt class="py-name">index</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt id="link-161" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-161', 'node', 'link-36');">node</a></tt><tt class="py-op">.</tt><tt class="py-name">type</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L261"></a><tt class="py-lineno">261</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt id="link-162" class="py-name"><a title="Evtx.Evtx.Template.node" class="py-name" href="#" onclick="return doclink('link-162', 'node', 'link-36');">node</a></tt><tt class="py-op">,</tt> <tt id="link-163" class="py-name"><a title="Evtx.Nodes.StreamStartNode" class="py-name" href="#" onclick="return doclink('link-163', 'StreamStartNode', 'link-33');">StreamStartNode</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L262"></a><tt class="py-lineno">262</tt>  <tt class="py-line">            <tt class="py-keyword">pass</tt>  <tt class="py-comment"># intended</tt> </tt>
+</div><a name="L263"></a><tt class="py-lineno">263</tt>  <tt class="py-line"> </tt>
+<a name="L264"></a><tt class="py-lineno">264</tt>  <tt class="py-line">    <tt class="py-name">sub_acc</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt> </tt>
+<a name="L265"></a><tt class="py-lineno">265</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">c</tt> <tt class="py-keyword">in</tt> <tt class="py-name">template_node</tt><tt class="py-op">.</tt><tt id="link-164" class="py-name"><a title="Evtx.Nodes.AttributeNode.children
+Evtx.Nodes.BXmlNode.children
+Evtx.Nodes.CDataSectionNode.children
+Evtx.Nodes.CloseElementNode.children
+Evtx.Nodes.CloseEmptyElementNode.children
+Evtx.Nodes.CloseStartElementNode.children
+Evtx.Nodes.ConditionalSubstitutionNode.children
+Evtx.Nodes.EndOfStreamNode.children
+Evtx.Nodes.EntityReferenceNode.children
+Evtx.Nodes.NormalSubstitutionNode.children
+Evtx.Nodes.NullTypeNode.children
+Evtx.Nodes.OpenStartElementNode.children
+Evtx.Nodes.ProcessingInstructionDataNode.children
+Evtx.Nodes.ProcessingInstructionTargetNode.children
+Evtx.Nodes.RootNode.children
+Evtx.Nodes.StreamStartNode.children
+Evtx.Nodes.TemplateInstanceNode.children
+Evtx.Nodes.ValueNode.children
+Evtx.Nodes.VariantTypeNode.children" class="py-name" href="#" onclick="return doclink('link-164', 'children', 'link-43');">children</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L266"></a><tt class="py-lineno">266</tt>  <tt class="py-line">        <tt class="py-name">rec</tt><tt class="py-op">(</tt><tt class="py-name">c</tt><tt class="py-op">,</tt> <tt class="py-name">sub_acc</tt><tt class="py-op">)</tt> </tt>
+<a name="L267"></a><tt class="py-lineno">267</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-string">""</tt><tt class="py-op">.</tt><tt class="py-name">join</tt><tt class="py-op">(</tt><tt class="py-name">sub_acc</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L268"></a><tt class="py-lineno">268</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="Evtx-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="www.williballenthin.com/evtx/doc/">python-evtx</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Fri May 31 00:38:34 2013
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>
