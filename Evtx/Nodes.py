@@ -931,13 +931,13 @@ class RootNode(BXmlNode):
                 sub_def.append(value)
             #[1] = parse_wstring_type_node,
             elif type_ == 0x1:
-                s = self.unpack_wstring(ofs, size / 2)
+                s = self.unpack_wstring(ofs, size / 2).rstrip("\x00")
                 value = s.replace("<", "&gt;").replace(">", "&lt;")
                 sub_def.append(value)
             #[2] = parse_string_type_node,
             elif type_ == 0x2:
                 s = self.unpack_string(ofs, size)
-                value = s.decode("utf8")
+                value = s.decode("utf8").rstrip("\x00")
                 value = value.replace("<", "&gt;")
                 value = value.replace(">", "&lt;")
                 sub_def.append(value)
