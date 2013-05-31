@@ -159,14 +159,20 @@ def _build_record_xml(record, cache=None):
     return xml
 
 
-def evtx_record_xml_view(record):
+def evtx_record_xml_view(record, cache=None):
     """
     Generate an UTF-8 XML representation of an EVTX record.
 
+    Note, the cache should be local to the Evtx.Chunk.
+      Do not share caches across Chunks.
+
     @type record: Evtx.Record
+    @type cache: dict of {int: TemplateNode}
     @rtype: str
     """
-    return _build_record_xml(record).encode("utf8", "xmlcharrefreplace")
+    if cache is None:
+        cache = {}
+    return _build_record_xml(record, cache=cache).encode("utf8", "xmlcharrefreplace")
 
 
 def evtx_chunk_xml_view(chunk):
