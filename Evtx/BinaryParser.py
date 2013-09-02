@@ -16,31 +16,43 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 #
-#   Version v.0.1
+#   Version v.0.3.0
 
-import struct, time, array, sys, cPickle, re, os, calendar
+import sys
+import struct
 from datetime import datetime
 from functools import partial
-import types
 
 verbose = False
 
 
 def debug(*message):
+    """
+    TODO(wb): replace with logging
+    """
     global verbose
     if verbose:
         print "# [d] %s" % (", ".join(map(str, message)))
 
 
 def warning(message):
+    """
+    TODO(wb): replace with logging
+    """
     print "# [w] %s" % (message)
 
 
 def info(message):
+    """
+    TODO(wb): replace with logging
+    """
     print "# [i] %s" % (message)
 
 
 def error(message):
+    """
+    TODO(wb): replace with logging
+    """
     print "# [e] %s" % (message)
     sys.exit(-1)
 
@@ -245,6 +257,7 @@ class Block(object):
         self._buf = buf
         self._offset = offset
         self._implicit_offset = 0
+        #print "-- OBJECT: %s" % self.__class__.__name__
 
     def __repr__(self):
         return "Block(buf=%r, offset=%r)" % (self._buf, self._offset)
@@ -258,8 +271,8 @@ class Block(object):
     def declare_field(self, type, name, offset=None, length=None):
         """
         Declaratively add fields to this block.
-        This method will dynamically add corresponding offset and unpacker methods
-        to this block.
+        This method will dynamically add corresponding
+          offset and unpacker methods to this block.
         Arguments:
         - `type`: A string. Should be one of the unpack_* types.
         - `name`: A string.
@@ -269,26 +282,19 @@ class Block(object):
         if offset == None:
             offset = self._implicit_offset
         if length == None:
-            def handler():
+
+            def no_length_handler():
                 f = getattr(self, "unpack_" + type)
                 return f(offset)
+            setattr(self, name, no_length_handler)
         else:
-            def handler():
+
+            def explicit_length_handler():
                 f = getattr(self, "unpack_" + type)
                 return f(offset, length)
+            setattr(self, name, explicit_length_handler)
 
-        setattr(self, name, handler)
         setattr(self, "_off_" + name, offset)
-        try:
-            debug("(%s) %s\t@ %s\t: %s" % (type.upper(),
-                                           name,
-                                           hex(self.absolute_offset(offset)),
-                                           str(handler())[:0x20]))
-        except ValueError: # invalid Windows timestamp
-            debug("(%s) %s\t@ %s\t: %s" % (type.upper(),
-                                           name,
-                                           hex(self.absolute_offset(offset)),
-                                           "<<error>>"))
         if type == "byte":
             self._implicit_offset = offset + 1
         elif type == "int8":
@@ -328,9 +334,11 @@ class Block(object):
         elif type == "wstring" and length != None:
             self._implicit_offset = offset + (2 * length)
         elif "string" in type and length == None:
-            raise ParseException("Implicit offset not supported for dynamic length strings")
+            raise ParseException("Implicit offset not supported "
+                                 "for dynamic length strings")
         else:
-            raise ParseException("Implicit offset not supported for type: " + type)
+            raise ParseException("Implicit offset not supported "
+                                 "for type: " + type)
 
     def current_field_offset(self):
         return self._implicit_offset

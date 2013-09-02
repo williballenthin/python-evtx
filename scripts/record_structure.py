@@ -4,6 +4,7 @@ from Evtx.Nodes import BXmlTypeNode
 from Evtx.Nodes import TemplateInstanceNode
 from Evtx.Nodes import VariantTypeNode
 from Evtx.BinaryParser import hex_dump
+from Evtx.Views import evtx_record_xml_view
 
 
 def describe_root(record, root, indent=0, suppress_values=False):
@@ -55,7 +56,8 @@ def describe_root(record, root, indent=0, suppress_values=False):
             ret += rec(child, indent=indent + 1)
         if isinstance(node, RootNode):
             ofs = node.tag_and_children_length()
-            ret += "%sSubstitutions(offset=%s)\n" % ("  " * (indent + 1), hex(node.offset() - record.offset() + ofs))
+            ret += "%sSubstitutions(offset=%s)\n" % ("  " * (indent + 1),
+                                                     hex(node.offset() - record.offset() + ofs))
             for sub in node.substitutions():
                 ret += "%s\n" % (format_node(sub, indent=indent + 2))
         return ret
@@ -81,9 +83,12 @@ def main():
     with Evtx(args.evtx) as evtx:
         print hex_dump(evtx.get_record(args.record).data())
 
-        print("record(absolute_offset=%s)" % (evtx.get_record(args.record).offset()))
-        print describe_root(evtx.get_record(args.record), evtx.get_record(args.record).root(), suppress_values=args.suppress_values)
-        print evtx.get_record(args.record).root().xml([])
+        print("record(absolute_offset=%s)" % \
+                  (evtx.get_record(args.record).offset()))
+        print describe_root(evtx.get_record(args.record),
+                            evtx.get_record(args.record).root(),
+                            suppress_values=args.suppress_values)
+        print evtx_record_xml_view(evtx.get_record(args.record))
 
 
 if __name__ == "__main__":

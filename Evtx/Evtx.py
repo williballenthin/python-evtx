@@ -16,31 +16,41 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 #
-#   Version v.0.1
-
+#   Version v.0.3.0
+import re
 import binascii
 import mmap
 from functools import wraps
 
-from BinaryParser import *
-from Nodes import *
+from BinaryParser import ParseException
+from BinaryParser import Block
+from BinaryParser import debug
+from BinaryParser import warning
+from Nodes import NameStringNode
+from Nodes import TemplateNode
+from Nodes import RootNode
 
 
 class InvalidRecordException(ParseException):
     def __init__(self):
-        super(InvalidRecordException, self).__init__("Invalid record structure")
+        super(InvalidRecordException, self).__init__(
+            "Invalid record structure")
 
 
 class Evtx(object):
     """
-    A convenience class that makes it easy to open an EVTX file and start iterating the important structures.
-    Note, this class must be used in a context statement (see the `with` keyword).
-    Note, this class will mmap the target file, so ensure your platform supports this operation.
+    A convenience class that makes it easy to open an
+      EVTX file and start iterating the important structures.
+    Note, this class must be used in a context statement
+       (see the `with` keyword).
+    Note, this class will mmap the target file, so ensure
+      your platform supports this operation.
     """
     def __init__(self, filename):
         """
         @type filename:  str
-        @param filename: A string that contains the path to the EVTX file to open.
+        @param filename: A string that contains the path
+          to the EVTX file to open.
         """
         self._filename = filename
         self._buf = None
@@ -60,13 +70,16 @@ class Evtx(object):
 
     def ensure_contexted(func):
         """
-        This decorator ensure that an instance of the Evtx class is used within a context statement.  That is,
-          that the `with` statement is used, or `__enter__()` and `__exit__()` are called explicitly.
+        This decorator ensure that an instance of the
+          Evtx class is used within a context statement.  That is,
+          that the `with` statement is used, or `__enter__()`
+          and `__exit__()` are called explicitly.
         """
         @wraps(func)
         def wrapped(self, *args, **kwargs):
             if self._buf is None:
-                raise TypeError("An Evtx object must be used with a context (see the `with` statement).")
+                raise TypeError("An Evtx object must be used with"
+                                " a context (see the `with` statement).")
             else:
                 return func(self, *args, **kwargs)
         return wrapped
@@ -102,9 +115,14 @@ class Evtx(object):
         @type record_num:  int
         @param record_num: The record number of the the record to fetch.
         @rtype Record or None
-        @return The record request by record number, or None if the record is not found.
+        @return The record request by record number, or None if
+          the record is not found.
         """
         return self._fh.get_record(record_num)
+
+    @ensure_contexted
+    def get_file_header(self):
+        return self._fh
 
 
 class FileHeader(Block):
@@ -211,15 +229,46 @@ class FileHeader(Block):
         @type record_num:  int
         @param record_num: The record number of the the record to fetch.
         @rtype Record or None
-        @return The record request by record number, or None if the record is not found.
+        @return The record request by record number, or None if the
+          record is not found.
         """
         for chunk in self.chunks():
-            if not (chunk.log_first_record_number() <= record_num <= chunk.log_last_record_number()):
+            first_record = chunk.log_first_record_number()
+            last_record = chunk.log_last_record_number()
+            if not (first_record <= record_num <= last_record):
                 continue
             for record in chunk.records():
                 if record.record_num() == record_num:
                     return record
         return None
+
+
+class Template(object):
+    def __init__(self, template_node):
+        self._template_node = template_node
+        self._xml = None
+
+    def _load_xml(self):
+        """
+        TODO(wb): One day, nodes should generate format strings
+          instead of the XML format made-up abomination.
+        """
+        if self._xml is not None:
+            return
+        matcher = "\[(?:Normal|Conditional) Substitution\(index=(\d+), type=\d+\)\]"
+        self._xml = re.sub(matcher, "{\\1:}",
+                           self._template_node.template_format().replace("{", "{{").replace("}", "}}"))
+
+    def make_substitutions(self, substitutions):
+        """
+
+        @type substitutions: list of VariantTypeNode
+        """
+        self._load_xml()
+        return self._xml.format(*map(lambda n: n.xml(), substitutions))
+
+    def node(self):
+        return self._template_node
 
 
 class ChunkHeader(Block):
@@ -324,7 +373,7 @@ class ChunkHeader(Block):
             while ofs > 0:
                 # unclear why these are found before the offset
                 # this is a direct port from A.S.'s code
-                token   = self.unpack_byte(ofs - 10)
+                token = self.unpack_byte(ofs - 10)
                 pointer = self.unpack_dword(ofs - 4)
                 if token != 0x0c or pointer != ofs:
                     warning("Unexpected token encountered")
@@ -344,14 +393,14 @@ class ChunkHeader(Block):
         if self._templates is None:
             self._load_templates()
 
-        template = TemplateNode(self._buf, self._offset + offset,
+        node = TemplateNode(self._buf, self._offset + offset,
                                 self, parent or self)
-        self._templates[offset] = template
-        return template
+        self._templates[offset] = node
+        return node
 
     def templates(self):
         """
-        @return A dict(offset --> TemplateNode) of all encountered
+        @return A dict(offset --> Template) of all encountered
           templates in this Chunk.
         """
         if not self._templates:
@@ -389,6 +438,12 @@ class Record(Block):
 
         self.declare_field("dword", "size2", self.size() - 4)
 
+    def __repr__(self):
+        return "Record(buf=%r, offset=%r)" % (self._buf, self._offset)
+
+    def __str__(self):
+        return "Record(offset=%s)" % (hex(self._offset))
+
     def root(self):
         return RootNode(self._buf, self._offset + 0x18, self._chunk, self)
 
@@ -403,6 +458,7 @@ class Record(Block):
         Return the raw data block which makes up this record as a bytestring.
 
         @rtype str
-        @return A string that is a copy of the buffer that makes up this record.
+        @return A string that is a copy of the buffer that makes
+          up this record.
         """
         return self._buf[self.offset():self.offset() + self.size()]
