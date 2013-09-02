@@ -408,6 +408,7 @@ class OpenStartElementNode(BXmlNode):
                     try:
                         cxml += c.xml(substitutions).encode("utf-8")
                     except UnicodeEncodeError as f:
+                        print c.xml(substitutions).decode("utf-16")
                         raise f
                 return cxml
             except UnicodeDecodeError as e:
@@ -1864,18 +1865,27 @@ class WstringArrayTypeNode(VariantTypeNode):
         for apart in bin.split("\x00\x00\x00"):
             for bpart in apart.split("\x00\x00"):
                 if len(bpart) % 2 == 1:
-                    strings.append((bpart + "\x00").decode("utf-16"))
+                    strings.append((bpart + "\x00").decode("utf-16le"))
                 else:
-                    strings.append(bpart.decode("utf-16"))
+                    strings.append(bpart.decode("utf-16le"))
         if strings[-1].strip("\x00") == "":
             strings = strings[:-1]
         for (index, string) in enumerate(strings):
             if string == "":
                 ret += "<string index=\"%d\" isNull=\"True\" />\n" % \
                     (index)
-            else:
-                ret += "<string index=\"%d\">%s</string>\n" % \
-                    (index, string.rstrip("\x00"))
+                continue
+
+            try:
+                # this is some hacky unicode detection
+                string.encode("ascii")
+                ret += "<string index=\"%d\">%s</string>\n" % (index, string.rstrip("\x00"))
+            except UnicodeDecodeError as e:
+                print list(string)
+                raise e
+            except UnicodeEncodeError:
+                ret += "<string index=\"%d\">%s</string>\n" % (index, string.encode("utf-16be").decode("utf-16"))
+
         return ret
 
     def template_format(self):
@@ -1883,5 +1893,5 @@ class WstringArrayTypeNode(VariantTypeNode):
 
     def tag_length(self):
         if self._length is None:
-            return (2 + self.binary_length())
+            return 2 + self.binary_length()
         return self._length

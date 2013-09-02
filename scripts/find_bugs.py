@@ -33,7 +33,7 @@ def main():
             for chunk in fh.chunks():
                 for record in chunk.records():
                     try:
-                        record.root().xml([]).encode("utf-8")
+                        print record.root().xml([])
                     except Exception as e:
                         print str(e)
                         print repr(e)

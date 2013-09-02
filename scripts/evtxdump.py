@@ -35,8 +35,8 @@ def main():
             print "<Events>"
             for chunk in fh.chunks():
                 for record in chunk.records():
-                    print record.root().xml([]).encode("utf-8")
-            print "</Events>"            
+                    sys.stdout.write(record.root().xml([]).encode("utf-8") + "\n")
+            print "</Events>"
 
 if __name__ == "__main__":
     main()
