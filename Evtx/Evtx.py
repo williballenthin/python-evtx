@@ -218,7 +218,7 @@ class FileHeader(Block):
           after the FileHeader, and continuing to the end of the file.
         """
         ofs = self._offset + self.header_chunk_size()
-        while ofs + 0x10000 < len(self._buf):
+        while ofs + 0x10000 <= len(self._buf):
             yield ChunkHeader(self._buf, ofs)
             ofs += 0x10000
 
