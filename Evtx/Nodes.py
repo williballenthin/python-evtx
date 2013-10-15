@@ -995,8 +995,8 @@ class RootNode(BXmlNode):
             elif type_ == 0x13:
                 version = self.unpack_byte(ofs)
                 num_elements = self.unpack_byte(ofs + 1)
-                id_high = self.unpack_dword_be(ofs)
-                id_low = self.unpack_word_be(ofs)
+                id_high = self.unpack_dword_be(ofs + 2)
+                id_low = self.unpack_word_be(ofs + 6)
                 value = "S-%d-%d" % (version, (id_high << 16) ^ id_low)
                 for i in xrange(num_elements):
                     val = self.unpack_dword(ofs + 8 + (4 * i))
