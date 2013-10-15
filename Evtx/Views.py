@@ -15,8 +15,6 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-#
-#   Version v.0.3.0
 from Nodes import RootNode
 from Nodes import TemplateNode
 from Nodes import EndOfStreamNode
@@ -208,9 +206,12 @@ def evtx_file_xml_view(file_header):
             yield record_str.encode("utf8", "xmlcharrefreplace"), record
 
 
-def evtx_template_readable_view(template_node):
+def evtx_template_readable_view(root_node, cache=None):
     """
     """
+    if cache is None:
+        cache = {}
+
     def rec(node, acc):
         if isinstance(node, EndOfStreamNode):
             pass  # intended
@@ -256,12 +257,25 @@ def evtx_template_readable_view(template_node):
             acc.append("[Normal Substitution(index=%d, type=%d)]" % \
                            (node.index(), node.type()))
         elif isinstance(node, ConditionalSubstitutionNode):
-            acc.append("[Condititional Substitution(index=%d, type=%d)]" % \
+            acc.append("[Conditional Substitution(index=%d, type=%d)]" % \
                            (node.index(), node.type()))
         elif isinstance(node, StreamStartNode):
             pass  # intended
 
-    sub_acc = []
-    for c in template_node.children():
-        rec(c, sub_acc)
-    return "".join(sub_acc)
+    acc = []
+    template_instance = root_node.fast_template_instance()
+    templ_off = template_instance.template_offset() + \
+        template_instance._chunk.offset()
+    if templ_off in cache:
+        acc.append(cache[templ_off])
+    else:
+        node = TemplateNode(template_instance._buf, templ_off,
+                            template_instance._chunk, template_instance)
+        sub_acc = []
+        for c in node.children():
+            rec(c, sub_acc)
+        sub_templ = "".join(sub_acc)
+        cache[templ_off] = sub_templ
+        acc.append(sub_templ)
+    return "".join(acc)
+
