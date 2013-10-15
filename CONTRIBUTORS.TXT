@@ -1,0 +1,5 @@
+
+
+Thanks to the following contributors for submitting issues, patches, and experiences to python-evtx:
+
+  - @sc07kvm: Reported a bug in the SID type node parsing code.
