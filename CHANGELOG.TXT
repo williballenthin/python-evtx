@@ -1,6 +1,7 @@
 
 
-
+v0.3.2
+  - fix bug where strings were raised, rather than Exceptions, reported by sc07kvm
 
 
 v0.3.1

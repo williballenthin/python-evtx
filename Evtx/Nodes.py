@@ -63,6 +63,16 @@ class SuppressConditionalSubstitution(Exception):
         super(SuppressConditionalSubstitution, self).__init__(msg)
 
 
+class UnexpectedStateException(ParseException):
+    """
+    UnexpectedStateException is an exception to be thrown when the parser
+      encounters an unexpected value or state. This probably means there
+      is a bug in the parser, but could stem from a corrupted input file.
+    """
+    def __init__(self, msg):
+        super(UnexpectedStateException, self).__init__(msg)
+
+
 class BXmlNode(Block):
 
     def __init__(self, buf, offset, chunk, parent):
@@ -984,7 +994,7 @@ class RootNode(BXmlNode):
                 elif size == 0x8:
                     sub_def.append(self.unpack_qword(ofs))
                 else:
-                    raise "Unexpected size for SizeTypeNode: %s" % hex(size)
+                    raise UnexpectedStateException("Unexpected size for SizeTypeNode: %s" % hex(size))
             #[17] = parse_filetime_type_node,
             elif type_ == 0x11:
                 sub_def.append(self.unpack_filetime(ofs))
@@ -1037,7 +1047,7 @@ class RootNode(BXmlNode):
                         for _ in xrange(len(frag) // 2):
                             acc.append("<string></string>\n")
                     else:
-                        raise "Error parsing uneven substring of NULLs"
+                        raise ParseException("Error parsing uneven substring of NULLs")
                     bin = bin[len(frag):]
                 sub_def.append("".join(acc))
             else:
