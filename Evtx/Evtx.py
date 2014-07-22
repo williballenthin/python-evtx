@@ -191,7 +191,7 @@ class FileHeader(Block):
           of space from the oldest records and an event message could
           not be written to the log file.
         """
-        return self.flags() & 0x2
+        return self.flags() & 0x2 == 0x2
 
     def first_chunk(self):
         """
