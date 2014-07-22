@@ -575,7 +575,7 @@ class CDataSectionNode(BXmlNode):
 class EntityReferenceNode(BXmlNode):
     """
     The binary XML node for the system token 0x09.
-    
+
     This is an entity reference node.  That is, something that represents
       a non-XML character, eg. & --> &amp;.
 
@@ -672,7 +672,7 @@ class ProcessingInstructionDataNode(BXmlNode):
             self._string = self.unpack_wstring(0x3, self.string_length())
         else:
             self._string = ""
-        
+
     def __repr__(self):
         return "ProcessingInstructionDataNode(buf=%r, offset=%r, chunk=%r, parent=%r)" % \
             (self._buf, self.offset(), self._chunk, self._parent)
