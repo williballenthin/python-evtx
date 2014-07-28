@@ -43,6 +43,12 @@ class EvtxFormatter(object):
         if len(self._indent_stack) > 0:
             self._indent_stack = self._indent_stack[:-1]
 
+    def save_indent(self):
+        return self._indent_stack[:]
+
+    def restore_indent(self, indent):
+        self._indent_stack = indent
+
     def _l(self, s):
         return "".join(self._indent_stack) + s
 
@@ -101,15 +107,20 @@ class EvtxFormatter(object):
     def format_record(self, record):
         yield self._l("Record")
         self._indent()
-        yield self._l("offset: %s" % (record.offset()))
+        yield self._l("offset: %s" % (hex(record.offset())))
         yield self._l("magic: %s" % (hex(record.magic())))
         yield self._l("size: %s" % (hex(record.size())))
         yield self._l("number: %s" % (hex(record.record_num())))
         yield self._l("timestamp: %s" % (record.timestamp()))
         yield self._l("verify: %s" % (record.verify()))
 
-        for line in self.format_node(record, record.root()):
-            yield line
+        try:
+            s = self.save_indent()
+            for line in self.format_node(record, record.root()):
+                yield line
+        except Exception as e:
+            self.restore_indent(s)
+            yield "ERROR: " + str(e)
         self._dedent()
 
     def _format_node_name(self, record, node, extra=None):
