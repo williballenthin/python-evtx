@@ -32,7 +32,7 @@ from Nodes import TemplateInstanceNode
 from Nodes import NormalSubstitutionNode
 from Nodes import ConditionalSubstitutionNode
 from Nodes import StreamStartNode
-
+from xml.sax.saxutils import escape as xml_sax_escape
 
 class UnexpectedElementException(Exception):
     def __init__(self, msg):
@@ -144,7 +144,7 @@ def _build_record_xml(record, cache=None):
         subs_strs = []
         for sub in root_node.fast_substitutions():
             if isinstance(sub, basestring):
-                subs_strs.append(sub.encode("ascii", "xmlcharrefreplace"))
+                subs_strs.append((xml_sax_escape(sub, {'"': "&quot;"})).encode("ascii", "xmlcharrefreplace"))
             elif isinstance(sub, RootNode):
                 subs_strs.append(rec(sub))
             elif sub is None:
@@ -153,7 +153,6 @@ def _build_record_xml(record, cache=None):
                 subs_strs.append(str(sub))
         return f.format(*subs_strs)
     xml = rec(record.root())
-    xml = xml.replace("&", "&amp;")
     return xml
 
 
