@@ -186,7 +186,10 @@ def dosdate(dosdate, dostime):
 
 def parse_filetime(qword):
     # see http://integriography.wordpress.com/2010/01/16/using-phython-to-parse-and-present-windows-64-bit-timestamps/
-    return datetime.utcfromtimestamp(float(qword) * 1e-7 - 11644473600)
+    try:
+        return datetime.utcfromtimestamp(float(qword) * 1e-7 - 11644473600)
+    except ValueError:
+        return
 
 
 class BinaryParserException(Exception):
