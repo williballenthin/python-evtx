@@ -189,7 +189,7 @@ def parse_filetime(qword):
     try:
         return datetime.utcfromtimestamp(float(qword) * 1e-7 - 11644473600)
     except ValueError:
-        return
+        return datetime.min
 
 
 class BinaryParserException(Exception):
