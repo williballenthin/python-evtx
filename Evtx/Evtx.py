@@ -411,7 +411,10 @@ class ChunkHeader(Block):
         return Record(self._buf, self._offset + 0x200, self)
 
     def records(self):
-        record = self.first_record()
+        try:
+            record = self.first_record()
+        except InvalidRecordException:
+            return
         while record._offset < self._offset + self.next_record_offset() and record.length() > 0:
             yield record
             try:
