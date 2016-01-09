@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/env python
 #    This file is part of python-evtx.
 #
 #   Copyright 2015 Willi Ballenthin <william.ballenthin@mandiant.com>
