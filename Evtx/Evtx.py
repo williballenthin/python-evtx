@@ -21,14 +21,15 @@ import re
 import binascii
 import mmap
 from functools import wraps
+import logging
 
 from BinaryParser import ParseException
 from BinaryParser import Block
-from BinaryParser import debug
-from BinaryParser import warning
 from Nodes import NameStringNode
 from Nodes import TemplateNode
 from Nodes import RootNode
+
+logging.basicConfig(level=logging.INFO)
 
 
 class InvalidRecordException(ParseException):
@@ -127,7 +128,7 @@ class Evtx(object):
 
 class FileHeader(Block):
     def __init__(self, buf, offset):
-        debug("FILE HEADER at %s." % (hex(offset)))
+        logging.debug("FILE HEADER at {}.".format(hex(offset)))
         super(FileHeader, self).__init__(buf, offset)
         self.declare_field("string", "magic", 0x0, length=8)
         self.declare_field("qword",  "oldest_chunk")
@@ -273,7 +274,7 @@ class Template(object):
 
 class ChunkHeader(Block):
     def __init__(self, buf, offset):
-        debug("CHUNK HEADER at %s." % (hex(offset)))
+        logging.debug("CHUNK HEADER at {}.".format(hex(offset)))
         super(ChunkHeader, self).__init__(buf, offset)
         self._strings = None
         self._templates = None
@@ -376,7 +377,7 @@ class ChunkHeader(Block):
                 token = self.unpack_byte(ofs - 10)
                 pointer = self.unpack_dword(ofs - 4)
                 if token != 0x0c or pointer != ofs:
-                    warning("Unexpected token encountered")
+                    logging.warning("Unexpected token encountered")
                     ofs = 0
                     continue
                 template = self.add_template(ofs)
@@ -427,7 +428,7 @@ class ChunkHeader(Block):
 
 class Record(Block):
     def __init__(self, buf, offset, chunk):
-        debug("Record at %s." % (hex(offset)))
+        logging.debug("Record at {}.".format(hex(offset)))
         super(Record, self).__init__(buf, offset)
         self._chunk = chunk
 
