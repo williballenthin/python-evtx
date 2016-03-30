@@ -15,23 +15,23 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-from Nodes import RootNode
-from Nodes import TemplateNode
-from Nodes import EndOfStreamNode
-from Nodes import OpenStartElementNode
-from Nodes import CloseStartElementNode
-from Nodes import CloseEmptyElementNode
-from Nodes import CloseElementNode
-from Nodes import ValueNode
-from Nodes import AttributeNode
-from Nodes import CDataSectionNode
-from Nodes import EntityReferenceNode
-from Nodes import ProcessingInstructionTargetNode
-from Nodes import ProcessingInstructionDataNode
-from Nodes import TemplateInstanceNode
-from Nodes import NormalSubstitutionNode
-from Nodes import ConditionalSubstitutionNode
-from Nodes import StreamStartNode
+from .Nodes import RootNode
+from .Nodes import TemplateNode
+from .Nodes import EndOfStreamNode
+from .Nodes import OpenStartElementNode
+from .Nodes import CloseStartElementNode
+from .Nodes import CloseEmptyElementNode
+from .Nodes import CloseElementNode
+from .Nodes import ValueNode
+from .Nodes import AttributeNode
+from .Nodes import CDataSectionNode
+from .Nodes import EntityReferenceNode
+from .Nodes import ProcessingInstructionTargetNode
+from .Nodes import ProcessingInstructionDataNode
+from .Nodes import TemplateInstanceNode
+from .Nodes import NormalSubstitutionNode
+from .Nodes import ConditionalSubstitutionNode
+from .Nodes import StreamStartNode
 from xml.sax.saxutils import escape as xml_sax_escape
 
 class UnexpectedElementException(Exception):
@@ -100,11 +100,11 @@ def _make_template_xml_view(root_node, cache=None):
             raise UnexpectedElementException("TemplateInstanceNode")
         elif isinstance(node, NormalSubstitutionNode):
             acc.append("{")
-            acc.append("%d" % (node.index()))
+            acc.append("{}".format(node.index()))
             acc.append("}")
         elif isinstance(node, ConditionalSubstitutionNode):
             acc.append("{")
-            acc.append("%d" % (node.index()))
+            acc.append("{}".format(node.index()))
             acc.append("}")
         elif isinstance(node, StreamStartNode):
             pass  # intended
@@ -253,11 +253,11 @@ def evtx_template_readable_view(root_node, cache=None):
         elif isinstance(node, TemplateInstanceNode):
             raise UnexpectedElementException("TemplateInstanceNode")
         elif isinstance(node, NormalSubstitutionNode):
-            acc.append("[Normal Substitution(index=%d, type=%d)]" % \
-                           (node.index(), node.type()))
+            acc.append("[Normal Substitution(index={}, type={})]".format(
+                node.index(), node.type()))
         elif isinstance(node, ConditionalSubstitutionNode):
-            acc.append("[Conditional Substitution(index=%d, type=%d)]" % \
-                           (node.index(), node.type()))
+            acc.append("[Conditional Substitution(index={}, type={})]".format(
+                node.index(), node.type()))
         elif isinstance(node, StreamStartNode):
             pass  # intended
 

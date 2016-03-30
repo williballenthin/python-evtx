@@ -51,23 +51,23 @@ def hex_dump(src, start_addr=0):
 
         spaces = " ".join(["  " for i in xrange(num_spaces)])
         s = src[0:num_chars]
-        hexa = ' '.join(["%02X" % ord(x) for x in s])
+        hexa = ' '.join(["{:02X}".format(ord(x)) for x in s])
         printable = s.translate(FILTER)
 
-        result.append("%04X   %s %s   %s%s\n" %
+        result.append("{:04X}   {} {}   {}{}\n".format(
                       (base_addr, spaces, hexa,
-                      " " * (num_spaces + 1), printable))
+                      " " * (num_spaces + 1), printable)))
 
         src = src[num_chars:]
         remainder_start_addr = base_addr + length
 
     for i in xrange(0, len(src), length):
         s = src[i:i + length]
-        hexa = ' '.join(["%02X" % ord(x) for x in s])
+        hexa = ' '.join(["{:02X}".format(ord(x)) for x in s])
         printable = s.translate(FILTER)
-        result.append("%04X   %-*s   %s\n" %
-                         (remainder_start_addr + i, length * 3,
-                          hexa, printable))
+        result.append("{:04X}   {:<}   {:{l}}\n".format(
+                         remainder_start_addr + i, 
+                         hexa, printable, l=length*3))
 
     return ''.join(result)
 
@@ -173,10 +173,10 @@ class BinaryParserException(Exception):
         self._value = value
 
     def __repr__(self):
-        return "BinaryParserException(%r)" % (self._value)
+        return "BinaryParserException({!r})".format(self._value)
 
     def __str__(self):
-        return "Binary Parser Exception: %s" % (self._value)
+        return "Binary Parser Exception: {}".format(self._value)
 
 
 class ParseException(BinaryParserException):
@@ -193,23 +193,22 @@ class ParseException(BinaryParserException):
         super(ParseException, self).__init__(value)
 
     def __repr__(self):
-        return "ParseException(%r)" % (self._value)
+        return "ParseException({!r})".format(self._value)
 
     def __str__(self):
-        return "Parse Exception(%s)" % (self._value)
+        return "Parse Exception({})".format(self._value)
 
 
 class OverrunBufferException(ParseException):
     def __init__(self, readOffs, bufLen):
-        tvalue = "read: %s, buffer length: %s" % (hex(readOffs), hex(bufLen))
+        tvalue = "read: {}, buffer length: {}".format(hex(readOffs), hex(bufLen))
         super(ParseException, self).__init__(tvalue)
 
     def __repr__(self):
-        return "OverrunBufferException(%r)" % (self._value)
+        return "OverrunBufferException({!r})".format(self._value)
 
     def __str__(self):
-        return "Tried to parse beyond the end of the file (%s)" % \
-            (self._value)
+        return "Tried to parse beyond the end of the file ({})".format(self._value)
 
 
 class Block(object):
@@ -227,13 +226,12 @@ class Block(object):
         self._buf = buf
         self._offset = offset
         self._implicit_offset = 0
-        #print "-- OBJECT: %s" % self.__class__.__name__
-
+        
     def __repr__(self):
-        return "Block(buf=%r, offset=%r)" % (self._buf, self._offset)
+        return "Block(buf={!r}, offset={!r})".format(self._buf, self._offset)
 
     def __unicode__(self):
-        return u"BLOCK @ %s." % (hex(self.offset()))
+        return u"BLOCK @ {}.".format(hex(self.offset()))
 
     def __str__(self):
         return str(unicode(self))
@@ -308,7 +306,7 @@ class Block(object):
                                  "for dynamic length strings")
         else:
             raise ParseException("Implicit offset not supported "
-                                 "for type: " + type)
+                                 "for type: {}".format(type))
 
     def current_field_offset(self):
         return self._implicit_offset
@@ -512,7 +510,7 @@ class Block(object):
             return ""
         o = self._offset + offset
         try:
-            return struct.unpack_from("<%ds" % (length), self._buf, o)[0]
+            return struct.unpack_from("<{}s".format(length), self._buf, o)[0]
         except struct.error:
             raise OverrunBufferException(o, len(self._buf))
 
@@ -607,12 +605,16 @@ class Block(object):
 
         # Yeah, this is ugly
         h = map(ord, _bin)
-        return "%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x" % \
-            (h[3], h[2], h[1], h[0],
-             h[5], h[4],
-             h[7], h[6],
-             h[8], h[9],
-             h[10], h[11], h[12], h[13], h[14], h[15])
+        return """
+        {:02x}{:02x}{:02x}{:02x}-{:02x}{:02x}- \
+        {:02x}{:02x}- \
+        {:02x}{:02x}- \
+        {:02x}{:02x}{:02x}{:02x}{:02x}{:02x}""".format(
+            h[3], h[2], h[1], h[0],
+            h[5], h[4],
+            h[7], h[6],
+            h[8], h[9],
+            h[10], h[11], h[12], h[13], h[14], h[15])
 
     def absolute_offset(self, offset):
         """
