@@ -23,11 +23,11 @@ import mmap
 from functools import wraps
 import logging
 
-from BinaryParser import ParseException
-from BinaryParser import Block
-from Nodes import NameStringNode
-from Nodes import TemplateNode
-from Nodes import RootNode
+from .BinaryParser import ParseException
+from .BinaryParser import Block
+from .Nodes import NameStringNode
+from .Nodes import TemplateNode
+from .Nodes import RootNode
 
 logging.basicConfig(level=logging.INFO)
 
@@ -144,10 +144,10 @@ class FileHeader(Block):
         self.declare_field("dword",  "checksum")
 
     def __repr__(self):
-        return "FileHeader(buf=%r, offset=%r)" % (self._buf, self._offset)
+        return "FileHeader(buf={!r}, offset={!r})".format(self._buf, self._offset)
 
     def __str__(self):
-        return "FileHeader(offset=%s)" % (hex(self._offset))
+        return "FileHeader(offset={})".format(hex(self._offset))
 
     def check_magic(self):
         """
@@ -292,10 +292,10 @@ class ChunkHeader(Block):
         self.declare_field("dword",  "header_checksum")
 
     def __repr__(self):
-        return "ChunkHeader(buf=%r, offset=%r)" % (self._buf, self._offset)
+        return "ChunkHeader(buf={!r}, offset={!r})".format(self._buf, self._offset)
 
     def __str__(self):
-        return "ChunkHeader(offset=%s)" % (hex(self._offset))
+        return "ChunkHeader(offset={})".format(hex(self._offset))
 
     def check_magic(self):
         """
@@ -443,10 +443,10 @@ class Record(Block):
         self.declare_field("dword", "size2", self.size() - 4)
 
     def __repr__(self):
-        return "Record(buf=%r, offset=%r)" % (self._buf, self._offset)
+        return "Record(buf={!r}, offset={!r})".format(self._buf, self._offset)
 
     def __str__(self):
-        return "Record(offset=%s)" % (hex(self._offset))
+        return "Record(offset={})".format(hex(self._offset))
 
     def root(self):
         return RootNode(self._buf, self._offset + 0x18, self._chunk, self)
