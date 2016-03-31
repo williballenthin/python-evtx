@@ -3,3 +3,4 @@
 Thanks to the following contributors for submitting issues, patches, and experiences to python-evtx:
 
   - @sc07kvm: Reported a bug in the SID type node parsing code, as well as invalid exception types.
+  - @@thomasRousseau: Updating code to Python3 and string formatting
