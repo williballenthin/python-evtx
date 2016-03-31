@@ -1013,7 +1013,7 @@ class RootNode(BXmlNode):
             elif type_ == 0x14:
                 value = "0x"
                 for c in self.unpack_binary(ofs, size)[::-1]:
-                    value += "{:02x}".fomrat(ord(c))
+                    value += "{:02x}".format(ord(c))
                 sub_def.append(value)
             #[21] = parse_hex64_type_node,  -- Hex64TypeNode, 0x15
             elif type_ == 0x15:
