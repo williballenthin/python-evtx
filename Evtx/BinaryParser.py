@@ -538,12 +538,15 @@ class Block(object):
         Throws:
         - `UnicodeDecodeError`
         """
+        start = int(self._offset + offset)
+        end   = int(start + 2 * length)
+        unpacked = self._buf[start:end]
         try:
-            return self._buf[self._offset + offset:self._offset + offset + \
-                             2 * length].tostring().decode("utf16")
+            unpacked = unpacked.tostring()
         except AttributeError: # already a 'str' ?
-            return self._buf[self._offset + offset:self._offset + offset + \
-                             2 * length].decode("utf16")
+            pass
+        unpacked  = unpacked.decode("utf-16")
+        return unpacked
 
     def unpack_dosdate(self, offset):
         """
