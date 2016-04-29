@@ -101,7 +101,7 @@ class BXmlNode(Block):
         @return An integer specifying the length of this tag, not including
           its children.
         """
-        raise NotImplementedError("tag_length not implemented for {!r}").format(self)
+        raise NotImplementedError("tag_length not implemented for {!r}".format(self))
 
     def _children(self, max_children=None, end_tokens=[SYSTEM_TOKENS.EndOfStreamToken]):
         """
