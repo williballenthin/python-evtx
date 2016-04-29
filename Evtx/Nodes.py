@@ -282,9 +282,7 @@ class OpenStartElementNode(BXmlNode):
     @memoize
     def is_empty_node(self):
         for child in self.children():
-            if type(child) is CloseEmptyElementNode:
-                return True
-        return False
+            return (type(child) is CloseEmptyElementNode)
 
     def flags(self):
         return self.token() >> 4
@@ -302,8 +300,11 @@ class OpenStartElementNode(BXmlNode):
 
     @memoize
     def children(self):
-        return self._children(end_tokens=[SYSTEM_TOKENS.CloseElementToken,
-                                          SYSTEM_TOKENS.CloseEmptyElementToken])
+        end_tokens = [
+            SYSTEM_TOKENS.CloseElementToken
+          , SYSTEM_TOKENS.CloseEmptyElementToken
+        ]
+        return self._children(end_tokens=end_tokens)
 
 
 class CloseStartElementNode(BXmlNode):
@@ -1037,7 +1038,7 @@ class RootNode(BXmlNode):
                     if match:
                         frag = match.group()
                         acc.append("<string>")
-                        acc.append(frag.decode("utf16"))
+                        acc.append(frag.decode("utf-16"))
                         acc.append("</string>\n")
                         bin = bin[len(frag) + 2:]
                         if len(bin) == 0:
@@ -1588,7 +1589,7 @@ class WstringArrayTypeNode(VariantTypeNode):
             if match:
                 frag = match.group()
                 acc.append("<string>")
-                acc.append(frag.decode("utf16"))
+                acc.append(frag.decode("utf-16"))
                 acc.append("</string>\n")
                 bin = bin[len(frag) + 2:]
                 if len(bin) == 0:
