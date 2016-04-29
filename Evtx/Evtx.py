@@ -257,17 +257,15 @@ class Template(object):
         """
         if self._xml is not None:
             return
-        matcher = "\[(?:Normal|Conditional) Substitution\(index=(\d+), type=\d+\)\]"
-        self._xml = re.sub(matcher, "{\\1:}",
-                           self._template_node.template_format().replace("{", "{{").replace("}", "}}"))
+        matcher = r"\[(?:Normal|Conditional) Substitution\(index=(\d+), type=\d+\)\]"
+        self._xml = re.sub(matcher, "{\\1:}", self._template_node.template_format().replace("{", "{{").replace("}", "}}"))
 
     def make_substitutions(self, substitutions):
         """
-
         @type substitutions: list of VariantTypeNode
         """
         self._load_xml()
-        return self._xml.format(*map(lambda n: n.xml(), substitutions))
+        return self._xml.format(*[n.xml() for n in substitutions])
 
     def node(self):
         return self._template_node
@@ -335,7 +333,7 @@ class ChunkHeader(Block):
     def _load_strings(self):
         if self._strings is None:
             self._strings = {}
-        for i in xrange(64):
+        for i in range(64):
             ofs = self.unpack_dword(0x80 + (i * 4))
             while ofs > 0:
                 string_node = self.add_string(ofs)
@@ -370,7 +368,7 @@ class ChunkHeader(Block):
         """
         if self._templates is None:
             self._templates = {}
-        for i in xrange(32):
+        for i in range(32):
             ofs = self.unpack_dword(0x180 + (i * 4))
             while ofs > 0:
                 # unclear why these are found before the offset

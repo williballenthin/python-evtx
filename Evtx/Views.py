@@ -146,7 +146,7 @@ def _build_record_xml(record, cache=None):
         f = _make_template_xml_view(root_node, cache=cache)
         subs_strs = []
         for sub in root_node.fast_substitutions():
-            if isinstance(sub, basestring):
+            if isinstance(sub, str):
                 subs_strs.append((xml_sax_escape(sub, {'"': "&quot;"})).encode("ascii", "xmlcharrefreplace"))
             elif isinstance(sub, RootNode):
                 subs_strs.append(rec(sub))
@@ -280,4 +280,3 @@ def evtx_template_readable_view(root_node, cache=None):
         cache[templ_off] = sub_templ
         acc.append(sub_templ)
     return "".join(acc)
-

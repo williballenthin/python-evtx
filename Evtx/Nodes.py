@@ -102,8 +102,7 @@ class BXmlNode(Block):
         """
         raise NotImplementedError("tag_length not implemented for {!r}").format(self)
 
-    def _children(self, max_children=None,
-                  end_tokens=[SYSTEM_TOKENS.EndOfStreamToken]):
+    def _children(self, max_children=None, end_tokens=[SYSTEM_TOKENS.EndOfStreamToken]):
         """
         @return A list containing all of the children BXmlNodes.
         """
@@ -111,7 +110,7 @@ class BXmlNode(Block):
         ofs = self.tag_length()
 
         if max_children:
-            gen = xrange(max_children)
+            gen = list(range(max_children))
         else:
             gen = itertools.count()
 
@@ -926,7 +925,7 @@ class RootNode(BXmlNode):
         ofs = self.tag_and_children_length()
         sub_count = self.unpack_dword(ofs)
         ofs += 4
-        for _ in xrange(sub_count):
+        for _ in range(sub_count):
             size = self.unpack_word(ofs)
             type_ = self.unpack_byte(ofs + 0x2)
             sub_decl.append((size, type_))
@@ -1008,7 +1007,7 @@ class RootNode(BXmlNode):
                 id_high = self.unpack_dword_be(ofs + 2)
                 id_low = self.unpack_word_be(ofs + 6)
                 value = "S-{}-{}".format(version, (id_high << 16) ^ id_low)
-                for i in xrange(num_elements):
+                for i in range(num_elements):
                     val = self.unpack_dword(ofs + 8 + (4 * i))
                     value += "-{}".format(val)
                 sub_def.append(value)
@@ -1044,7 +1043,7 @@ class RootNode(BXmlNode):
                             break
                     frag = re.search("(\x00*)", bin).group()
                     if len(frag) % 2 == 0:
-                        for _ in xrange(len(frag) // 2):
+                        for _ in range(len(frag) // 2):
                             acc.append("<string></string>\n")
                     else:
                         raise ParseException("Error parsing uneven substring of NULLs")
@@ -1066,7 +1065,7 @@ class RootNode(BXmlNode):
         ofs = self.tag_and_children_length()
         sub_count = self.unpack_dword(ofs)
         ofs += 4
-        for _ in xrange(sub_count):
+        for _ in range(sub_count):
             size = self.unpack_word(ofs)
             type_ = self.unpack_byte(ofs + 0x2)
             sub_decl.append((size, type_))
@@ -1092,7 +1091,7 @@ class RootNode(BXmlNode):
         sub_count = self.unpack_dword(ofs)
         ofs += 4
         ret = ofs
-        for _ in xrange(sub_count):
+        for _ in range(sub_count):
             size = self.unpack_word(ofs)
             ret += size + 4
             ofs += 4
@@ -1499,7 +1498,7 @@ class SIDTypeNode(VariantTypeNode):
     @memoize
     def elements(self):
         ret = []
-        for i in xrange(self.num_elements()):
+        for i in range(self.num_elements()):
             ret.append(self.unpack_dword(self.current_field_offset() + 4 * i))
         return ret
 
@@ -1610,10 +1609,10 @@ class WstringArrayTypeNode(VariantTypeNode):
                     break
             frag = re.search("(\x00*)", bin).group()
             if len(frag) % 2 == 0:
-                for _ in xrange(len(frag) // 2):
+                for _ in range(len(frag) // 2):
                     acc.append("<string></string>\n")
             else:
-                raise "Error parsing uneven substring of NULLs"
+                raise Exception("Error parsing uneven substring of NULLs")
             bin = bin[len(frag):]
         return "".join(acc)
 

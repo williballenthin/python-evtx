@@ -35,9 +35,13 @@ def hex_dump(src, start_addr=0):
       data is interpreted as starting at this offset, and
       the offset column is updated accordingly.
     """
-    FILTER = ''.join([(len(repr(chr(x))) == 3) and
-                        chr(x) or
-                        '.' for x in range(256)])
+    filter_gen = [
+        (3 == len(repr(chr(x))))
+        and chr(x)
+        or '.'
+        for x in range(256)
+    ]
+    FILTER = ''.join(filter_gen)
     length = 16
     result = []
 
@@ -48,25 +52,31 @@ def hex_dump(src, start_addr=0):
         num_spaces = (start_addr % length)
         num_chars = length - (start_addr % length)
 
-        spaces = " ".join(["  " for i in xrange(num_spaces)])
+        spaces = " ".join(["  " for i in range(num_spaces)])
         s = src[0:num_chars]
         hexa = ' '.join(["{:02X}".format(ord(x)) for x in s])
         printable = s.translate(FILTER)
 
-        result.append("{:04X}   {} {}   {}{}\n".format(
-                      (base_addr, spaces, hexa,
-                      " " * (num_spaces + 1), printable)))
+        template = "{:04X}   {} {}   {}{}\n"
+        format_args = (base_addr, spaces, hexa, " " * (num_spaces + 1), printable)
+        result.append(template.format(format_args))
 
         src = src[num_chars:]
         remainder_start_addr = base_addr + length
 
-    for i in xrange(0, len(src), length):
+    for i in range(0, len(src), length):
         s = src[i:i + length]
         hexa = ' '.join(["{:02X}".format(ord(x)) for x in s])
         printable = s.translate(FILTER)
-        result.append("{:04X}   {:<}   {:{l}}\n".format(
-                         remainder_start_addr + i, 
-                         hexa, printable, l=length*3))
+        template = "{:04X}   {:<}   {:{l}}\n"
+        result.append(
+            template.format(
+                (remainder_start_addr + i)
+              , hexa
+              , printable
+              , l=length*3
+            )
+        )
 
     return ''.join(result)
 
@@ -104,7 +114,7 @@ class memoize(object):
             cache = obj.__cache
         except AttributeError:
             cache = obj.__cache = {}
-        key = (self.func, args[1:], frozenset(kw.items()))
+        key = (self.func, args[1:], frozenset(list(kw.items())))
         try:
             res = cache[key]
         except KeyError:
@@ -121,26 +131,26 @@ def align(offset, alignment):
     """
     if offset % alignment == 0:
         return offset
-        return offset + (alignment - (offset % alignment))
+    return offset + (alignment - (offset % alignment))
 
 
-def dosdate(dosdate, dostime):
+def dosdate(dos_date, dos_time):
     """
-    `dosdate`: 2 bytes, little endian.
-    `dostime`: 2 bytes, little endian.
+    `dos_date`: 2 bytes, little endian.
+    `dos_time`: 2 bytes, little endian.
     returns: datetime.datetime or datetime.datetime.min on error
     """
     try:
-        t  = ord(dosdate[1]) << 8
-        t |= ord(dosdate[0])
-        day   = t & 0b0000000000011111
+        t  = ord(dos_date[1]) << 8
+        t |= ord(dos_date[0])
+        day   =  t & 0b0000000000011111
         month = (t & 0b0000000111100000) >> 5
         year  = (t & 0b1111111000000000) >> 9
         year += 1980
 
-        t  = ord(dostime[1]) << 8
-        t |= ord(dostime[0])
-        sec     = t & 0b0000000000011111
+        t  = ord(dos_time[1]) << 8
+        t |= ord(dos_time[0])
+        sec     =  t & 0b0000000000011111
         sec    *= 2
         minute  = (t & 0b0000011111100000) >> 5
         hour    = (t & 0b1111100000000000) >> 11
@@ -164,7 +174,6 @@ class BinaryParserException(Exception):
     """
     def __init__(self, value):
         """
-        Constructor.
         Arguments:
         - `value`: A string description.
         """
@@ -185,7 +194,6 @@ class ParseException(BinaryParserException):
     """
     def __init__(self, value):
         """
-        Constructor.
         Arguments:
         - `value`: A string description.
         """
@@ -217,7 +225,6 @@ class Block(object):
     """
     def __init__(self, buf, offset):
         """
-        Constructor.
         Arguments:
         - `buf`: Byte string containing stuff to parse.
         - `offset`: The offset into the buffer at which the block starts.
@@ -225,15 +232,15 @@ class Block(object):
         self._buf = buf
         self._offset = offset
         self._implicit_offset = 0
-        
+
     def __repr__(self):
         return "Block(buf={!r}, offset={!r})".format(self._buf, self._offset)
 
     def __unicode__(self):
-        return u"BLOCK @ {}.".format(hex(self.offset()))
+        return "BLOCK @ {}.".format(hex(self.offset()))
 
     def __str__(self):
-        return str(unicode(self))
+        return str(self)
 
     def declare_field(self, type, name, offset=None, length=None):
         """
@@ -603,7 +610,7 @@ class Block(object):
             raise OverrunBufferException(o, len(self._buf))
 
         # Yeah, this is ugly
-        h = map(ord, _bin)
+        h = list(map(ord, _bin))
         return """
         {:02x}{:02x}{:02x}{:02x}-{:02x}{:02x}- \
         {:02x}{:02x}- \

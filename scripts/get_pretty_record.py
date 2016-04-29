@@ -59,16 +59,15 @@ def main():
             raise RuntimeError("Cannot find the record specified.")
 
         try:
-            print prettify_xml("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>\n%s" % evtx_record_xml_view(record))
+            print(prettify_xml("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>\n%s" % evtx_record_xml_view(record)))
         except ExpatError as e:
-            print "Exception: "
-            print repr(e)
-            print ""
-            print ""
-            print "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>\n%s" % evtx_record_xml_view(record)
+            print("Exception: ")
+            print(repr(e))
+            print("")
+            print("")
+            print("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>\n%s" % evtx_record_xml_view(record))
 
 
 
 if __name__ == "__main__":
     main()
-

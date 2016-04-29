@@ -27,15 +27,12 @@ from Evtx.Views import evtx_template_readable_view
 
 def main():
     with open(sys.argv[1], 'r') as f:
-        with contextlib.closing(mmap.mmap(f.fileno(), 0,
-                                          access=mmap.ACCESS_READ)) as buf:
+        with contextlib.closing(mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)) as buf:
             fh = FileHeader(buf, 0x0)
             for (i, chunk) in enumerate(fh.chunks()):
                 for template in chunk.templates().values():
-                    print "Template {%s} at chunk %d, offset %s" % \
-                        (template.guid(), i,
-                         hex(template.absolute_offset(0x0)))
-                    print evtx_template_readable_view(template)
+                    print("Template {%s} at chunk %d, offset %s" % (template.guid(), i, hex(template.absolute_offset(0x0))))
+                    print(evtx_template_readable_view(template))
 
 if __name__ == "__main__":
     main()

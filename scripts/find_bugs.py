@@ -35,9 +35,9 @@ def main():
                     try:
                         evtx_record_xml_view(record).encode("utf-8")
                     except Exception as e:
-                        print str(e)
-                        print repr(e)
-                        print evtx_record_xml_view(record).encode("utf-8")
+                        print((str(e)))
+                        print((repr(e)))
+                        print((evtx_record_xml_view(record).encode("utf-8")))
                         return
 
 if __name__ == "__main__":
