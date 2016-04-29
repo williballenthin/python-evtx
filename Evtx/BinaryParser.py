@@ -242,13 +242,13 @@ class Block(object):
     def __str__(self):
         return str(self)
 
-    def declare_field(self, type, name, offset=None, length=None):
+    def declare_field(self, unpack_type, name, offset=None, length=None):
         """
         Declaratively add fields to this block.
         This method will dynamically add corresponding
           offset and unpacker methods to this block.
         Arguments:
-        - `type`: A string. Should be one of the unpack_* types.
+        - `unpack_type`: A string. Should be one of the unpack_* types.
         - `name`: A string.
         - `offset`: A number.
         - `length`: (Optional) A number. For (w)strings, length in chars.
@@ -258,61 +258,58 @@ class Block(object):
         if length == None:
 
             def no_length_handler():
-                f = getattr(self, "unpack_" + type)
+                f = getattr(self, "unpack_" + unpack_type)
                 return f(offset)
             setattr(self, name, no_length_handler)
         else:
-
             def explicit_length_handler():
-                f = getattr(self, "unpack_" + type)
+                f = getattr(self, "unpack_" + unpack_type)
                 return f(offset, length)
             setattr(self, name, explicit_length_handler)
 
         setattr(self, "_off_" + name, offset)
-        if type == "byte":
+        if unpack_type == "byte":
             self._implicit_offset = offset + 1
-        elif type == "int8":
+        elif unpack_type == "int8":
             self._implicit_offset = offset + 1
-        elif type == "word":
+        elif unpack_type == "word":
             self._implicit_offset = offset + 2
-        elif type == "word_be":
+        elif unpack_type == "word_be":
             self._implicit_offset = offset + 2
-        elif type == "int16":
+        elif unpack_type == "int16":
             self._implicit_offset = offset + 2
-        elif type == "dword":
+        elif unpack_type == "dword":
             self._implicit_offset = offset + 4
-        elif type == "dword_be":
+        elif unpack_type == "dword_be":
             self._implicit_offset = offset + 4
-        elif type == "int32":
+        elif unpack_type == "int32":
             self._implicit_offset = offset + 4
-        elif type == "qword":
+        elif unpack_type == "qword":
             self._implicit_offset = offset + 8
-        elif type == "int64":
+        elif unpack_type == "int64":
             self._implicit_offset = offset + 8
-        elif type == "float":
+        elif unpack_type == "float":
             self._implicit_offset = offset + 4
-        elif type == "double":
+        elif unpack_type == "double":
             self._implicit_offset = offset + 8
-        elif type == "dosdate":
+        elif unpack_type == "dosdate":
             self._implicit_offset = offset + 4
-        elif type == "filetime":
+        elif unpack_type == "filetime":
             self._implicit_offset = offset + 8
-        elif type == "systemtime":
+        elif unpack_type == "systemtime":
             self._implicit_offset = offset + 8
-        elif type == "guid":
+        elif unpack_type == "guid":
             self._implicit_offset = offset + 16
-        elif type == "binary":
+        elif unpack_type == "binary":
             self._implicit_offset = offset + length
-        elif type == "string" and length != None:
+        elif unpack_type == "string" and length != None:
             self._implicit_offset = offset + length
-        elif type == "wstring" and length != None:
+        elif unpack_type == "wstring" and length != None:
             self._implicit_offset = offset + (2 * length)
-        elif "string" in type and length == None:
-            raise ParseException("Implicit offset not supported "
-                                 "for dynamic length strings")
+        elif "string" in unpack_type and length == None:
+            raise ParseException("Implicit offset not supported for dynamic length strings")
         else:
-            raise ParseException("Implicit offset not supported "
-                                 "for type: {}".format(type))
+            raise ParseException("Implicit offset not supported for type: {}".format(unpack_type))
 
     def current_field_offset(self):
         return self._implicit_offset
