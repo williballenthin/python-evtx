@@ -54,7 +54,7 @@ def hex_dump(src, start_addr=0):
 
         spaces = " ".join(["  " for i in range(num_spaces)])
         s = src[0:num_chars]
-        hexa = ' '.join(["{:02X}".format(ord(x)) for x in s])
+        hexa = ' '.join(["{:02X}".format(x) for x in s])
         printable = s.translate(FILTER)
 
         template = "{:04X}   {} {}   {}{}\n"
@@ -66,7 +66,7 @@ def hex_dump(src, start_addr=0):
 
     for i in range(0, len(src), length):
         s = src[i:i + length]
-        hexa = ' '.join(["{:02X}".format(ord(x)) for x in s])
+        hexa = ' '.join(["{:02X}".format(x) for x in s])
         printable = s.translate(FILTER)
         template = "{:04X}   {:<}   {:{l}}\n"
         result.append(
