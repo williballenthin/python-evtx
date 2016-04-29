@@ -1410,7 +1410,7 @@ class GuidTypeNode(VariantTypeNode):
         return 16
 
     def string(self):
-        return "{{g}}".format(g=self.guid())
+        return ('{%s}' % self.guid())
 
 
 class SizeTypeNode(VariantTypeNode):
