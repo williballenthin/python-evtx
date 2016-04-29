@@ -77,8 +77,8 @@ def _make_template_xml_view(root_node, cache=None):
             for child in node.children():
                 rec(child, acc)
             acc.append("</")
-            acc.append(node.tag_name())
-            acc.append(">\n")
+            acc.append(node.tag_name().string())
+            acc.append(">")
         elif isinstance(node, CloseStartElementNode):
             pass  # intended
         elif isinstance(node, CloseEmptyElementNode):
