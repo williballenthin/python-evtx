@@ -114,16 +114,13 @@ def _make_template_xml_view(root_node, cache=None):
 
     acc = []
     template_instance = root_node.fast_template_instance()
-    templ_off = template_instance.template_offset() + \
-        template_instance._chunk.offset()
+    templ_off = template_instance.template_offset() + template_instance._chunk.offset()
     if templ_off in cache:
         acc.append(cache[templ_off])
     else:
-        node = TemplateNode(template_instance._buf, templ_off,
-                            template_instance._chunk, template_instance)
+        node = TemplateNode(template_instance._buf, templ_off, template_instance._chunk, template_instance)
         sub_acc = []
-        for c in node.children():
-            rec(c, sub_acc)
+        _ = [ rec(c, sub_acc) for c in node.children() ]
         sub_templ = "".join(sub_acc)
         cache[templ_off] = sub_templ
         acc.append(sub_templ)

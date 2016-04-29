@@ -27,8 +27,7 @@ from Evtx.Evtx import FileHeader
 
 def main():
     with open(sys.argv[1], 'r') as f:
-        with contextlib.closing(mmap.mmap(f.fileno(), 0,
-                                          access=mmap.ACCESS_READ)) as buf:
+        with contextlib.closing(mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)) as buf:
             fh = FileHeader(buf, 0x0)
 
             print("Information from file header:")

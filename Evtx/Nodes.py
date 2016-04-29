@@ -91,8 +91,9 @@ class BXmlNode(Block):
         return "BXmlNode(offset={})".format(hex(self.offset()))
 
     def dump(self):
-        return hex_dump(self._buf[self.offset():self.offset() + self.length()],
-                        start_addr=self.offset())
+        buf_start = self.offset()
+        buf_end   = (buf_start + self.length())
+        return hex_dump(self._buf[buf_start:buf_end], start_addr=buf_start)
 
     def tag_length(self):
         """
@@ -1162,15 +1163,12 @@ class WstringTypeNode(VariantTypeNode):
     Variant ttype 0x01.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        super(WstringTypeNode, self).__init__(buf, offset, chunk,
-                                              parent, length=length)
+        super(WstringTypeNode, self).__init__(buf, offset, chunk, parent, length=length)
         if self._length is None:
-            self.declare_field("word",    "string_length", 0x0)
-            self.declare_field("wstring", "_string",
-                               length=(self.string_length()))
+            self.declare_field("word","string_length", 0x0)
+            self.declare_field("wstring", "_string", length=(self.string_length()))
         else:
-            self.declare_field("wstring", "_string", 0x0,
-                               length=(self._length / 2))
+            self.declare_field("wstring", "_string", 0x0, length=(self._length / 2))
 
     def tag_length(self):
         if self._length is None:
@@ -1242,8 +1240,7 @@ class SignedWordTypeNode(VariantTypeNode):
     Variant type 0x05.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        super(SignedWordTypeNode, self).__init__(buf, offset, chunk,
-                                                 parent, length=length)
+        super(SignedWordTypeNode, self).__init__(buf, offset, chunk, parent, length=length)
         self.declare_field("int16", "word", 0x0)
 
     def tag_length(self):
@@ -1275,8 +1272,7 @@ class SignedDwordTypeNode(VariantTypeNode):
     Variant type 0x07.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        super(SignedDwordTypeNode, self).__init__(buf, offset, chunk,
-                                                  parent, length=length)
+        super(SignedDwordTypeNode, self).__init__(buf, offset, chunk, parent, length=length)
         self.declare_field("int32", "dword", 0x0)
 
     def tag_length(self):
@@ -1291,9 +1287,7 @@ class UnsignedDwordTypeNode(VariantTypeNode):
     Variant type 0x08.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        super(UnsignedDwordTypeNode, self).__init__(buf, offset,
-                                                   chunk, parent,
-                                                    length=length)
+        super(UnsignedDwordTypeNode, self).__init__(buf, offset, chunk, parent, length=length)
         self.declare_field("dword", "dword", 0x0)
 
     def tag_length(self):
@@ -1308,8 +1302,7 @@ class SignedQwordTypeNode(VariantTypeNode):
     Variant type 0x09.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        super(SignedQwordTypeNode, self).__init__(buf, offset, chunk,
-                                                  parent, length=length)
+        super(SignedQwordTypeNode, self).__init__(buf, offset, chunk, parent, length=length)
         self.declare_field("int64", "qword", 0x0)
 
     def tag_length(self):
@@ -1324,9 +1317,7 @@ class UnsignedQwordTypeNode(VariantTypeNode):
     Variant type 0x0A.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        super(UnsignedQwordTypeNode, self).__init__(buf, offset,
-                                                   chunk, parent,
-                                                    length=length)
+        super(UnsignedQwordTypeNode, self).__init__(buf, offset, chunk, parent, length=length)
         self.declare_field("qword", "qword", 0x0)
 
     def tag_length(self):
@@ -1341,8 +1332,7 @@ class FloatTypeNode(VariantTypeNode):
     Variant type 0x0B.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        super(FloatTypeNode, self).__init__(buf, offset, chunk,
-                                            parent, length=length)
+        super(FloatTypeNode, self).__init__(buf, offset, chunk, parent, length=length)
         self.declare_field("float", "float", 0x0)
 
     def tag_length(self):
@@ -1357,8 +1347,7 @@ class DoubleTypeNode(VariantTypeNode):
     Variant type 0x0C.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        super(DoubleTypeNode, self).__init__(buf, offset, chunk,
-                                             parent, length=length)
+        super(DoubleTypeNode, self).__init__(buf, offset, chunk, parent, length=length)
         self.declare_field("double", "double", 0x0)
 
     def tag_length(self):
@@ -1373,17 +1362,14 @@ class BooleanTypeNode(VariantTypeNode):
     Variant type 0x0D.
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
-        super(BooleanTypeNode, self).__init__(buf, offset, chunk,
-                                              parent, length=length)
+        super(BooleanTypeNode, self).__init__(buf, offset, chunk, parent, length=length)
         self.declare_field("int32", "int32", 0x0)
 
     def tag_length(self):
         return 4
 
     def string(self):
-        if self.int32 > 0:
-            return "True"
-        return "False"
+        return "True" if (self.int32 > 0) else "False"
 
 
 class BinaryTypeNode(VariantTypeNode):

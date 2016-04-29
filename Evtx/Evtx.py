@@ -357,8 +357,7 @@ class ChunkHeader(Block):
         """
         if self._strings is None:
             self._load_strings()
-        string_node = NameStringNode(self._buf, self._offset + offset,
-                                     self, parent or self)
+        string_node = NameStringNode(self._buf, self._offset + offset, self, parent or self)
         self._strings[offset] = string_node
         return string_node
 
@@ -418,9 +417,7 @@ class ChunkHeader(Block):
         while record._offset < self._offset + self.next_record_offset() and record.length() > 0:
             yield record
             try:
-                record = Record(self._buf,
-                                record._offset + record.length(),
-                                self)
+                record = Record(self._buf, record._offset + record.length(), self)
             except InvalidRecordException:
                 return
 
