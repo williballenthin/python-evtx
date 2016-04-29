@@ -602,25 +602,14 @@ class Block(object):
         Throws:
         - `OverrunBufferException`
         """
-        o = self._offset + offset
-
+        start = (self._offset + offset)
+        end   = (start + 16)
         try:
-            _bin = self._buf[o:o + 16]
+            _bin = self._buf[start:end]
         except IndexError:
-            raise OverrunBufferException(o, len(self._buf))
-
-        # Yeah, this is ugly
-        h = list(map(ord, _bin))
-        return """
-        {:02x}{:02x}{:02x}{:02x}-{:02x}{:02x}- \
-        {:02x}{:02x}- \
-        {:02x}{:02x}- \
-        {:02x}{:02x}{:02x}{:02x}{:02x}{:02x}""".format(
-            h[3], h[2], h[1], h[0],
-            h[5], h[4],
-            h[7], h[6],
-            h[8], h[9],
-            h[10], h[11], h[12], h[13], h[14], h[15])
+            raise OverrunBufferException(start, len(self._buf))
+        from uuid import UUID
+        return UUID(bytes=_bin).hex
 
     def absolute_offset(self, offset):
         """
