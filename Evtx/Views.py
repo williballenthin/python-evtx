@@ -144,7 +144,9 @@ def _build_record_xml(record, cache=None):
         subs_strs = []
         for sub in root_node.fast_substitutions():
             if isinstance(sub, str):
-                subs_strs.append((xml_sax_escape(sub, {'"': "&quot;"})).encode("ascii", "xmlcharrefreplace"))
+                val = xml_sax_escape(sub, {'"': "&quot;"})
+                val = val.encode("ascii", "xmlcharrefreplace").decode()
+                subs_strs.append(val)
             elif isinstance(sub, RootNode):
                 subs_strs.append(rec(sub))
             elif sub is None:
