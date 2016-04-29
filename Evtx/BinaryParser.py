@@ -208,8 +208,8 @@ class ParseException(BinaryParserException):
 
 class OverrunBufferException(ParseException):
     def __init__(self, readOffs, bufLen):
-        tvalue = "read: {}, buffer length: {}".format(hex(readOffs), hex(bufLen))
-        super(ParseException, self).__init__(tvalue)
+        value = "read: {}, buffer length: {}".format(hex(readOffs), hex(bufLen))
+        super(OverrunBufferException, self).__init__(value)
 
     def __repr__(self):
         return "OverrunBufferException({!r})".format(self._value)
