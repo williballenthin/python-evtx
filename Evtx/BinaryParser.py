@@ -609,7 +609,8 @@ class Block(object):
         except IndexError:
             raise OverrunBufferException(start, len(self._buf))
         from uuid import UUID
-        return UUID(bytes=_bin).hex
+        guid = UUID(bytes=_bin)
+        return str(guid)
 
     def absolute_offset(self, offset):
         """
