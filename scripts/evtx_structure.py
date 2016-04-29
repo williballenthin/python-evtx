@@ -21,10 +21,7 @@
 import mmap
 import contextlib
 
-import argparse
-
 from Evtx.Evtx import FileHeader
-from Evtx.Views import evtx_file_xml_view
 from Evtx.Nodes import RootNode
 from Evtx.Nodes import BXmlTypeNode
 from Evtx.Nodes import AttributeNode
@@ -139,7 +136,7 @@ class EvtxFormatter(object):
         if isinstance(node, VariantTypeNode):
             line += " --> %s" % (node.string())
         if isinstance(node, OpenStartElementNode):
-            line += " --> %s" % (node.tag_name())
+            line += " --> %s" % (node.tag_name().string())
         if isinstance(node, AttributeNode):
             line += " --> %s" % (node.attribute_name().string())
         return line
@@ -181,15 +178,19 @@ class EvtxFormatter(object):
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Dump the structure of an EVTX file.")
-    parser.add_argument("evtx", type=str,
-                        help="Path to the Windows EVTX event log file")
+    from argparse import ArgumentParser
+    parser = ArgumentParser(
+        description="Dump the structure of an EVTX file."
+    )
+    parser.add_argument(
+        "evtx"
+      , type=str
+      , help="Path to the Windows EVTX event log file"
+    )
     args = parser.parse_args()
 
     with open(args.evtx, 'r') as f:
-        with contextlib.closing(mmap.mmap(f.fileno(), 0,
-                                          access=mmap.ACCESS_READ)) as buf:
+        with contextlib.closing(mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)) as buf:
             fh = FileHeader(buf, 0x0)
             formatter = EvtxFormatter()
             for line in formatter.format_header(fh):

@@ -27,17 +27,16 @@ from Evtx.Views import evtx_record_xml_view
 
 def main():
     with open(sys.argv[1], 'r') as f:
-        with contextlib.closing(mmap.mmap(f.fileno(), 0,
-                                          access=mmap.ACCESS_READ)) as buf:
+        with contextlib.closing(mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)) as buf:
             fh = FileHeader(buf, 0x0)
             for chunk in fh.chunks():
                 for record in chunk.records():
                     try:
-                        evtx_record_xml_view(record).encode("utf-8")
+                        evtx_record_xml_view(record)
                     except Exception as e:
                         print((str(e)))
                         print((repr(e)))
-                        print((evtx_record_xml_view(record).encode("utf-8")))
+                        print((evtx_record_xml_view(record)))
                         return
 
 if __name__ == "__main__":

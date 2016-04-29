@@ -28,7 +28,7 @@ def to_lxml(record_xml):
     """
     @type record: Record
     """
-    return etree.fromstring("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>%s" % record_xml)
+    return etree.fromstring(record_xml)
 
 
 def xml_records(filename):
@@ -76,11 +76,13 @@ def main():
     args = parser.parse_args()
 
     for node, err in xml_records(args.evtx):
-        if err is not None:
+        if (err is not None):
             continue
-        sys = get_child(node, "System")
-        if args.eid == int(get_child(sys, "EventID").text):
-            print(etree.tostring(node, pretty_print=True))
+        system_node = get_child(node, "System")
+        if args.eid == int(get_child(system_node, "EventID").text):
+            xml = etree.tostring(node, pretty_print=True, encoding='utf-8', xml_declaration=True, standalone=True)
+            xml = xml.decode('utf-8')
+            print(xml)
 
 
 if __name__ == "__main__":
