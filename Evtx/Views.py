@@ -65,7 +65,7 @@ def _make_template_xml_view(root_node, cache=None):
             pass  # intended
         elif isinstance(node, OpenStartElementNode):
             acc.append("<")
-            acc.append(node.tag_name())
+            acc.append(node.tag_name().string())
             for child in node.children():
                 if isinstance(child, AttributeNode):
                     acc.append(" ")
@@ -218,7 +218,7 @@ def evtx_template_readable_view(root_node, cache=None):
             pass  # intended
         elif isinstance(node, OpenStartElementNode):
             acc.append("<")
-            acc.append(node.tag_name())
+            acc.append(node.tag_name().string())
             for child in node.children():
                 if isinstance(child, AttributeNode):
                     acc.append(" ")
@@ -230,7 +230,7 @@ def evtx_template_readable_view(root_node, cache=None):
             for child in node.children():
                 rec(child, acc)
             acc.append("</")
-            acc.append(node.tag_name())
+            acc.append(node.tag_name().string())
             acc.append(">\n")
         elif isinstance(node, CloseStartElementNode):
             pass  # intended

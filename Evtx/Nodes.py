@@ -291,7 +291,7 @@ class OpenStartElementNode(BXmlNode):
 
     @memoize
     def tag_name(self):
-        return self._chunk.strings()[self.string_offset()].string()
+        return self._chunk.strings()[self.string_offset()]
 
     def tag_length(self):
         return self._tag_length
