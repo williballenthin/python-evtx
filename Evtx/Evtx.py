@@ -369,7 +369,7 @@ class ChunkHeader(Block):
         """
         if self._templates is None:
             self._templates = {}
-        for i in xrange(32):
+        for i in range(32):
             ofs = self.unpack_dword(0x180 + (i * 4))
             while ofs > 0:
                 # unclear why these are found before the offset
