@@ -935,7 +935,7 @@ class RootNode(BXmlNode):
                 sub_def.append(value)
             #[1] = parse_wstring_type_node,
             elif type_ == 0x1:
-                s = self.unpack_wstring(ofs, size / 2).rstrip("\x00")
+                s = self.unpack_wstring(ofs, size // 2).rstrip("\x00")
                 value = s.replace("<", "&gt;").replace(">", "&lt;")
                 sub_def.append(value)
             #[2] = parse_string_type_node,
@@ -1168,7 +1168,7 @@ class WstringTypeNode(VariantTypeNode):
                                length=(self.string_length()))
         else:
             self.declare_field("wstring", "_string", 0x0,
-                               length=(self._length / 2))
+                               length=(self._length // 2))
 
     def tag_length(self):
         if self._length is None:
