@@ -334,7 +334,7 @@ class ChunkHeader(Block):
     def _load_strings(self):
         if self._strings is None:
             self._strings = {}
-        for i in xrange(64):
+        for i in range(64):
             ofs = self.unpack_dword(0x80 + (i * 4))
             while ofs > 0:
                 string_node = self.add_string(ofs)
