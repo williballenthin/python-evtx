@@ -597,12 +597,12 @@ class Block(object):
         o = self._offset + offset
 
         try:
-            _bin = self._buf[o:o + 16]
+            _bin = bytes(self._buf[o:o + 16])
         except IndexError:
             raise OverrunBufferException(o, len(self._buf))
 
         # Yeah, this is ugly
-        h = map(ord, _bin)
+        h = _bin 
         return """
         {:02x}{:02x}{:02x}{:02x}-{:02x}{:02x}- \
         {:02x}{:02x}- \
