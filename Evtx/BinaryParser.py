@@ -106,11 +106,9 @@ class memoize(object):
         except AttributeError:
             cache = obj.__cache = {}
         key = (self.func, args[1:], frozenset(kw.items()))
-        try:
-            res = cache[key]
-        except KeyError:
-            res = cache[key] = self.func(*args, **kw)
-        return res
+        if key not in cache:
+            cache[key] = self.func(*args, **kw)
+        return cache[key]
 
 
 def align(offset, alignment):
