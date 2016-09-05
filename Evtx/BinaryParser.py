@@ -508,7 +508,7 @@ class Block(object):
             return ""
         o = self._offset + offset
         try:
-            return struct.unpack_from("<{}s".format(length), self._buf, o)[0]
+            return bytes(struct.unpack_from("<{}s".format(length), self._buf, o)[0])
         except struct.error:
             raise OverrunBufferException(o, len(self._buf))
 
@@ -521,7 +521,7 @@ class Block(object):
         Throws:
         - `OverrunBufferException`
         """
-        return self.unpack_binary(offset, length)
+        return self.unpack_binary(offset, length).decode('ascii')
 
     def unpack_wstring(self, offset, length):
         """
@@ -534,11 +534,14 @@ class Block(object):
         - `UnicodeDecodeError`
         """
         try:
-            return self._buf[self._offset + offset:self._offset + offset + \
-                             2 * length].tostring().decode("utf16")
+            return bytes(self._buf[self._offset + offset:self._offset + offset + \
+                                   2 * length]).decode("utf16")
         except AttributeError: # already a 'str' ?
-            return self._buf[self._offset + offset:self._offset + offset + \
-                             2 * length].decode("utf16")
+            return bytes(self._buf[self._offset + offset:self._offset + offset + \
+                                   2 * length]).decode("utf16")
+        except:
+            from IPython import embed; embed()
+            import sys; sys.exit()
 
     def unpack_dosdate(self, offset):
         """
