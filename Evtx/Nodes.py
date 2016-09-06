@@ -1611,8 +1611,7 @@ class WstringArrayTypeNode(VariantTypeNode):
                 for _ in range(len(frag) // 2):
                     acc.append("<string></string>\n")
             else:
-                # TODO: raise a real exception type here
-                raise RuntimeError("Error parsing uneven substring of NULLs")
+                raise ParseException("Error parsing uneven substring of NULLs")
             bin = bin[len(frag):]
         return "".join(acc)
 
