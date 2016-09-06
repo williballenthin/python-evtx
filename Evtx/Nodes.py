@@ -1014,7 +1014,7 @@ class RootNode(BXmlNode):
             elif type_ == 0x14:
                 value = "0x"
                 for c in self.unpack_binary(ofs, size)[::-1]:
-                    value += "{:02x}".format(ord(c))
+                    value += "{:02x}".format(c)
                 sub_def.append(value)
             #[21] = parse_hex64_type_node,  -- Hex64TypeNode, 0x15
             elif type_ == 0x15:
@@ -1031,7 +1031,7 @@ class RootNode(BXmlNode):
                 bin = self.unpack_binary(ofs, size)
                 acc = []
                 while len(bin) > 0:
-                    match = re.search("((?:[^\x00].)+)", bin)
+                    match = re.search(b"((?:[^\x00].)+)", bin)
                     if match:
                         frag = match.group()
                         acc.append("<string>")
@@ -1040,7 +1040,7 @@ class RootNode(BXmlNode):
                         bin = bin[len(frag) + 2:]
                         if len(bin) == 0:
                             break
-                    frag = re.search("(\x00*)", bin).group()
+                    frag = re.search(b"(\x00*)", bin).group()
                     if len(frag) % 2 == 0:
                         for _ in range(len(frag) // 2):
                             acc.append("<string></string>\n")
