@@ -81,14 +81,14 @@ def main():
     args = parser.parse_args()
 
     with Evtx(args.evtx) as evtx:
-        print hex_dump(evtx.get_record(args.record).data())
+        print(hex_dump(evtx.get_record(args.record).data()))
 
-        print("record(absolute_offset=%s)" % \
-                  (evtx.get_record(args.record).offset()))
-        print describe_root(evtx.get_record(args.record),
+        print(("record(absolute_offset=%s)" % \
+                  (evtx.get_record(args.record).offset())))
+        print(describe_root(evtx.get_record(args.record),
                             evtx.get_record(args.record).root(),
-                            suppress_values=args.suppress_values)
-        print evtx_record_xml_view(evtx.get_record(args.record))
+                            suppress_values=args.suppress_values))
+        print(evtx_record_xml_view(evtx.get_record(args.record)))
 
 
 if __name__ == "__main__":

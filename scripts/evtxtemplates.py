@@ -32,11 +32,11 @@ def main():
                                           access=mmap.ACCESS_READ)) as buf:
             fh = FileHeader(buf, 0x0)
             for (i, chunk) in enumerate(fh.chunks()):
-                for template in chunk.templates().values():
-                    print "Template {%s} at chunk %d, offset %s" % \
+                for template in list(chunk.templates().values()):
+                    print("Template {%s} at chunk %d, offset %s" % \
                         (template.guid(), i,
-                         hex(template.absolute_offset(0x0)))
-                    print evtx_template_readable_view(template)
+                         hex(template.absolute_offset(0x0))))
+                    print(evtx_template_readable_view(template))
 
 if __name__ == "__main__":
     main()

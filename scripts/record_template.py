@@ -15,7 +15,7 @@ def main():
 
     with Evtx(args.evtx) as evtx:
         r = evtx.get_record(args.record)
-        print evtx_template_readable_view(r.root())
+        print(evtx_template_readable_view(r.root()))
 
 
 if __name__ == "__main__":

@@ -56,7 +56,7 @@ def main():
             continue
         sys = get_child(node, "System")
         if args.eid == int(get_child(sys, "EventID").text):
-            print etree.tostring(node, pretty_print=True)
+            print(etree.tostring(node, pretty_print=True))
 
 
 if __name__ == "__main__":
