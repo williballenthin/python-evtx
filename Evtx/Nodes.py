@@ -1550,7 +1550,7 @@ class Hex64TypeNode(VariantTypeNode):
     def string(self):
         ret = "0x"
         for c in self.hex()[::-1]:
-            ret += "{:02x}".format(ord(c))
+            ret += "{:02x}".format(c)
         return ret
 
 
