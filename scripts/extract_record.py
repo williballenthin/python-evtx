@@ -37,7 +37,7 @@ def main():
         record = evtx.get_record(args.record)
         if record is None:
             raise RuntimeError("Cannot find the record specified.")
-        sys.stdout.write(record.data())
+        print(record.data())
 
 
 if __name__ == "__main__":
