@@ -182,9 +182,6 @@ class Block(object):
     def __repr__(self):
         return "Block(buf={!r}, offset={!r})".format(self._buf, self._offset)
 
-    def __unicode__(self):
-        return "BLOCK @ {}.".format(hex(self.offset()))
-
     def __str__(self):
         return str(self)
 
@@ -493,9 +490,6 @@ class Block(object):
         except AttributeError: # already a 'str' ?
             return bytes(self._buf[self._offset + offset:self._offset + offset + \
                                    2 * length]).decode("utf16")
-        except:
-            from IPython import embed; embed()
-            import sys; sys.exit()
 
     def unpack_dosdate(self, offset):
         """
