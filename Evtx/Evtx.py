@@ -266,7 +266,7 @@ class Template(object):
         @type substitutions: list of VariantTypeNode
         """
         self._load_xml()
-        return self._xml.format(*map(lambda n: n.xml(), substitutions))
+        return self._xml.format(*[n.xml() for n in substitutions])
 
     def node(self):
         return self._template_node

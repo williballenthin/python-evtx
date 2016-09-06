@@ -108,7 +108,7 @@ class BXmlNode(Block):
         ofs = self.tag_length()
 
         if max_children:
-            gen = range(max_children)
+            gen = list(range(max_children))
         else:
             gen = itertools.count()
 
@@ -1610,7 +1610,8 @@ class WstringArrayTypeNode(VariantTypeNode):
                 for _ in range(len(frag) // 2):
                     acc.append("<string></string>\n")
             else:
-                raise "Error parsing uneven substring of NULLs"
+                # TODO: raise a real exception type here
+                raise RuntimeError("Error parsing uneven substring of NULLs")
             bin = bin[len(frag):]
         return "".join(acc)
 
