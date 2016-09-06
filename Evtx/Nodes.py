@@ -984,7 +984,7 @@ class RootNode(BXmlNode):
                 sub_def.append(base64.b64encode(self.unpack_binary(ofs, size)))
             #[15] = parse_guid_type_node,
             elif type_ == 0xF:
-                sub_def.append(self.unpack_guid(ofs))
+                sub_def.append('{' + self.unpack_guid(ofs) + '}')
             #[16] = parse_size_type_node,
             elif type_ == 0x10:
                 if size == 0x4:
@@ -1422,7 +1422,8 @@ class GuidTypeNode(VariantTypeNode):
         return 16
 
     def string(self):
-        return "{{g}}".format(g=self.guid())
+        print('{' + self.guid() + '}')
+        return '{' + self.guid() + '}'
 
 
 class SizeTypeNode(VariantTypeNode):

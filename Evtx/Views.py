@@ -15,6 +15,8 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
+import string
+
 from .Nodes import RootNode
 from .Nodes import TemplateNode
 from .Nodes import EndOfStreamNode
@@ -61,9 +63,6 @@ def _make_template_xml_view(root_node, cache=None):
     if cache is None:
         cache = {}
 
-    def escape_format_chars(s):
-        return s.replace("{", "{{").replace("}", "}}")
-
     def rec(node, acc):
         if isinstance(node, EndOfStreamNode):
             pass  # intended
@@ -90,7 +89,7 @@ def _make_template_xml_view(root_node, cache=None):
         elif isinstance(node, CloseElementNode):
             pass  # intended
         elif isinstance(node, ValueNode):
-            acc.append(escape_format_chars(node.children()[0].string()))
+            acc.append(to_xml_string(node.children()[0].string()))
         elif isinstance(node, AttributeNode):
             pass  # intended
         elif isinstance(node, CDataSectionNode):
@@ -134,6 +133,11 @@ def _make_template_xml_view(root_node, cache=None):
     return "".join(acc)
 
 
+class SafeDict(dict):
+    def __missing__(self, key):
+        return '{' + key + '}'
+
+
 def _build_record_xml(record, cache=None):
     """
     Note, the cache should be local to the Evtx.Chunk.
@@ -145,13 +149,11 @@ def _build_record_xml(record, cache=None):
     """
     if cache is None:
         cache = {}
-
     def rec(root_node):
         f = _make_template_xml_view(root_node, cache=cache)
         subs_strs = []
         for sub in root_node.fast_substitutions():
             if isinstance(sub, str):
-                #subs_strs.append(to_xml_string(sub))
                 subs_strs.append(sub)
             elif isinstance(sub, RootNode):
                 subs_strs.append(rec(sub))
@@ -159,7 +161,10 @@ def _build_record_xml(record, cache=None):
                 subs_strs.append("")
             else:
                 subs_strs.append(str(sub))
-        return f.format(*subs_strs)
+
+        # maintain substrings like {foo} if foo= isn't a kwarg to format
+        # via: http://stackoverflow.com/a/17215533/87207
+        return string.Formatter().vformat(f, subs_strs, SafeDict())
     xml = rec(record.root())
     return xml
 
