@@ -19,6 +19,7 @@ import re
 import base64
 import itertools
 
+import six
 import hexdump
 
 from .BinaryParser import Block
@@ -1010,17 +1011,19 @@ class RootNode(BXmlNode):
                     val = self.unpack_dword(ofs + 8 + (4 * i))
                     value += "-{}".format(val)
                 sub_def.append(value)
-            #[20] = parse_hex32_type_node,  -- Hex32TypeNoe, 0x14
+            #[20] = parse_hex32_type_node,  -- Hex32TypeNode, 0x14
             elif type_ == 0x14:
                 value = "0x"
-                for c in self.unpack_binary(ofs, size)[::-1]:
-                    value += "{:02x}".format(c)
+                b = self.unpack_binary(ofs, size)[::-1]
+                for i in range(len(b) - 1):
+                    value += '{:02x}'.format(six.indexbytes(b, i))
                 sub_def.append(value)
             #[21] = parse_hex64_type_node,  -- Hex64TypeNode, 0x15
             elif type_ == 0x15:
                 value = "0x"
-                for c in bytes(self.unpack_binary(ofs, size)[::-1]):
-                    value += "{:02x}".format(c)
+                b = self.unpack_binary(ofs, size)[::-1]
+                for i in range(len(b) - 1):
+                    value += '{:02x}'.format(six.indexbytes(b, i))
                 sub_def.append(value)
             #[33] = parse_bxml_type_node,  -- BXmlTypeNode, 0x21
             elif type_ == 0x21:
