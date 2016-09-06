@@ -134,7 +134,6 @@ def _make_template_xml_view(root_node, cache=None):
     return "".join(acc)
 
 
-
 def _build_record_xml(record, cache=None):
     """
     Note, the cache should be local to the Evtx.Chunk.
@@ -167,7 +166,7 @@ def _build_record_xml(record, cache=None):
 
 def evtx_record_xml_view(record, cache=None):
     """
-    Generate an UTF-8 XML representation of an EVTX record.
+    Generate an XML representation of an EVTX record.
 
     Note, the cache should be local to the Evtx.Chunk.
       Do not share caches across Chunks.
@@ -178,12 +177,12 @@ def evtx_record_xml_view(record, cache=None):
     """
     if cache is None:
         cache = {}
-    return _build_record_xml(record, cache=cache).encode("utf8", "xmlcharrefreplace")
+    return _build_record_xml(record, cache=cache)
 
 
 def evtx_chunk_xml_view(chunk):
     """
-    Generate UTF-8 XML representations of the records in an EVTX chunk.
+    Generate XML representations of the records in an EVTX chunk.
 
     Does not include the XML <?xml... header.
     Records are ordered by chunk.records()
@@ -194,12 +193,12 @@ def evtx_chunk_xml_view(chunk):
     cache = {}
     for record in chunk.records():
         record_str = _build_record_xml(record, cache=cache)
-        yield record_str.encode("utf8", "xmlcharrefreplace"), record
+        yield record_str, record
 
 
 def evtx_file_xml_view(file_header):
     """
-    Generate UTF-8 XML representations of the records in an EVTX file.
+    Generate XML representations of the records in an EVTX file.
 
     Does not include the XML <?xml... header.
     Records are ordered by file_header.chunks(), and then by chunk.records()
@@ -211,7 +210,7 @@ def evtx_file_xml_view(file_header):
         cache = {}
         for record in chunk.records():
             record_str = _build_record_xml(record, cache=cache)
-            yield record_str.encode("utf8", "xmlcharrefreplace"), record
+            yield record_str, record
 
 
 def evtx_template_readable_view(root_node, cache=None):
