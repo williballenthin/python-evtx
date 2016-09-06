@@ -16,11 +16,12 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 import re
-import itertools
 import base64
+import itertools
+
+import hexdump
 
 from .BinaryParser import Block
-from .BinaryParser import hex_dump
 from .BinaryParser import ParseException
 from .BinaryParser import memoize
 
@@ -88,8 +89,8 @@ class BXmlNode(Block):
         return "BXmlNode(offset={})".format(hex(self.offset()))
 
     def dump(self):
-        return hex_dump(self._buf[self.offset():self.offset() + self.length()],
-                        start_addr=self.offset())
+        b = self._buf[self.offset():self.offset() + self.length()]
+        return hexdump.hexdump(b, result='return')
 
     def tag_length(self):
         """

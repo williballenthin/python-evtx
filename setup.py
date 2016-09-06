@@ -12,4 +12,6 @@ setuptools.setup(name="python-evtx",
       author_email="willi.ballenthin@gmail.com",
       url="https://github.com/williballenthin/python-evtx",
       license="Apache 2.0 License",
-      packages=setuptools.find_packages())
+      packages=setuptools.find_packages(),
+      install_requires=['hexdump'],
+)

@@ -1,9 +1,10 @@
+import hexdump
+
 from Evtx.Evtx import Evtx
 from Evtx.Nodes import RootNode
 from Evtx.Nodes import BXmlTypeNode
 from Evtx.Nodes import TemplateInstanceNode
 from Evtx.Nodes import VariantTypeNode
-from Evtx.BinaryParser import hex_dump
 from Evtx.Views import evtx_record_xml_view
 
 
@@ -81,7 +82,7 @@ def main():
     args = parser.parse_args()
 
     with Evtx(args.evtx) as evtx:
-        print(hex_dump(evtx.get_record(args.record).data()))
+        hexdump.hexdump(evtx.get_record(args.record).data())
 
         print(("record(absolute_offset=%s)" % \
                   (evtx.get_record(args.record).offset())))
