@@ -34,9 +34,16 @@ from .Nodes import ConditionalSubstitutionNode
 from .Nodes import StreamStartNode
 from xml.sax.saxutils import escape as xml_sax_escape
 
+
 class UnexpectedElementException(Exception):
     def __init__(self, msg):
         super(UnexpectedElementException, self).__init__(msg)
+
+
+def to_xml_string(s):
+    #s = xml_sax_escape(s, {'"': '&quot;'})
+    s = s.encode("ascii", "xmlcharrefreplace").decode('ascii')
+    return s
 
 
 def _make_template_xml_view(root_node, cache=None):
@@ -66,7 +73,7 @@ def _make_template_xml_view(root_node, cache=None):
             for child in node.children():
                 if isinstance(child, AttributeNode):
                     acc.append(" ")
-                    acc.append(child.attribute_name().string())
+                    acc.append(to_xml_string(child.attribute_name().string()))
                     acc.append("=\"")
                     rec(child.attribute_value(), acc)
                     acc.append("\"")
@@ -74,7 +81,7 @@ def _make_template_xml_view(root_node, cache=None):
             for child in node.children():
                 rec(child, acc)
             acc.append("</")
-            acc.append(node.tag_name())
+            acc.append(to_xml_string(node.tag_name()))
             acc.append(">\n")
         elif isinstance(node, CloseStartElementNode):
             pass  # intended
@@ -88,14 +95,14 @@ def _make_template_xml_view(root_node, cache=None):
             pass  # intended
         elif isinstance(node, CDataSectionNode):
             acc.append("<![CDATA[")
-            acc.append(node.cdata())
+            acc.append(to_xml_string(node.cdata()))
             acc.append("]]>")
         elif isinstance(node, EntityReferenceNode):
-            acc.append(node.entity_reference())
+            acc.append(to_xml_string(node.entity_reference()))
         elif isinstance(node, ProcessingInstructionTargetNode):
-            acc.append(node.processing_instruction_target())
+            acc.append(to_xml_string(node.processing_instruction_target()))
         elif isinstance(node, ProcessingInstructionDataNode):
-            acc.append(node.string())
+            acc.append(to_xml_string(node.string()))
         elif isinstance(node, TemplateInstanceNode):
             raise UnexpectedElementException("TemplateInstanceNode")
         elif isinstance(node, NormalSubstitutionNode):
@@ -127,11 +134,6 @@ def _make_template_xml_view(root_node, cache=None):
     return "".join(acc)
 
 
-def to_xml_string(s):
-    s = xml_sax_escape(s, {'"': '&quot;'})
-    s = s.encode("ascii", "xmlcharrefreplace").decode('ascii')
-    return s
-
 
 def _build_record_xml(record, cache=None):
     """
@@ -150,7 +152,8 @@ def _build_record_xml(record, cache=None):
         subs_strs = []
         for sub in root_node.fast_substitutions():
             if isinstance(sub, str):
-                subs_strs.append(to_xml_string(sub))
+                #subs_strs.append(to_xml_string(sub))
+                subs_strs.append(sub)
             elif isinstance(sub, RootNode):
                 subs_strs.append(rec(sub))
             elif sub is None:
