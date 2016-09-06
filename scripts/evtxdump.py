@@ -26,6 +26,10 @@ from Evtx.Evtx import FileHeader
 from Evtx.Views import evtx_file_xml_view
 
 
+def ascii(s):
+    return s.encode('ascii', 'replace').decode('ascii')
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Dump a binary EVTX file into XML.")
@@ -42,7 +46,7 @@ def main():
             print("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>")
             print("<Events>")
             for xml, record in evtx_file_xml_view(fh):
-                print(xml)
+                print(ascii(xml))
             print("</Events>")
 
 if __name__ == "__main__":

@@ -15,6 +15,7 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
+import sys
 import string
 
 from .Nodes import RootNode
@@ -153,7 +154,10 @@ def _build_record_xml(record, cache=None):
         f = _make_template_xml_view(root_node, cache=cache)
         subs_strs = []
         for sub in root_node.fast_substitutions():
-            if isinstance(sub, str):
+            # ugly hack for supporting is-string on py2 and py3
+            if sys.version_info < (3, ) and isinstance(sub, basestring):
+                subs_strs.append(sub)
+            elif sys.version_info >= (3, ) and isinstance(sub, str):
                 subs_strs.append(sub)
             elif isinstance(sub, RootNode):
                 subs_strs.append(rec(sub))
