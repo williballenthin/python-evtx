@@ -127,6 +127,12 @@ def _make_template_xml_view(root_node, cache=None):
     return "".join(acc)
 
 
+def to_xml_string(s):
+    s = xml_sax_escape(s, {'"': '&quot;'})
+    s = s.encode("ascii", "xmlcharrefreplace").decode('ascii')
+    return s
+
+
 def _build_record_xml(record, cache=None):
     """
     Note, the cache should be local to the Evtx.Chunk.
@@ -144,7 +150,7 @@ def _build_record_xml(record, cache=None):
         subs_strs = []
         for sub in root_node.fast_substitutions():
             if isinstance(sub, str):
-                subs_strs.append((xml_sax_escape(sub, {'"': "&quot;"})).encode("ascii", "xmlcharrefreplace"))
+                subs_strs.append(to_xml_string(sub))
             elif isinstance(sub, RootNode):
                 subs_strs.append(rec(sub))
             elif sub is None:
