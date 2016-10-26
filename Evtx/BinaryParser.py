@@ -74,7 +74,7 @@ def align(offset, alignment):
     """
     if offset % alignment == 0:
         return offset
-        return offset + (alignment - (offset % alignment))
+    return offset + (alignment - (offset % alignment))
 
 
 def dosdate(dosdate, dostime):
