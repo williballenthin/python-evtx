@@ -456,7 +456,7 @@ class Block(object):
         - `OverrunBufferException`
         """
         if not length:
-            return ""
+            return bytes("".encode("ascii"))
         o = self._offset + offset
         try:
             return bytes(struct.unpack_from("<{}s".format(length), self._buf, o)[0])
