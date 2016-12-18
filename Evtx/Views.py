@@ -16,6 +16,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 import sys
+import six
 import string
 
 from .Nodes import RootNode
@@ -44,8 +45,7 @@ class UnexpectedElementException(Exception):
 
 
 def to_xml_string(s):
-    #s = xml_sax_escape(s, {'"': '&quot;'})
-    s = s.encode("ascii", "xmlcharrefreplace").decode('ascii')
+    s = xml_sax_escape(s, {'"': '&quot;'})
     return s
 
 
@@ -154,11 +154,8 @@ def _build_record_xml(record, cache=None):
         f = _make_template_xml_view(root_node, cache=cache)
         subs_strs = []
         for sub in root_node.fast_substitutions():
-            # ugly hack for supporting is-string on py2 and py3
-            if sys.version_info < (3, ) and isinstance(sub, basestring):
-                subs_strs.append(sub)
-            elif sys.version_info >= (3, ) and isinstance(sub, str):
-                subs_strs.append(sub)
+            if isinstance(sub, six.string_types):
+                subs_strs.append(sub.replace('&', '&amp;'))
             elif isinstance(sub, RootNode):
                 subs_strs.append(rec(sub))
             elif sub is None:
