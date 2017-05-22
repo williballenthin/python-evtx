@@ -602,6 +602,40 @@ class CDataSectionNode(BXmlNode):
             self.token() & 0x0F == SYSTEM_TOKENS.CDataSectionToken
 
 
+class CharacterReferenceNode(BXmlNode):
+    """
+    The binary XML node for the system token 0x08.
+
+    This is an character reference node.  That is, something that represents
+      a non-XML character, eg. & --> &#x0038;.
+    """
+    def __init__(self, buf, offset, chunk, parent):
+        super(CharacterReferenceNode, self).__init__(buf, offset, chunk, parent)
+        self.declare_field("byte", "token", 0x0)
+        self.declare_field("word", "entity")
+        self._tag_length = 3
+
+    def __repr__(self):
+        return "CharacterReferenceNode(buf={!r}, offset={!r}, chunk={!r}, parent={!r})".format(
+            self._buf, self.offset(), self._chunk, self._parent)
+
+    def __str__(self):
+        return "CharacterReferenceNode(offset={}, length={}, token={})".format(
+            hex(self.offset()), hex(self.length()), hex(0x08))
+
+    def entity_reference(self):
+        return '&#x%04x;' % (self.entity())
+
+    def flags(self):
+        return self.token() >> 4
+
+    def tag_length(self):
+        return self._tag_length
+
+    def children(self):
+        return []
+
+
 class EntityReferenceNode(BXmlNode):
     """
     The binary XML node for the system token 0x09.
@@ -1531,7 +1565,7 @@ node_dispatch_table = [
     ValueNode,
     AttributeNode,
     CDataSectionNode,
-    None,
+    CharacterReferenceNode,
     EntityReferenceNode,
     ProcessingInstructionTargetNode,
     ProcessingInstructionDataNode,
