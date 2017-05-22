@@ -11,7 +11,7 @@ matrix:
           python: 3.5
 
 install:
-    - apt-get install python-lxml
+    - sudo apt-get install -y python-lxml
     - pip install pep8 pytest-cov lxml
     - pip install -e .
 
