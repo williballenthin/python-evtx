@@ -1,7 +1,10 @@
+import textwrap
+
 from fixtures import *
 
 import Evtx.Evtx as evtx
 import Evtx.Nodes as e_nodes
+import Evtx.Views as e_views
 
 
 def test_parse_records(system):
@@ -241,3 +244,40 @@ def test_parse_record(system):
                 ['WstringTypeNode', 'C:\Windows\System32\Winevt\Logs\Archive-System-2012-03-14-04-17-39-932.evtx']]]]]]]]]]]
 
     assert extract_structure(record.root()) == expected
+
+
+def test_render_record(system):
+    '''
+    regression test demonstrating formatting a record to xml.
+
+    Args:
+      system (bytes): the system.evtx test file contents. pytest fixture.
+    '''
+    fh = evtx.FileHeader(system, 0x0)
+    chunk = one(fh.chunks())
+    record = one(chunk.records())
+
+    xml = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>\n%s" % e_views.evtx_record_xml_view(record)
+    assert xml == textwrap.dedent('''\
+                                     <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+                                     <Event xmlns="http://schemas.microsoft.com/win/2004/08/events/event"><System><Provider Name="Microsoft-Windows-Eventlog" Guid="{fc65ddd8-d6ef-4962-83d5-6e5cfe9ce148}"></Provider>
+                                     <EventID Qualifiers="">105</EventID>
+                                     <Version>0</Version>
+                                     <Level>4</Level>
+                                     <Task>105</Task>
+                                     <Opcode>0</Opcode>
+                                     <Keywords>0x80000000000000</Keywords>
+                                     <TimeCreated SystemTime="2012-03-14 04:17:43.354563"></TimeCreated>
+                                     <EventRecordID>12049</EventRecordID>
+                                     <Correlation ActivityID="" RelatedActivityID=""></Correlation>
+                                     <Execution ProcessID="820" ThreadID="2868"></Execution>
+                                     <Channel>System</Channel>
+                                     <Computer>WKS-WIN764BITB.shieldbase.local</Computer>
+                                     <Security UserID=""></Security>
+                                     </System>
+                                     <UserData><AutoBackup xmlns:auto-ns3="http://schemas.microsoft.com/win/2004/08/events" xmlns="http://manifests.microsoft.com/win/2004/08/windows/eventlog"><Channel>System</Channel>
+                                     <BackupPath>C:\\Windows\\System32\\Winevt\\Logs\\Archive-System-2012-03-14-04-17-39-932.evtx</BackupPath>
+                                     </AutoBackup>
+                                     </UserData>
+                                     </Event>
+                                     ''')
