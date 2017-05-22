@@ -1134,7 +1134,8 @@ class VariantTypeNode(BXmlNode):
         raise NotImplementedError("string not implemented for {!r}".format(self))
 
 
-class NullTypeNode(object):  # but satisfies the contract of VariantTypeNode, BXmlNode, but not Block
+# but satisfies the contract of VariantTypeNode, BXmlNode, but not Block
+class NullTypeNode(object):
     """
     Variant type 0x00.
     """
@@ -1428,7 +1429,6 @@ class GuidTypeNode(VariantTypeNode):
         return 16
 
     def string(self):
-        print('{' + self.guid() + '}')
         return '{' + self.guid() + '}'
 
 
