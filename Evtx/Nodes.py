@@ -1387,7 +1387,7 @@ class BooleanTypeNode(VariantTypeNode):
         return 4
 
     def string(self):
-        if self.int32 > 0:
+        if self.int32() > 0:
             return "True"
         return "False"
 
