@@ -956,78 +956,59 @@ class RootNode(BXmlNode):
             type_ = self.unpack_byte(ofs + 0x2)
             sub_decl.append((size, type_))
             ofs += 4
+
         for (size, type_) in sub_decl:
-            # [0] = parse_null_type_node,
-            if type_ == 0x0:
+            if type_ == NODE_TYPES.NULL:
                 value = None
                 sub_def.append(value)
-            # [1] = parse_wstring_type_node,
-            elif type_ == 0x1:
+            elif type_ == NODE_TYPES.WSTRING:
                 s = self.unpack_wstring(ofs, size // 2).rstrip("\x00")
                 value = s.replace("<", "&gt;").replace(">", "&lt;")
                 sub_def.append(value)
-            # [2] = parse_string_type_node,
-            elif type_ == 0x2:
+            elif type_ == NODE_TYPES.STRING:
                 s = self.unpack_string(ofs, size)
                 value = s.decode("utf8").rstrip("\x00")
                 value = value.replace("<", "&gt;")
                 value = value.replace(">", "&lt;")
                 sub_def.append(value)
-            # [3] = parse_signed_byte_type_node,
-            elif type_ == 0x3:
+            elif type_ == NODE_TYPES.SIGNED_BYTE:
                 sub_def.append(self.unpack_int8(ofs))
-            # [4] = parse_unsigned_byte_type_node,
-            elif type_ == 0x4:
+            elif type_ == NODE_TYPES.UNSIGNED_BYTE:
                 sub_def.append(self.unpack_byte(ofs))
-            # [5] = parse_signed_word_type_node,
-            elif type_ == 0x5:
+            elif type_ == NODE_TYPES.SIGNED_WORD:
                 sub_def.append(self.unpack_int16(ofs))
-            # [6] = parse_unsigned_word_type_node,
-            elif type_ == 0x6:
+            elif type_ == NODE_TYPES.UNSIGNED_WORD:
                 sub_def.append(self.unpack_word(ofs))
-            # [7] = parse_signed_dword_type_node,
-            elif type_ == 0x7:
+            elif type_ == NODE_TYPES.SIGNED_DWORD:
                 sub_def.append(self.unpack_int32(ofs))
-            # [8] = parse_unsigned_dword_type_node,
-            elif type_ == 0x8:
+            elif type_ == NODE_TYPES.UNSIGNED_DWORD:
                 sub_def.append(self.unpack_dword(ofs))
-            # [9] = parse_signed_qword_type_node,
-            elif type_ == 0x9:
+            elif type_ == NODE_TYPES.SIGNED_QWORD:
                 sub_def.append(self.unpack_int64(ofs))
-            # [10] = parse_unsigned_qword_type_node,
-            elif type_ == 0xA:
+            elif type_ == NODE_TYPES.UNSIGNED_QWORD:
                 sub_def.append(self.unpack_qword(ofs))
-            # [11] = parse_float_type_node,
-            elif type_ == 0xB:
+            elif type_ == NODE_TYPES.FLOAT:
                 sub_def.append(self.unpack_float(ofs))
-            # [12] = parse_double_type_node,
-            elif type_ == 0xC:
+            elif type_ == NODE_TYPES.DOUBLE:
                 sub_def.append(self.unpack_double(ofs))
-            # [13] = parse_boolean_type_node,
-            elif type_ == 0xD:
+            elif type_ == NODE_TYPES.BOOLEAN:
                 sub_def.append(str(self.unpack_word(ofs) > 1))
-            # [14] = parse_binary_type_node,
-            elif type_ == 0xE:
+            elif type_ == NODE_TYPES.BINARY:
                 sub_def.append(base64.b64encode(self.unpack_binary(ofs, size)))
-            # [15] = parse_guid_type_node,
-            elif type_ == 0xF:
+            elif type_ == NODE_TYPES.GUID:
                 sub_def.append('{' + self.unpack_guid(ofs) + '}')
-            # [16] = parse_size_type_node,
-            elif type_ == 0x10:
+            elif type_ == NODE_TYPES.SIZE:
                 if size == 0x4:
                     sub_def.append(self.unpack_dword(ofs))
                 elif size == 0x8:
                     sub_def.append(self.unpack_qword(ofs))
                 else:
                     raise UnexpectedStateException("Unexpected size for SizeTypeNode: {}".format(hex(size)))
-            # [17] = parse_filetime_type_node,
-            elif type_ == 0x11:
+            elif type_ == NODE_TYPES.FILETIME:
                 sub_def.append(self.unpack_filetime(ofs))
-            # [18] = parse_systemtime_type_node,
-            elif type_ == 0x12:
+            elif type_ == NODE_TYPES.SYSTEMTIME:
                 sub_def.append(self.unpack_systemtime(ofs))
-            # [19] = parse_sid_type_node,  -- SIDTypeNode, 0x13
-            elif type_ == 0x13:
+            elif type_ == NODE_TYPES.SID:
                 version = self.unpack_byte(ofs)
                 num_elements = self.unpack_byte(ofs + 1)
                 id_high = self.unpack_dword_be(ofs + 2)
@@ -1037,26 +1018,22 @@ class RootNode(BXmlNode):
                     val = self.unpack_dword(ofs + 8 + (4 * i))
                     value += "-{}".format(val)
                 sub_def.append(value)
-            # [20] = parse_hex32_type_node,  -- Hex32TypeNode, 0x14
-            elif type_ == 0x14:
+            elif type_ == NODE_TYPES.HEX32:
                 value = "0x"
                 b = self.unpack_binary(ofs, size)[::-1]
                 for i in range(len(b) - 1):
                     value += '{:02x}'.format(six.indexbytes(b, i))
                 sub_def.append(value)
-            # [21] = parse_hex64_type_node,  -- Hex64TypeNode, 0x15
-            elif type_ == 0x15:
+            elif type_ == NODE_TYPES.HEX64:
                 value = "0x"
                 b = self.unpack_binary(ofs, size)[::-1]
                 for i in range(len(b) - 1):
                     value += '{:02x}'.format(six.indexbytes(b, i))
                 sub_def.append(value)
-            # [33] = parse_bxml_type_node,  -- BXmlTypeNode, 0x21
-            elif type_ == 0x21:
+            elif type_ == NODE_TYPES.BXML:
                 sub_def.append(RootNode(self._buf, self.offset() + ofs,
                                         self._chunk, self))
-            # [129] = TODO, -- WstringArrayTypeNode, 0x81
-            elif type_ == 0x81:
+            elif type_ == NODE_TYPES.WSTRINGARRAY:
                 bin = self.unpack_binary(ofs, size)
                 acc = []
                 while len(bin) > 0:
