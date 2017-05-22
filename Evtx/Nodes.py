@@ -957,62 +957,62 @@ class RootNode(BXmlNode):
             sub_decl.append((size, type_))
             ofs += 4
         for (size, type_) in sub_decl:
-            #[0] = parse_null_type_node,
+            # [0] = parse_null_type_node,
             if type_ == 0x0:
                 value = None
                 sub_def.append(value)
-            #[1] = parse_wstring_type_node,
+            # [1] = parse_wstring_type_node,
             elif type_ == 0x1:
                 s = self.unpack_wstring(ofs, size // 2).rstrip("\x00")
                 value = s.replace("<", "&gt;").replace(">", "&lt;")
                 sub_def.append(value)
-            #[2] = parse_string_type_node,
+            # [2] = parse_string_type_node,
             elif type_ == 0x2:
                 s = self.unpack_string(ofs, size)
                 value = s.decode("utf8").rstrip("\x00")
                 value = value.replace("<", "&gt;")
                 value = value.replace(">", "&lt;")
                 sub_def.append(value)
-            #[3] = parse_signed_byte_type_node,
+            # [3] = parse_signed_byte_type_node,
             elif type_ == 0x3:
                 sub_def.append(self.unpack_int8(ofs))
-            #[4] = parse_unsigned_byte_type_node,
+            # [4] = parse_unsigned_byte_type_node,
             elif type_ == 0x4:
                 sub_def.append(self.unpack_byte(ofs))
-            #[5] = parse_signed_word_type_node,
+            # [5] = parse_signed_word_type_node,
             elif type_ == 0x5:
                 sub_def.append(self.unpack_int16(ofs))
-            #[6] = parse_unsigned_word_type_node,
+            # [6] = parse_unsigned_word_type_node,
             elif type_ == 0x6:
                 sub_def.append(self.unpack_word(ofs))
-            #[7] = parse_signed_dword_type_node,
+            # [7] = parse_signed_dword_type_node,
             elif type_ == 0x7:
                 sub_def.append(self.unpack_int32(ofs))
-            #[8] = parse_unsigned_dword_type_node,
+            # [8] = parse_unsigned_dword_type_node,
             elif type_ == 0x8:
                 sub_def.append(self.unpack_dword(ofs))
-            #[9] = parse_signed_qword_type_node,
+            # [9] = parse_signed_qword_type_node,
             elif type_ == 0x9:
                 sub_def.append(self.unpack_int64(ofs))
-            #[10] = parse_unsigned_qword_type_node,
+            # [10] = parse_unsigned_qword_type_node,
             elif type_ == 0xA:
                 sub_def.append(self.unpack_qword(ofs))
-            #[11] = parse_float_type_node,
+            # [11] = parse_float_type_node,
             elif type_ == 0xB:
                 sub_def.append(self.unpack_float(ofs))
-            #[12] = parse_double_type_node,
+            # [12] = parse_double_type_node,
             elif type_ == 0xC:
                 sub_def.append(self.unpack_double(ofs))
-            #[13] = parse_boolean_type_node,
+            # [13] = parse_boolean_type_node,
             elif type_ == 0xD:
                 sub_def.append(str(self.unpack_word(ofs) > 1))
-            #[14] = parse_binary_type_node,
+            # [14] = parse_binary_type_node,
             elif type_ == 0xE:
                 sub_def.append(base64.b64encode(self.unpack_binary(ofs, size)))
-            #[15] = parse_guid_type_node,
+            # [15] = parse_guid_type_node,
             elif type_ == 0xF:
                 sub_def.append('{' + self.unpack_guid(ofs) + '}')
-            #[16] = parse_size_type_node,
+            # [16] = parse_size_type_node,
             elif type_ == 0x10:
                 if size == 0x4:
                     sub_def.append(self.unpack_dword(ofs))
@@ -1020,13 +1020,13 @@ class RootNode(BXmlNode):
                     sub_def.append(self.unpack_qword(ofs))
                 else:
                     raise UnexpectedStateException("Unexpected size for SizeTypeNode: {}".format(hex(size)))
-            #[17] = parse_filetime_type_node,
+            # [17] = parse_filetime_type_node,
             elif type_ == 0x11:
                 sub_def.append(self.unpack_filetime(ofs))
-            #[18] = parse_systemtime_type_node,
+            # [18] = parse_systemtime_type_node,
             elif type_ == 0x12:
                 sub_def.append(self.unpack_systemtime(ofs))
-            #[19] = parse_sid_type_node,  -- SIDTypeNode, 0x13
+            # [19] = parse_sid_type_node,  -- SIDTypeNode, 0x13
             elif type_ == 0x13:
                 version = self.unpack_byte(ofs)
                 num_elements = self.unpack_byte(ofs + 1)
@@ -1037,25 +1037,25 @@ class RootNode(BXmlNode):
                     val = self.unpack_dword(ofs + 8 + (4 * i))
                     value += "-{}".format(val)
                 sub_def.append(value)
-            #[20] = parse_hex32_type_node,  -- Hex32TypeNode, 0x14
+            # [20] = parse_hex32_type_node,  -- Hex32TypeNode, 0x14
             elif type_ == 0x14:
                 value = "0x"
                 b = self.unpack_binary(ofs, size)[::-1]
                 for i in range(len(b) - 1):
                     value += '{:02x}'.format(six.indexbytes(b, i))
                 sub_def.append(value)
-            #[21] = parse_hex64_type_node,  -- Hex64TypeNode, 0x15
+            # [21] = parse_hex64_type_node,  -- Hex64TypeNode, 0x15
             elif type_ == 0x15:
                 value = "0x"
                 b = self.unpack_binary(ofs, size)[::-1]
                 for i in range(len(b) - 1):
                     value += '{:02x}'.format(six.indexbytes(b, i))
                 sub_def.append(value)
-            #[33] = parse_bxml_type_node,  -- BXmlTypeNode, 0x21
+            # [33] = parse_bxml_type_node,  -- BXmlTypeNode, 0x21
             elif type_ == 0x21:
                 sub_def.append(RootNode(self._buf, self.offset() + ofs,
                                         self._chunk, self))
-            #[129] = TODO, -- WstringArrayTypeNode, 0x81
+            # [129] = TODO, -- WstringArrayTypeNode, 0x81
             elif type_ == 0x81:
                 bin = self.unpack_binary(ofs, size)
                 acc = []
