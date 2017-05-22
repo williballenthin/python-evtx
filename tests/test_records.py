@@ -1,10 +1,19 @@
 import textwrap
 
-from fixtures import *
+import pytest
 
 import Evtx.Evtx as evtx
 import Evtx.Nodes as e_nodes
 import Evtx.Views as e_views
+
+from fixtures import *
+
+try:
+    import lxml
+    import lxml.etree
+    no_lxml = False
+except:
+    no_lxml = True
 
 
 def test_parse_records(system):
@@ -309,3 +318,49 @@ def test_render_records2(security):
         for record in chunk.records():
             xml = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>\n%s" % e_views.evtx_record_xml_view(record)
             assert xml is not None
+
+
+def to_lxml(record):
+    """
+    @type record: Record
+    """
+    text = e_views.evtx_record_xml_view(record)
+    try:
+        return lxml.etree.fromstring("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>%s" %
+                                     text.encode('utf-8'))
+    except:
+        print(text)
+        raise
+
+
+@pytest.mark.skipif(no_lxml, reason='lxml not installed')
+def test_render_records_lxml(system):
+    '''
+    regression test demonstrating formatting records to xml.
+
+    Args:
+      system (bytes): the system.evtx test file contents. pytest fixture.
+    '''
+
+    fh = evtx.FileHeader(system, 0x0)
+    for i, chunk in enumerate(fh.chunks()):
+        for j, record in enumerate(chunk.records()):
+            xml = to_lxml(record)
+            assert xml is not None
+
+
+@pytest.mark.skipif(no_lxml, reason='lxml not installed')
+def test_render_records_lxml2(security):
+    '''
+    regression test demonstrating formatting records to xml.
+
+    Args:
+      security (bytes): the security.evtx test file contents. pytest fixture.
+    '''
+
+    fh = evtx.FileHeader(security, 0x0)
+    for i, chunk in enumerate(fh.chunks()):
+        for j, record in enumerate(chunk.records()):
+            xml = to_lxml(record)
+            assert xml is not None
+
