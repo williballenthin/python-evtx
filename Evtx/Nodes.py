@@ -1603,25 +1603,25 @@ class WstringArrayTypeNode(VariantTypeNode):
         return self._length
 
     def string(self):
-        bin = self.binary()
+        binary = self.binary()
         acc = []
-        while len(bin) > 0:
-            match = re.search(b"((?:[^\x00].)+)", bin)
+        while len(binary) > 0:
+            match = re.search(b"((?:[^\x00].)+)", binary)
             if match:
                 frag = match.group()
                 acc.append("<string>")
                 acc.append(frag.decode("utf16"))
                 acc.append("</string>\n")
-                bin = bin[len(frag) + 2:]
-                if len(bin) == 0:
+                binary = binary[len(frag) + 2:]
+                if len(binary) == 0:
                     break
-            frag = re.search(b"(\x00*)", bin).group()
+            frag = re.search(b"(\x00*)", binary).group()
             if len(frag) % 2 == 0:
                 for _ in range(len(frag) // 2):
                     acc.append("<string></string>\n")
             else:
                 raise ParseException("Error parsing uneven substring of NULLs")
-            bin = bin[len(frag):]
+            binary = binary[len(frag):]
         return "".join(acc)
 
 
