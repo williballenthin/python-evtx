@@ -45,6 +45,33 @@ class SYSTEM_TOKENS:
     StartOfStreamToken = 0x0F
 
 
+class NODE_TYPES:
+    NULL = 0x00
+    WSTRING = 0x01
+    STRING = 0x02
+    SIGNED_BYTE = 0x03
+    UNSIGNED_BYTE = 0x04
+    SIGNED_WORD = 0x05
+    UNSIGNED_WORD = 0x06
+    SIGNED_DWORD = 0x07
+    UNSIGNED_DWORD = 0x08
+    SIGNED_QWORD = 0x09
+    UNSIGNED_QWORD = 0x0A
+    FLOAT = 0x0B
+    DOUBLE = 0x0C
+    BOOLEAN = 0x0D
+    BINARY = 0x0E
+    GUID = 0x0F
+    SIZE = 0x10
+    FILETIME = 0x11
+    SYSTEMTIME = 0x12
+    SID = 0x13
+    HEX32 = 0x14
+    HEX64 = 0x15
+    BXML = 0x21
+    WSTRINGARRAY = 0x81
+
+
 node_dispatch_table = []  # updated at end of file
 node_readable_tokens = []  # updated at end of file
 
@@ -592,7 +619,6 @@ class EntityReferenceNode(BXmlNode):
             new_string = self._chunk.add_string(self.string_offset(),
                                                 parent=self)
             self._tag_length += new_string.length()
-
 
     def __repr__(self):
         return "EntityReferenceNode(buf={!r}, offset={!r}, chunk={!r}, parent={!r})".format(
