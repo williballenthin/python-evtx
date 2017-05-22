@@ -21,7 +21,11 @@ setuptools.setup(
         url="https://github.com/williballenthin/python-evtx",
         license="Apache 2.0 License",
         packages=setuptools.find_packages(),
-        install_requires=['hexdump', 'six'],
+        install_requires=[
+            'six',
+            'pytest',
+            'hexdump',
+            ],
         scripts=['scripts/evtx_dump.py',
                  'scripts/evtx_dump_chunk_slack.py',
                  'scripts/evtx_eid_record_numbers.py',
