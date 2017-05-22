@@ -4,13 +4,11 @@ import pytest
 
 import Evtx.Evtx as evtx
 import Evtx.Nodes as e_nodes
-import Evtx.Views as e_views
 
 from fixtures import *
 
 try:
     import lxml
-    import lxml.etree
     no_lxml = False
 except:
     no_lxml = True

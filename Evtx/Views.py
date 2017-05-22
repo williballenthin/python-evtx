@@ -15,10 +15,12 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
+import re
+import xml.sax.saxutils
+
 import six
 
 import Evtx.Nodes as e_nodes
-import xml.sax.saxutils
 
 
 XML_HEADER = "<?xml version=\"1.1\" encoding=\"utf-8\" standalone=\"yes\" ?>\n"
@@ -29,45 +31,66 @@ class UnexpectedElementException(Exception):
         super(UnexpectedElementException, self).__init__(msg)
 
 
-try:
-    # unfortunately no support yet in six.
-    # py3
-    from html import escape as html_escape
-except ImportError:
-    # py2
-    from cgi import escape as html_escape
-
-
-CHAR_TAB = 0x9
-CHAR_NL = 0xA
-CHAR_CR = 0xD
-
-VALID_WHITESPACE = (CHAR_TAB, CHAR_NL, CHAR_CR)
-
-import re
 # ref: https://www.w3.org/TR/xml11/#charsets
 RESTRICTED_CHARS = re.compile('[\x01-\x08\x0B\x0C\x0E-\x1F\x7F-\x84\x86-\x9F]')
 
 
-def escape(s):
-    esc = html_escape(s)
+def escape_attr(s):
+    '''
+    escape the given string such that it can be placed in an XML attribute, like:
+
+        <foo bar='$value'>
+
+    Args:
+      s (str): the string to escape.
+
+    Returns:
+      str: the escaped string.
+    '''
+    esc = xml.sax.saxutils.quoteattr(s)
     esc = esc.encode('ascii', 'xmlcharrefreplace').decode('ascii')
     esc = RESTRICTED_CHARS.sub('', esc)
     return esc
 
-    out = []
-    for c in s:
-        # ref: http://www.asciitable.com/index/asciifull.gif
-        if ord(c) < 0x20 and c not in VALID_WHITESPACE:
-            c = '&#x%04x;' % (ord(c))
-        out.append(c)
 
-    return ''.join(out)
+def escape_value(s):
+    '''
+    escape the given string such that it can be placed in an XML value location, like:
+
+        <foo>
+          $value
+        </foo>
+
+    Args:
+      s (str): the string to escape.
+
+    Returns:
+      str: the escaped string.
+    '''
+    esc = xml.sax.saxutils.escape(s)
+    esc = esc.encode('ascii', 'xmlcharrefreplace').decode('ascii')
+    esc = RESTRICTED_CHARS.sub('', esc)
+    return esc
 
 
-def to_xml_string(s):
-    s = xml.sax.saxutils.escape(s, {'"': '&quot;'})
-    return escape(s)
+# ref: https://www.w3.org/TR/xml/#NT-NameStartChar
+# but we are going to require a even stricter subset.
+NAME_PATTERN = re.compile('[a-zA-Z_][a-zA-Z_\-]*')
+
+
+def validate_name(s):
+    '''
+    ensure the given name can be used as an XML entity name, such as tag or attribute name.
+
+    Args:
+      s (str): the string to validate.
+
+    Raises:
+      RuntimeError: if the string is not suitable to be an XML name.
+    '''
+    if not NAME_PATTERN.match(s):
+        raise RuntimeError('invalid xml name: %s' % (s))
+    return s
 
 
 def render_root_node_with_subs(root_node, subs):
@@ -90,16 +113,17 @@ def render_root_node_with_subs(root_node, subs):
             for child in node.children():
                 if isinstance(child, e_nodes.AttributeNode):
                     acc.append(" ")
-                    acc.append(to_xml_string(child.attribute_name().string()))
+                    acc.append(validate_name(child.attribute_name().string()))
                     acc.append("=\"")
                     # TODO: should use xml.sax.saxutils.quoteattr here
+                    # but to do so, we'd need to ensure we're not double-quoting this value.
                     rec(child.attribute_value(), acc)
                     acc.append("\"")
             acc.append(">")
             for child in node.children():
                 rec(child, acc)
             acc.append("</")
-            acc.append(to_xml_string(node.tag_name()))
+            acc.append(validate_name(node.tag_name()))
             acc.append(">\n")
         elif isinstance(node, e_nodes.CloseStartElementNode):
             pass  # intended
@@ -108,19 +132,20 @@ def render_root_node_with_subs(root_node, subs):
         elif isinstance(node, e_nodes.CloseElementNode):
             pass  # intended
         elif isinstance(node, e_nodes.ValueNode):
-            acc.append(to_xml_string(node.children()[0].string()))
+            acc.append(escape_value(node.children()[0].string()))
         elif isinstance(node, e_nodes.AttributeNode):
             pass  # intended
         elif isinstance(node, e_nodes.CDataSectionNode):
             acc.append("<![CDATA[")
-            acc.append(to_xml_string(node.cdata()))
+            # TODO: is this correct escaping???
+            acc.append(escape_value(node.cdata()))
             acc.append("]]>")
         elif isinstance(node, e_nodes.EntityReferenceNode):
-            acc.append(to_xml_string(node.entity_reference()))
+            acc.append(escape_value(node.entity_reference()))
         elif isinstance(node, e_nodes.ProcessingInstructionTargetNode):
-            acc.append(to_xml_string(node.processing_instruction_target()))
+            acc.append(escape_value(node.processing_instruction_target()))
         elif isinstance(node, e_nodes.ProcessingInstructionDataNode):
-            acc.append(to_xml_string(node.string()))
+            acc.append(escape_value(node.string()))
         elif isinstance(node, e_nodes.TemplateInstanceNode):
             raise UnexpectedElementException("TemplateInstanceNode")
         elif isinstance(node, e_nodes.NormalSubstitutionNode):
@@ -129,7 +154,7 @@ def render_root_node_with_subs(root_node, subs):
             if isinstance(sub, e_nodes.BXmlTypeNode):
                 sub = render_root_node(sub.root())
             else:
-                sub = to_xml_string(sub.string())
+                sub = escape_value(sub.string())
 
             acc.append(sub)
         elif isinstance(node, e_nodes.ConditionalSubstitutionNode):
@@ -138,7 +163,7 @@ def render_root_node_with_subs(root_node, subs):
             if isinstance(sub, e_nodes.BXmlTypeNode):
                 sub = render_root_node(sub.root())
             else:
-                sub = to_xml_string(sub.string())
+                sub = escape_value(sub.string())
 
             acc.append(sub)
         elif isinstance(node, e_nodes.StreamStartNode):
