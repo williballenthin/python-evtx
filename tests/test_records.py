@@ -322,12 +322,17 @@ def test_render_records2(security):
 
 def to_lxml(record):
     """
-    @type record: Record
+    convert the given record to a lxml-parsed document.
+
+    Args:
+      record (evtx.Record): the record to parse.
+
+    Returns:
+      lxml.etree.ETree: the lxml document.
     """
     text = e_views.evtx_record_xml_view(record)
     try:
-        return lxml.etree.fromstring("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>%s" %
-                                     text.encode('utf-8'))
+        return lxml.etree.fromstring(b"<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>" + text.encode('utf-8'))
     except:
         print(text)
         raise
@@ -341,7 +346,6 @@ def test_render_records_lxml(system):
     Args:
       system (bytes): the system.evtx test file contents. pytest fixture.
     '''
-
     fh = evtx.FileHeader(system, 0x0)
     for i, chunk in enumerate(fh.chunks()):
         for j, record in enumerate(chunk.records()):
@@ -357,10 +361,8 @@ def test_render_records_lxml2(security):
     Args:
       security (bytes): the security.evtx test file contents. pytest fixture.
     '''
-
     fh = evtx.FileHeader(security, 0x0)
     for i, chunk in enumerate(fh.chunks()):
         for j, record in enumerate(chunk.records()):
             xml = to_lxml(record)
             assert xml is not None
-
