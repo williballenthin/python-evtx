@@ -1413,7 +1413,7 @@ class BinaryTypeNode(VariantTypeNode):
         return self._length
 
     def string(self):
-        return base64.b64encode(self.binary())
+        return base64.b64encode(self.binary()).decode('ascii')
 
 
 class GuidTypeNode(VariantTypeNode):
@@ -1606,7 +1606,7 @@ class WstringArrayTypeNode(VariantTypeNode):
         bin = self.binary()
         acc = []
         while len(bin) > 0:
-            match = re.search("((?:[^\x00].)+)", bin)
+            match = re.search(b"((?:[^\x00].)+)", bin)
             if match:
                 frag = match.group()
                 acc.append("<string>")
@@ -1615,7 +1615,7 @@ class WstringArrayTypeNode(VariantTypeNode):
                 bin = bin[len(frag) + 2:]
                 if len(bin) == 0:
                     break
-            frag = re.search("(\x00*)", bin).group()
+            frag = re.search(b"(\x00*)", bin).group()
             if len(frag) % 2 == 0:
                 for _ in range(len(frag) // 2):
                     acc.append("<string></string>\n")
