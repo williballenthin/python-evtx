@@ -178,7 +178,7 @@ class Block(object):
         self._buf = buf
         self._offset = offset
         self._implicit_offset = 0
-        
+
     def __repr__(self):
         return "Block(buf={!r}, offset={!r})".format(self._buf, self._offset)
 
@@ -196,10 +196,10 @@ class Block(object):
         - `offset`: A number.
         - `length`: (Optional) A number. For (w)strings, length in chars.
         """
-        if offset == None:
+        if offset is None:
             offset = self._implicit_offset
-        if length == None:
 
+        if length is None:
             def no_length_handler():
                 f = getattr(self, "unpack_" + type)
                 return f(offset)
@@ -246,11 +246,11 @@ class Block(object):
             self._implicit_offset = offset + 16
         elif type == "binary":
             self._implicit_offset = offset + length
-        elif type == "string" and length != None:
+        elif type == "string" and length is not None:
             self._implicit_offset = offset + length
-        elif type == "wstring" and length != None:
+        elif type == "wstring" and length is not None:
             self._implicit_offset = offset + (2 * length)
-        elif "string" in type and length == None:
+        elif "string" in type and length is None:
             raise ParseException("Implicit offset not supported "
                                  "for dynamic length strings")
         else:
@@ -484,12 +484,12 @@ class Block(object):
         Throws:
         - `UnicodeDecodeError`
         """
+        start = self._offset + offset
+        end = self._offset + offset + 2 * length
         try:
-            return bytes(self._buf[self._offset + offset:self._offset + offset + \
-                                   2 * length]).decode("utf16")
-        except AttributeError: # already a 'str' ?
-            return bytes(self._buf[self._offset + offset:self._offset + offset + \
-                                   2 * length]).decode("utf16")
+            return bytes(self._buf[start:end]).decode("utf16")
+        except AttributeError:  # already a 'str' ?
+            return bytes(self._buf[start:end]).decode('utf16')
 
     def unpack_dosdate(self, offset):
         """
