@@ -1486,7 +1486,7 @@ class SystemtimeTypeNode(VariantTypeNode):
         return 16
 
     def string(self):
-        return self.systemtime().isoformat("T") + "Z"
+        return self.systemtime().isoformat(' ')
 
 
 class SIDTypeNode(VariantTypeNode):
