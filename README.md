@@ -18,9 +18,7 @@ Joachim Metz also released a cross-platform, LGPL licensed C++ based parser in 2
 
 Dependencies
 ------------
-python-evtx was developed using the 2.7 tag of the Python programming language. As it is purely Python, the module works equally well across platforms.  The code does not depend on any modules that require separate compilation.
-
-python-evtx is not yet Python 3 compatible; however, I do not expect a port to be particularly painful.
+python-evtx works on both the 2.7 and 3.x versions of the Python programming language. As it is purely Python, the module works equally well across platforms.  The code does not depend on any modules that require separate compilation; however, if you have lxml installed, its even nicer.
 
 python-evtx operates on event log files from Windows operating systems newer than Windows Vista.  These files typically have the file extension .evtx.  Version 5.09 of the `file` utility identifies such a file as "MS Vista Windows Event Log".  To manual confirm the file type, look for the ASCII string "ElfFile" in the first seven bytes:
 
@@ -35,12 +33,11 @@ Provided with the parsing module `Evtx` are three scripts that mimic the tools d
 
 Note the length of the `evtxdump.py` script: its only 20 lines.  Now, review the contents and notice the complete implementation of the logic:
 
-    print "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>"
-    print "<Events>"
-    for chunk in fh.chunks():
-        for record in chunk.records():
-            print record.root().xml([])
-    print "</Events>"            
+    print(e_views.XML_HEADER)
+    print('<Events>')
+    for record in log.records:
+        print(record.xml())
+    print('</Events>')  
 
 Working with python-evtx is really easy!
 
@@ -52,11 +49,6 @@ Updates to python-evtx are pushed to PyPi, so you can install the module using e
     pip install python-evtx
 
 The source code for python-evtx is hosted at Github, and you may download, fork, and review it from this repository (http://www.github.com/williballenthin/python-evtx).  Please report issues or feature requests through Github's bug tracker associated with the project.
-
-
-Hacking
--------
-
 
 License
 -------
