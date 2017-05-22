@@ -17,9 +17,7 @@
 #   limitations under the License.
 #
 #   Version v.0.1
-import sys
-
-from Evtx.Evtx import Evtx
+import Evtx.Evtx as evtx
 
 
 def main():
@@ -33,8 +31,8 @@ def main():
                         help="The record number of the record to extract")
     args = parser.parse_args()
 
-    with Evtx(args.evtx) as evtx:
-        record = evtx.get_record(args.record)
+    with evtx.Evtx(args.evtx) as log:
+        record = log.get_record(args.record)
         if record is None:
             raise RuntimeError("Cannot find the record specified.")
         print(record.data())

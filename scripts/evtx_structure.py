@@ -15,19 +15,8 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-import mmap
-import contextlib
-
-import argparse
-
-from Evtx.Evtx import FileHeader
-from Evtx.Views import evtx_file_xml_view
-from Evtx.Nodes import RootNode
-from Evtx.Nodes import BXmlTypeNode
-from Evtx.Nodes import AttributeNode
-from Evtx.Nodes import VariantTypeNode
-from Evtx.Nodes import TemplateInstanceNode
-from Evtx.Nodes import OpenStartElementNode
+import Evtx.Evtx as evtx
+import Evtx.Nodes as e_nodes
 
 
 class EvtxFormatter(object):
@@ -133,28 +122,28 @@ class EvtxFormatter(object):
         else:
             line = "%s(offset=%s)" % (node.__class__.__name__, hex(node.offset() - record.offset()))
 
-        if isinstance(node, VariantTypeNode):
+        if isinstance(node, e_nodes.VariantTypeNode):
             line += " --> %s" % (node.string())
-        if isinstance(node, OpenStartElementNode):
+        if isinstance(node, e_nodes.OpenStartElementNode):
             line += " --> %s" % (node.tag_name())
-        if isinstance(node, AttributeNode):
+        if isinstance(node, e_nodes.AttributeNode):
             line += " --> %s" % (node.attribute_name().string())
         return line
 
     def format_node(self, record, node):
         extra = None
-        if isinstance(node, TemplateInstanceNode) and node.is_resident_template():
+        if isinstance(node, e_nodes.TemplateInstanceNode) and node.is_resident_template():
             extra = "resident=True, length=%s" % (hex(node.template().data_length()))
-        elif isinstance(node, TemplateInstanceNode):
+        elif isinstance(node, e_nodes.TemplateInstanceNode):
             extra = "resident=False"
         yield self._l(self._format_node_name(record, node, extra=extra))
 
-        if isinstance(node, BXmlTypeNode):
+        if isinstance(node, e_nodes.BXmlTypeNode):
             self._indent()
             for line in self.format_node(record, node._root):
                 yield line
             self._dedent()
-        elif isinstance(node, TemplateInstanceNode) and node.is_resident_template():
+        elif isinstance(node, e_nodes.TemplateInstanceNode) and node.is_resident_template():
             self._indent()
             for line in self.format_node(record, node.template()):
                 yield line
@@ -166,7 +155,7 @@ class EvtxFormatter(object):
                 yield line
         self._dedent()
 
-        if isinstance(node, RootNode):
+        if isinstance(node, e_nodes.RootNode):
             ofs = node.tag_and_children_length()
             yield self._l("Substitutions(offset=%s)" % (hex(node.offset() - record.offset() + ofs)))
             self._indent()
@@ -178,19 +167,18 @@ class EvtxFormatter(object):
 
 
 def main():
+    import argparse
+
     parser = argparse.ArgumentParser(
         description="Dump the structure of an EVTX file.")
     parser.add_argument("evtx", type=str,
                         help="Path to the Windows EVTX event log file")
     args = parser.parse_args()
 
-    with open(args.evtx, 'r') as f:
-        with contextlib.closing(mmap.mmap(f.fileno(), 0,
-                                          access=mmap.ACCESS_READ)) as buf:
-            fh = FileHeader(buf, 0x0)
-            formatter = EvtxFormatter()
-            for line in formatter.format_header(fh):
-                print(line)
+    with evtx.Evtx(args.evtx) as log:
+        formatter = EvtxFormatter()
+        for line in formatter.format_header(log.get_file_header()):
+            print(line)
 
 
 if __name__ == "__main__":

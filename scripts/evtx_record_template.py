@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
-from Evtx.Evtx import Evtx
-from Evtx.Views import evtx_template_readable_view
+
+import Evtx.Evtx as evtx
+import Evtx.Views as e_views
 
 
 def main():
@@ -15,9 +16,9 @@ def main():
                         help="Record number")
     args = parser.parse_args()
 
-    with Evtx(args.evtx) as evtx:
-        r = evtx.get_record(args.record)
-        print(evtx_template_readable_view(r.root()))
+    with evtx.Evtx(args.evtx) as log:
+        r = log.get_record(args.record)
+        print(e_views.evtx_template_readable_view(r.root()))
 
 
 if __name__ == "__main__":

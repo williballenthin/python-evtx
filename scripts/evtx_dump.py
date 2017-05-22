@@ -17,37 +17,26 @@
 #   limitations under the License.
 #
 #   Version v0.1.1
-import mmap
-import contextlib
-
-import argparse
-
-from Evtx.Evtx import FileHeader
-from Evtx.Views import evtx_file_xml_view
-
-
-def ascii(s):
-    return s.encode('ascii', 'replace').decode('ascii')
+import Evtx.Evtx as evtx
+import Evtx.Views as e_views
 
 
 def main():
+    import argparse
+
     parser = argparse.ArgumentParser(
         description="Dump a binary EVTX file into XML.")
-    parser.add_argument("--cleanup", action="store_true",
-                        help="Cleanup unused XML entities (slower)"),
     parser.add_argument("evtx", type=str,
                         help="Path to the Windows EVTX event log file")
     args = parser.parse_args()
 
-    with open(args.evtx, 'r') as f:
-        with contextlib.closing(mmap.mmap(f.fileno(), 0,
-                                          access=mmap.ACCESS_READ)) as buf:
-            fh = FileHeader(buf, 0x0)
-            print("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>")
-            print("<Events>")
-            for xml, record in evtx_file_xml_view(fh):
-                print(ascii(xml))
-            print("</Events>")
+    with evtx.Evtx(args.evtx) as log:
+        print(e_views.XML_HEADER)
+        print("<Events>")
+        for record in log.records():
+            print(record.xml())
+        print("</Events>")
+
 
 if __name__ == "__main__":
     main()

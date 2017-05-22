@@ -17,26 +17,27 @@
 #   limitations under the License.
 #
 #   Version v0.1
-
-
-import sys
-import mmap
-import contextlib
-from Evtx.Evtx import FileHeader
-from Evtx.Views import evtx_template_readable_view
+import Evtx.Evtx as evtx
+import Evtx.Views as e_views
 
 
 def main():
-    with open(sys.argv[1], 'r') as f:
-        with contextlib.closing(mmap.mmap(f.fileno(), 0,
-                                          access=mmap.ACCESS_READ)) as buf:
-            fh = FileHeader(buf, 0x0)
-            for (i, chunk) in enumerate(fh.chunks()):
-                for template in list(chunk.templates().values()):
-                    print("Template {%s} at chunk %d, offset %s" % \
-                        (template.guid(), i,
-                         hex(template.absolute_offset(0x0))))
-                    print(evtx_template_readable_view(template))
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Dump templates from a binary EVTX file.")
+    parser.add_argument("evtx", type=str,
+                        help="Path to the Windows EVTX event log file")
+    args = parser.parse_args()
+
+    with evtx.Evtx(args.evtx) as log:
+        for i, chunk in enumerate(log.chunks()):
+            for template in list(chunk.templates().values()):
+                print("Template {%s} at chunk %d, offset %s" %
+                      (template.guid(), i,
+                       hex(template.absolute_offset(0x0))))
+                print(e_views.evtx_template_readable_view(template))
+
 
 if __name__ == "__main__":
     main()

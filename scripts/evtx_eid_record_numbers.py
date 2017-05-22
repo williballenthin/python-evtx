@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 
-from lxml.etree import XMLSyntaxError
-from Evtx.Evtx import Evtx
-from Evtx.Views import evtx_file_xml_view
+import lxml.etree
+
+import Evtx.Evtx as evtx
 
 from filter_records import get_child
-from filter_records import to_lxml
 
 
 def main():
@@ -20,11 +19,11 @@ def main():
                         help="The EID of records to extract")
     args = parser.parse_args()
 
-    with Evtx(args.evtx) as evtx:
-        for xml, record in evtx_file_xml_view(evtx.get_file_header()):
+    with evtx.Evtx(args.evtx) as log:
+        for record in log.records:
             try:
-                node = to_lxml(xml)
-            except XMLSyntaxError:
+                node = record.lxml()
+            except lxml.etree.XMLSyntaxError:
                 continue
             if args.eid != int(get_child(get_child(node, "System"), "EventID").text):
                 continue
