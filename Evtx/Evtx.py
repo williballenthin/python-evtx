@@ -17,6 +17,8 @@
 #   limitations under the License.
 #
 #   Version v.0.3.0
+from __future__ import absolute_import
+
 import re
 import binascii
 import mmap

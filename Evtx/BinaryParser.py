@@ -17,8 +17,8 @@
 #   limitations under the License.
 #
 #   Version v.0.3.0
+from __future__ import absolute_import
 
-import sys
 import struct
 from datetime import datetime
 from functools import partial
