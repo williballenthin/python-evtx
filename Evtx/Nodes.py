@@ -1467,7 +1467,7 @@ class FiletimeTypeNode(VariantTypeNode):
         self.declare_field("filetime", "filetime", 0x0)
 
     def string(self):
-        return self.filetime().isoformat("T") + "Z"
+        return self.filetime().isoformat(' ')
 
     def tag_length(self):
         return 8
