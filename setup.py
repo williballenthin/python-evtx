@@ -25,6 +25,7 @@ setuptools.setup(
             'six',
             'pytest',
             'hexdump',
+            'pytest-cov',
             ],
         scripts=['scripts/evtx_dump.py',
                  'scripts/evtx_dump_chunk_slack.py',
