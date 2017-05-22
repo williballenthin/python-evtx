@@ -70,7 +70,7 @@ def to_xml_string(s):
     return escape(s)
 
 
-def render_root_node(root_node, subs):
+def render_root_node_with_subs(root_node, subs):
     """
     render the given root node using the given substitutions into XML.
 
@@ -92,6 +92,7 @@ def render_root_node(root_node, subs):
                     acc.append(" ")
                     acc.append(to_xml_string(child.attribute_name().string()))
                     acc.append("=\"")
+                    # TODO: should use xml.sax.saxutils.quoteattr here
                     rec(child.attribute_value(), acc)
                     acc.append("\"")
             acc.append(">")
@@ -123,9 +124,23 @@ def render_root_node(root_node, subs):
         elif isinstance(node, e_nodes.TemplateInstanceNode):
             raise UnexpectedElementException("TemplateInstanceNode")
         elif isinstance(node, e_nodes.NormalSubstitutionNode):
-            acc.append(subs[node.index()])
+            sub = subs[node.index()]
+
+            if isinstance(sub, e_nodes.BXmlTypeNode):
+                sub = render_root_node(sub.root())
+            else:
+                sub = to_xml_string(sub.string())
+
+            acc.append(sub)
         elif isinstance(node, e_nodes.ConditionalSubstitutionNode):
-            acc.append(subs[node.index()])
+            sub = subs[node.index()]
+
+            if isinstance(sub, e_nodes.BXmlTypeNode):
+                sub = render_root_node(sub.root())
+            else:
+                sub = to_xml_string(sub.string())
+
+            acc.append(sub)
         elif isinstance(node, e_nodes.StreamStartNode):
             pass  # intended
 
@@ -133,6 +148,20 @@ def render_root_node(root_node, subs):
     for c in root_node.template().children():
         rec(c, acc)
     return "".join(acc)
+
+
+def render_root_node(root_node):
+    subs = []
+    for sub in root_node.substitutions():
+        if isinstance(sub, six.string_types):
+            raise RuntimeError('string sub?')
+
+        if sub is None:
+            raise RuntimeError('null sub?')
+
+        subs.append(sub)
+
+    return render_root_node_with_subs(root_node, subs)
 
 
 def evtx_record_xml_view(record, cache=None):
@@ -145,23 +174,7 @@ def evtx_record_xml_view(record, cache=None):
     Returns:
       str: the rendered XML document.
     '''
-    def rec(root_node):
-        subs = []
-        for sub in root_node.substitutions():
-            if isinstance(sub, six.string_types):
-                raise RuntimeError('string sub?')
-
-            if sub is None:
-                raise RuntimeError('null sub?')
-
-            if isinstance(sub, e_nodes.BXmlTypeNode):
-                subs.append(rec(sub.root()))
-            else:
-                subs.append(sub.string())
-
-        return render_root_node(root_node, subs)
-
-    return rec(record.root())
+    return render_root_node(record.root())
 
 
 def evtx_chunk_xml_view(chunk):
