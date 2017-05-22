@@ -1298,7 +1298,7 @@ class UnsignedDwordTypeNode(VariantTypeNode):
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
         super(UnsignedDwordTypeNode, self).__init__(buf, offset,
-                                                   chunk, parent,
+                                                    chunk, parent,
                                                     length=length)
         self.declare_field("dword", "dword", 0x0)
 
@@ -1331,7 +1331,7 @@ class UnsignedQwordTypeNode(VariantTypeNode):
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
         super(UnsignedQwordTypeNode, self).__init__(buf, offset,
-                                                   chunk, parent,
+                                                    chunk, parent,
                                                     length=length)
         self.declare_field("qword", "qword", 0x0)
 
@@ -1588,7 +1588,7 @@ class WstringArrayTypeNode(VariantTypeNode):
     """
     def __init__(self, buf, offset, chunk, parent, length=None):
         super(WstringArrayTypeNode, self).__init__(buf, offset, chunk,
-                                              parent, length=length)
+                                                   parent, length=length)
         if self._length is None:
             self.declare_field("word",   "binary_length", 0x0)
             self.declare_field("binary", "binary",
