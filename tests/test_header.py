@@ -13,6 +13,7 @@ def test_file_header(system):
     fh = evtx.FileHeader(system, 0x0)
 
     # collected empirically
+    assert fh.magic() == 'ElfFile\x00'
     assert fh.major_version() == 0x3
     assert fh.minor_version() == 0x1
     assert fh.flags() == 0x1
@@ -36,6 +37,7 @@ def test_file_header2(security):
     fh = evtx.FileHeader(security, 0x0)
 
     # collected empirically
+    assert fh.magic() == 'ElfFile\x00'
     assert fh.major_version() == 0x3
     assert fh.minor_version() == 0x1
     assert fh.flags() == 0x1

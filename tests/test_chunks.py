@@ -32,6 +32,7 @@ def test_chunks(system):
         # collected empirically
         if i < 9:
             assert chunk.check_magic() is True
+            assert chunk.magic() == 'ElfChnk\x00'
             assert chunk.calculate_header_checksum() == chunk.header_checksum()
             assert chunk.calculate_data_checksum() == chunk.data_checksum()
 
@@ -89,6 +90,7 @@ def test_chunks2(security):
         # collected empirically
         if i < 26:
             assert chunk.check_magic() is True
+            assert chunk.magic() == 'ElfChnk\x00'
             assert chunk.calculate_header_checksum() == chunk.header_checksum()
             assert chunk.calculate_data_checksum() == chunk.data_checksum()
 
@@ -101,4 +103,3 @@ def test_chunks2(security):
         else:
             assert chunk.check_magic() is False
             assert chunk.magic() == EMPTY_MAGIC
-
