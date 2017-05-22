@@ -1571,7 +1571,7 @@ class BXmlTypeNode(VariantTypeNode):
         return self._length or self._root.length()
 
     def string(self):
-        return str(self._root)
+        return ''
 
     def root(self):
         return self._root
