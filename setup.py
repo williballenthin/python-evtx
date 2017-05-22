@@ -13,7 +13,7 @@ and his Perl implementation "Parse-Evtx"."""
 
 setuptools.setup(
         name="python-evtx",
-        version="0.5.3",
+        version="0.6.0",
         description="Pure Python parser for recent Windows event log files (.evtx).",
         long_description=long_description,
         author="Willi Ballenthin",
