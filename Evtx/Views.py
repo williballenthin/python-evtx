@@ -29,9 +29,45 @@ class UnexpectedElementException(Exception):
         super(UnexpectedElementException, self).__init__(msg)
 
 
+try:
+    # unfortunately no support yet in six.
+    # py3
+    from html import escape as html_escape
+except ImportError:
+    # py2
+    from cgi import escape as html_escape
+
+
+CHAR_TAB = 0x9
+CHAR_NL = 0xA
+CHAR_CR = 0xD
+
+VALID_WHITESPACE = (CHAR_TAB, CHAR_NL, CHAR_CR)
+
+import re
+# ref: https://www.w3.org/TR/xml11/#charsets
+RESTRICTED_CHARS = re.compile('[\x01-\x08\x0B\x0C\x0E-\x1F\x7F-\x84\x86-\x9F]')
+
+
+def escape(s):
+    esc = html_escape(s)
+    esc = esc.encode('ascii', 'xmlcharrefreplace').decode('ascii')
+    esc = RESTRICTED_CHARS.sub('', esc)
+    return esc
+
+    out = []
+    for c in s:
+        # ref: http://www.asciitable.com/index/asciifull.gif
+        if ord(c) < 0x20 and c not in VALID_WHITESPACE:
+            c = '&#x%04x;' % (ord(c))
+        out.append(c)
+
+    return ''.join(out)
+
+
 def to_xml_string(s):
     s = xml.sax.saxutils.escape(s, {'"': '&quot;'})
-    return s
+    return escape(s)
 
 
 def render_root_node(root_node, subs):
