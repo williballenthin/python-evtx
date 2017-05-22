@@ -928,136 +928,31 @@ class RootNode(BXmlNode):
 
         return self.tag_length() + children_length
 
-    def fast_template_instance(self):
+    def template_instance(self):
+        '''
+        parse the template instance node.
+        this is used to compute the location of the template definition structure.
+
+        Returns:
+          TemplateInstanceNode: the template instance.
+        '''
         ofs = self.offset()
         if self.unpack_byte(0x0) & 0x0F == 0xF:
             ofs += 4
         return TemplateInstanceNode(self._buf, ofs, self._chunk, self)
 
-    @memoize
-    def fast_substitutions(self):
-        """
-        Get the list of elements that are the
-          the substitutions for this root node.
-          Each element is one of:
-            str
-            int
-            float
-            RootNode
-        @rtype: list
-        """
-        sub_decl = []
-        sub_def = []
-        ofs = self.tag_and_children_length()
-        sub_count = self.unpack_dword(ofs)
-        ofs += 4
-        for _ in range(sub_count):
-            size = self.unpack_word(ofs)
-            type_ = self.unpack_byte(ofs + 0x2)
-            sub_decl.append((size, type_))
-            ofs += 4
+    def template(self):
+        '''
+        parse the template referenced by this root node.
+        note, this template structure is not guaranteed to be located within the root node's boundaries.
 
-        for (size, type_) in sub_decl:
-            if type_ == NODE_TYPES.NULL:
-                value = None
-                sub_def.append(value)
-            elif type_ == NODE_TYPES.WSTRING:
-                s = self.unpack_wstring(ofs, size // 2).rstrip("\x00")
-                value = s.replace("<", "&gt;").replace(">", "&lt;")
-                sub_def.append(value)
-            elif type_ == NODE_TYPES.STRING:
-                s = self.unpack_string(ofs, size)
-                value = s.decode("utf8").rstrip("\x00")
-                value = value.replace("<", "&gt;")
-                value = value.replace(">", "&lt;")
-                sub_def.append(value)
-            elif type_ == NODE_TYPES.SIGNED_BYTE:
-                sub_def.append(self.unpack_int8(ofs))
-            elif type_ == NODE_TYPES.UNSIGNED_BYTE:
-                sub_def.append(self.unpack_byte(ofs))
-            elif type_ == NODE_TYPES.SIGNED_WORD:
-                sub_def.append(self.unpack_int16(ofs))
-            elif type_ == NODE_TYPES.UNSIGNED_WORD:
-                sub_def.append(self.unpack_word(ofs))
-            elif type_ == NODE_TYPES.SIGNED_DWORD:
-                sub_def.append(self.unpack_int32(ofs))
-            elif type_ == NODE_TYPES.UNSIGNED_DWORD:
-                sub_def.append(self.unpack_dword(ofs))
-            elif type_ == NODE_TYPES.SIGNED_QWORD:
-                sub_def.append(self.unpack_int64(ofs))
-            elif type_ == NODE_TYPES.UNSIGNED_QWORD:
-                sub_def.append(self.unpack_qword(ofs))
-            elif type_ == NODE_TYPES.FLOAT:
-                sub_def.append(self.unpack_float(ofs))
-            elif type_ == NODE_TYPES.DOUBLE:
-                sub_def.append(self.unpack_double(ofs))
-            elif type_ == NODE_TYPES.BOOLEAN:
-                sub_def.append(str(self.unpack_word(ofs) > 1))
-            elif type_ == NODE_TYPES.BINARY:
-                sub_def.append(base64.b64encode(self.unpack_binary(ofs, size)))
-            elif type_ == NODE_TYPES.GUID:
-                sub_def.append('{' + self.unpack_guid(ofs) + '}')
-            elif type_ == NODE_TYPES.SIZE:
-                if size == 0x4:
-                    sub_def.append(self.unpack_dword(ofs))
-                elif size == 0x8:
-                    sub_def.append(self.unpack_qword(ofs))
-                else:
-                    raise UnexpectedStateException("Unexpected size for SizeTypeNode: {}".format(hex(size)))
-            elif type_ == NODE_TYPES.FILETIME:
-                sub_def.append(self.unpack_filetime(ofs))
-            elif type_ == NODE_TYPES.SYSTEMTIME:
-                sub_def.append(self.unpack_systemtime(ofs))
-            elif type_ == NODE_TYPES.SID:
-                version = self.unpack_byte(ofs)
-                num_elements = self.unpack_byte(ofs + 1)
-                id_high = self.unpack_dword_be(ofs + 2)
-                id_low = self.unpack_word_be(ofs + 6)
-                value = "S-{}-{}".format(version, (id_high << 16) ^ id_low)
-                for i in range(num_elements):
-                    val = self.unpack_dword(ofs + 8 + (4 * i))
-                    value += "-{}".format(val)
-                sub_def.append(value)
-            elif type_ == NODE_TYPES.HEX32:
-                value = "0x"
-                b = self.unpack_binary(ofs, size)[::-1]
-                for i in range(len(b) - 1):
-                    value += '{:02x}'.format(six.indexbytes(b, i))
-                sub_def.append(value)
-            elif type_ == NODE_TYPES.HEX64:
-                value = "0x"
-                b = self.unpack_binary(ofs, size)[::-1]
-                for i in range(len(b) - 1):
-                    value += '{:02x}'.format(six.indexbytes(b, i))
-                sub_def.append(value)
-            elif type_ == NODE_TYPES.BXML:
-                sub_def.append(RootNode(self._buf, self.offset() + ofs,
-                                        self._chunk, self))
-            elif type_ == NODE_TYPES.WSTRINGARRAY:
-                bin = self.unpack_binary(ofs, size)
-                acc = []
-                while len(bin) > 0:
-                    match = re.search(b"((?:[^\x00].)+)", bin)
-                    if match:
-                        frag = match.group()
-                        acc.append("<string>")
-                        acc.append(frag.decode("utf16"))
-                        acc.append("</string>\n")
-                        bin = bin[len(frag) + 2:]
-                        if len(bin) == 0:
-                            break
-                    frag = re.search(b"(\x00*)", bin).group()
-                    if len(frag) % 2 == 0:
-                        for _ in range(len(frag) // 2):
-                            acc.append("<string></string>\n")
-                    else:
-                        raise ParseException("Error parsing uneven substring of NULLs")
-                    bin = bin[len(frag):]
-                sub_def.append("".join(acc))
-            else:
-                raise "Unexpected type encountered: {}".format(hex(type_))
-            ofs += size
-        return sub_def
+        Returns:
+          TemplateNode: the template.
+        '''
+        instance = self.template_instance()
+        offset = self._chunk.offset() + instance.template_offset()
+        node = TemplateNode(self._buf, offset, self._chunk, instance)
+        return node
 
     @memoize
     def substitutions(self):

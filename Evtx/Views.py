@@ -15,28 +15,10 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-import sys
 import six
-import string
 
-from .Nodes import RootNode
-from .Nodes import TemplateNode
-from .Nodes import EndOfStreamNode
-from .Nodes import OpenStartElementNode
-from .Nodes import CloseStartElementNode
-from .Nodes import CloseEmptyElementNode
-from .Nodes import CloseElementNode
-from .Nodes import ValueNode
-from .Nodes import AttributeNode
-from .Nodes import CDataSectionNode
-from .Nodes import EntityReferenceNode
-from .Nodes import ProcessingInstructionTargetNode
-from .Nodes import ProcessingInstructionDataNode
-from .Nodes import TemplateInstanceNode
-from .Nodes import NormalSubstitutionNode
-from .Nodes import ConditionalSubstitutionNode
-from .Nodes import StreamStartNode
-from xml.sax.saxutils import escape as xml_sax_escape
+import Evtx.Nodes as e_nodes
+import xml.sax.saxutils
 
 
 class UnexpectedElementException(Exception):
@@ -45,33 +27,29 @@ class UnexpectedElementException(Exception):
 
 
 def to_xml_string(s):
-    s = xml_sax_escape(s, {'"': '&quot;'})
+    s = xml.sax.saxutils.escape(s, {'"': '&quot;'})
     return s
 
 
-def _make_template_xml_view(root_node, cache=None):
+def render_root_node(root_node, subs):
     """
-    Given a RootNode, parse only the template/children
-      and not the substitutions.
+    render the given root node using the given substitutions into XML.
 
-    Note, the cache should be local to the Evtx.Chunk.
-      Do not share caches across Chunks.
+    Args:
+      root_node (e_nodes.RootNode): the node to render.
+      subs (list[str]): the substitutions that maybe included in the XML.
 
-    @type root_node: Nodes.RootNode
-    @type cache: dict of {int: TemplateNode}
-    @rtype: str
+    Returns:
+      str: the rendered XML document.
     """
-    if cache is None:
-        cache = {}
-
     def rec(node, acc):
-        if isinstance(node, EndOfStreamNode):
+        if isinstance(node, e_nodes.EndOfStreamNode):
             pass  # intended
-        elif isinstance(node, OpenStartElementNode):
+        elif isinstance(node, e_nodes.OpenStartElementNode):
             acc.append("<")
             acc.append(node.tag_name())
             for child in node.children():
-                if isinstance(child, AttributeNode):
+                if isinstance(child, e_nodes.AttributeNode):
                     acc.append(" ")
                     acc.append(to_xml_string(child.attribute_name().string()))
                     acc.append("=\"")
@@ -83,107 +61,68 @@ def _make_template_xml_view(root_node, cache=None):
             acc.append("</")
             acc.append(to_xml_string(node.tag_name()))
             acc.append(">\n")
-        elif isinstance(node, CloseStartElementNode):
+        elif isinstance(node, e_nodes.CloseStartElementNode):
             pass  # intended
-        elif isinstance(node, CloseEmptyElementNode):
+        elif isinstance(node, e_nodes.CloseEmptyElementNode):
             pass  # intended
-        elif isinstance(node, CloseElementNode):
+        elif isinstance(node, e_nodes.CloseElementNode):
             pass  # intended
-        elif isinstance(node, ValueNode):
+        elif isinstance(node, e_nodes.ValueNode):
             acc.append(to_xml_string(node.children()[0].string()))
-        elif isinstance(node, AttributeNode):
+        elif isinstance(node, e_nodes.AttributeNode):
             pass  # intended
-        elif isinstance(node, CDataSectionNode):
+        elif isinstance(node, e_nodes.CDataSectionNode):
             acc.append("<![CDATA[")
             acc.append(to_xml_string(node.cdata()))
             acc.append("]]>")
-        elif isinstance(node, EntityReferenceNode):
+        elif isinstance(node, e_nodes.EntityReferenceNode):
             acc.append(to_xml_string(node.entity_reference()))
-        elif isinstance(node, ProcessingInstructionTargetNode):
+        elif isinstance(node, e_nodes.ProcessingInstructionTargetNode):
             acc.append(to_xml_string(node.processing_instruction_target()))
-        elif isinstance(node, ProcessingInstructionDataNode):
+        elif isinstance(node, e_nodes.ProcessingInstructionDataNode):
             acc.append(to_xml_string(node.string()))
-        elif isinstance(node, TemplateInstanceNode):
+        elif isinstance(node, e_nodes.TemplateInstanceNode):
             raise UnexpectedElementException("TemplateInstanceNode")
-        elif isinstance(node, NormalSubstitutionNode):
-            acc.append("{")
-            acc.append("{}".format(node.index()))
-            acc.append("}")
-        elif isinstance(node, ConditionalSubstitutionNode):
-            acc.append("{")
-            acc.append("{}".format(node.index()))
-            acc.append("}")
-        elif isinstance(node, StreamStartNode):
+        elif isinstance(node, e_nodes.NormalSubstitutionNode):
+            acc.append(subs[node.index()])
+        elif isinstance(node, e_nodes.ConditionalSubstitutionNode):
+            acc.append(subs[node.index()])
+        elif isinstance(node, e_nodes.StreamStartNode):
             pass  # intended
 
     acc = []
-    template_instance = root_node.fast_template_instance()
-    templ_off = template_instance.template_offset() + \
-        template_instance._chunk.offset()
-    if templ_off in cache:
-        acc.append(cache[templ_off])
-    else:
-        node = TemplateNode(template_instance._buf, templ_off,
-                            template_instance._chunk, template_instance)
-        sub_acc = []
-        for c in node.children():
-            rec(c, sub_acc)
-        sub_templ = "".join(sub_acc)
-        cache[templ_off] = sub_templ
-        acc.append(sub_templ)
+    for c in root_node.template().children():
+        rec(c, acc)
     return "".join(acc)
 
 
-class SafeDict(dict):
-    def __missing__(self, key):
-        return '{' + key + '}'
-
-
-def _build_record_xml(record, cache=None):
-    """
-    Note, the cache should be local to the Evtx.Chunk.
-      Do not share caches across Chunks.
-
-    @type record: Evtx.Record
-    @type cache: dict of {int: TemplateNode}
-    @rtype: str
-    """
-    if cache is None:
-        cache = {}
-    def rec(root_node):
-        f = _make_template_xml_view(root_node, cache=cache)
-        subs_strs = []
-        for sub in root_node.fast_substitutions():
-            if isinstance(sub, six.string_types):
-                subs_strs.append(sub.replace('&', '&amp;'))
-            elif isinstance(sub, RootNode):
-                subs_strs.append(rec(sub))
-            elif sub is None:
-                subs_strs.append("")
-            else:
-                subs_strs.append(str(sub))
-
-        # maintain substrings like {foo} if foo= isn't a kwarg to format
-        # via: http://stackoverflow.com/a/17215533/87207
-        return string.Formatter().vformat(f, subs_strs, SafeDict())
-    xml = rec(record.root())
-    return xml
-
-
 def evtx_record_xml_view(record, cache=None):
-    """
-    Generate an XML representation of an EVTX record.
+    '''
+    render the given record into an XML document.
 
-    Note, the cache should be local to the Evtx.Chunk.
-      Do not share caches across Chunks.
+    Args:
+      record (Evtx.Record): the record to render.
 
-    @type record: Evtx.Record
-    @type cache: dict of {int: TemplateNode}
-    @rtype: str
-    """
-    if cache is None:
-        cache = {}
-    return _build_record_xml(record, cache=cache)
+    Returns:
+      str: the rendered XML document.
+    '''
+    def rec(root_node):
+        subs = []
+        for sub in root_node.substitutions():
+            if isinstance(sub, six.string_types):
+                raise RuntimeError('string sub?')
+
+            if sub is None:
+                raise RuntimeError('null sub?')
+
+            if isinstance(sub, e_nodes.BXmlTypeNode):
+                subs.append(rec(sub.root()))
+            else:
+                subs.append(sub.string())
+
+        return render_root_node(root_node, subs)
+
+    return rec(record.root())
 
 
 def evtx_chunk_xml_view(chunk):
@@ -193,12 +132,14 @@ def evtx_chunk_xml_view(chunk):
     Does not include the XML <?xml... header.
     Records are ordered by chunk.records()
 
-    @type chunk: Evtx.Chunk
-    @rtype: generator of str, Evtx.Record
+    Args:
+      chunk (Evtx.Chunk): the chunk to render.
+
+    Yields:
+      tuple[str, Evtx.Record]: the rendered XML document and the raw record.
     """
-    cache = {}
     for record in chunk.records():
-        record_str = _build_record_xml(record, cache=cache)
+        record_str = evtx_record_xml_view(record)
         yield record_str, record
 
 
@@ -209,30 +150,27 @@ def evtx_file_xml_view(file_header):
     Does not include the XML <?xml... header.
     Records are ordered by file_header.chunks(), and then by chunk.records()
 
-    @type file_header: Evtx.FileHeader
-    @rtype: generator of str, Evtx.Record
+    Args:
+      chunk (Evtx.FileHeader): the file header to render.
+
+    Yields:
+      tuple[str, Evtx.Record]: the rendered XML document and the raw record.
     """
     for chunk in file_header.chunks():
-        cache = {}
         for record in chunk.records():
-            record_str = _build_record_xml(record, cache=cache)
+            record_str = evtx_record_xml_view(record)
             yield record_str, record
 
 
 def evtx_template_readable_view(root_node, cache=None):
-    """
-    """
-    if cache is None:
-        cache = {}
-
     def rec(node, acc):
-        if isinstance(node, EndOfStreamNode):
+        if isinstance(node, e_nodes.EndOfStreamNode):
             pass  # intended
-        elif isinstance(node, OpenStartElementNode):
+        elif isinstance(node, e_nodes.OpenStartElementNode):
             acc.append("<")
             acc.append(node.tag_name())
             for child in node.children():
-                if isinstance(child, AttributeNode):
+                if isinstance(child, e_nodes.AttributeNode):
                     acc.append(" ")
                     acc.append(child.attribute_name().string())
                     acc.append("=\"")
@@ -244,51 +182,38 @@ def evtx_template_readable_view(root_node, cache=None):
             acc.append("</")
             acc.append(node.tag_name())
             acc.append(">\n")
-        elif isinstance(node, CloseStartElementNode):
+        elif isinstance(node, e_nodes.CloseStartElementNode):
             pass  # intended
-        elif isinstance(node, CloseEmptyElementNode):
+        elif isinstance(node, e_nodes.CloseEmptyElementNode):
             pass  # intended
-        elif isinstance(node, CloseElementNode):
+        elif isinstance(node, e_nodes.CloseElementNode):
             pass  # intended
-        elif isinstance(node, ValueNode):
+        elif isinstance(node, e_nodes.ValueNode):
             acc.append(node.children()[0].string())
-        elif isinstance(node, AttributeNode):
+        elif isinstance(node, e_nodes.AttributeNode):
             pass  # intended
-        elif isinstance(node, CDataSectionNode):
+        elif isinstance(node, e_nodes.CDataSectionNode):
             acc.append("<![CDATA[")
             acc.append(node.cdata())
             acc.append("]]>")
-        elif isinstance(node, EntityReferenceNode):
+        elif isinstance(node, e_nodes.EntityReferenceNode):
             acc.append(node.entity_reference())
-        elif isinstance(node, ProcessingInstructionTargetNode):
+        elif isinstance(node, e_nodes.ProcessingInstructionTargetNode):
             acc.append(node.processing_instruction_target())
-        elif isinstance(node, ProcessingInstructionDataNode):
+        elif isinstance(node, e_nodes.ProcessingInstructionDataNode):
             acc.append(node.string())
-        elif isinstance(node, TemplateInstanceNode):
+        elif isinstance(node, e_nodes.TemplateInstanceNode):
             raise UnexpectedElementException("TemplateInstanceNode")
-        elif isinstance(node, NormalSubstitutionNode):
+        elif isinstance(node, e_nodes.NormalSubstitutionNode):
             acc.append("[Normal Substitution(index={}, type={})]".format(
                 node.index(), node.type()))
-        elif isinstance(node, ConditionalSubstitutionNode):
+        elif isinstance(node, e_nodes.ConditionalSubstitutionNode):
             acc.append("[Conditional Substitution(index={}, type={})]".format(
                 node.index(), node.type()))
-        elif isinstance(node, StreamStartNode):
+        elif isinstance(node, e_nodes.StreamStartNode):
             pass  # intended
 
     acc = []
-    template_instance = root_node.fast_template_instance()
-    templ_off = template_instance.template_offset() + \
-        template_instance._chunk.offset()
-    if templ_off in cache:
-        acc.append(cache[templ_off])
-    else:
-        node = TemplateNode(template_instance._buf, templ_off,
-                            template_instance._chunk, template_instance)
-        sub_acc = []
-        for c in node.children():
-            rec(c, sub_acc)
-        sub_templ = "".join(sub_acc)
-        cache[templ_off] = sub_templ
-        acc.append(sub_templ)
+    for c in root_node.template().children():
+        rec(c, acc)
     return "".join(acc)
-

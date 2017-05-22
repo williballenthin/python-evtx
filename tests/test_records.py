@@ -211,7 +211,7 @@ def test_parse_record(system):
           ['UnsignedWordTypeNode', '105'],
           ['NullTypeNode'],
           ['Hex64TypeNode', '0x80000000000000'],
-          ['FiletimeTypeNode', '2012-03-14T04:17:43.354563Z'],
+          ['FiletimeTypeNode', '2012-03-14 04:17:43.354563'],
           ['NullTypeNode'],
           ['UnsignedDwordTypeNode', '820'],
           ['UnsignedDwordTypeNode', '2868'],
