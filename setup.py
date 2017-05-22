@@ -32,8 +32,6 @@ setuptools.setup(
                  'scripts/evtx_eid_record_numbers.py',
                  'scripts/evtx_extract_record.py',
                  'scripts/evtx_filter_records.py',
-                 'scripts/evtx_find_bugs.py',
-                 'scripts/evtx_get_pretty_record.py',
                  'scripts/evtx_info.py',
                  'scripts/evtx_record_structure.py',
                  'scripts/evtx_structure.py',
