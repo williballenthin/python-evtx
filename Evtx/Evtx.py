@@ -23,11 +23,12 @@ import mmap
 from functools import wraps
 import logging
 
-from .BinaryParser import ParseException
-from .BinaryParser import Block
-from .Nodes import NameStringNode
-from .Nodes import TemplateNode
+import Evtx.Views as e_views
 from .Nodes import RootNode
+from .Nodes import TemplateNode
+from .Nodes import NameStringNode
+from .BinaryParser import Block
+from .BinaryParser import ParseException
 
 logger = logging.getLogger(__name__)
 
@@ -395,7 +396,7 @@ class ChunkHeader(Block):
             self._load_templates()
 
         node = TemplateNode(self._buf, self._offset + offset,
-                                self, parent or self)
+                            self, parent or self)
         self._templates[offset] = node
         return node
 
@@ -466,3 +467,29 @@ class Record(Block):
           up this record.
         """
         return self._buf[self.offset():self.offset() + self.size()]
+
+    def xml(self):
+        '''
+        render the record into XML.
+        does not include the xml declaration header.
+
+        Returns:
+          str: the rendered xml document.
+        '''
+        return e_views.evtx_record_xml_view(self)
+
+    def lxml(self):
+        '''
+        render the record into a lxml document.
+        this is useful for querying data from the record using xpath, etc.
+
+        note: lxml must be installed.
+
+        Returns:
+          lxml.etree.ElementTree: the rendered and parsed xml document.
+
+        Raises:
+          ImportError: if lxml is not installed.
+        '''
+        import lxml
+        return lxml.etree.fromstring((e_views.XML_HEADER + self.xml()).encode('utf-8'))

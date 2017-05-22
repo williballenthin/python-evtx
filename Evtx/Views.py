@@ -21,6 +21,9 @@ import Evtx.Nodes as e_nodes
 import xml.sax.saxutils
 
 
+XML_HEADER = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>\n"
+
+
 class UnexpectedElementException(Exception):
     def __init__(self, msg):
         super(UnexpectedElementException, self).__init__(msg)

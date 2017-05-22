@@ -266,9 +266,8 @@ def test_render_record(system):
     chunk = one(fh.chunks())
     record = one(chunk.records())
 
-    xml = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>\n%s" % e_views.evtx_record_xml_view(record)
+    xml = record.xml() 
     assert xml == textwrap.dedent('''\
-                                     <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
                                      <Event xmlns="http://schemas.microsoft.com/win/2004/08/events/event"><System><Provider Name="Microsoft-Windows-Eventlog" Guid="{fc65ddd8-d6ef-4962-83d5-6e5cfe9ce148}"></Provider>
                                      <EventID Qualifiers="">105</EventID>
                                      <Version>0</Version>
@@ -302,8 +301,7 @@ def test_render_records(system):
     fh = evtx.FileHeader(system, 0x0)
     for chunk in fh.chunks():
         for record in chunk.records():
-            xml = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>\n%s" % e_views.evtx_record_xml_view(record)
-            assert xml is not None
+            assert record.xml() is not None
 
 
 def test_render_records2(security):
@@ -316,26 +314,7 @@ def test_render_records2(security):
     fh = evtx.FileHeader(security, 0x0)
     for chunk in fh.chunks():
         for record in chunk.records():
-            xml = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>\n%s" % e_views.evtx_record_xml_view(record)
-            assert xml is not None
-
-
-def to_lxml(record):
-    """
-    convert the given record to a lxml-parsed document.
-
-    Args:
-      record (evtx.Record): the record to parse.
-
-    Returns:
-      lxml.etree.ETree: the lxml document.
-    """
-    text = e_views.evtx_record_xml_view(record)
-    try:
-        return lxml.etree.fromstring(b"<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>" + text.encode('utf-8'))
-    except:
-        print(text)
-        raise
+            assert record.xml() is not None
 
 
 @pytest.mark.skipif(no_lxml, reason='lxml not installed')
@@ -349,8 +328,7 @@ def test_render_records_lxml(system):
     fh = evtx.FileHeader(system, 0x0)
     for i, chunk in enumerate(fh.chunks()):
         for j, record in enumerate(chunk.records()):
-            xml = to_lxml(record)
-            assert xml is not None
+            assert record.lxml() is not None
 
 
 @pytest.mark.skipif(no_lxml, reason='lxml not installed')
@@ -364,5 +342,4 @@ def test_render_records_lxml2(security):
     fh = evtx.FileHeader(security, 0x0)
     for i, chunk in enumerate(fh.chunks()):
         for j, record in enumerate(chunk.records()):
-            xml = to_lxml(record)
-            assert xml is not None
+            assert record.lxml() is not None
