@@ -281,3 +281,31 @@ def test_render_record(system):
                                      </UserData>
                                      </Event>
                                      ''')
+
+
+def test_render_records(system):
+    '''
+    regression test demonstrating formatting records to xml.
+
+    Args:
+      system (bytes): the system.evtx test file contents. pytest fixture.
+    '''
+    fh = evtx.FileHeader(system, 0x0)
+    for chunk in fh.chunks():
+        for record in chunk.records():
+            xml = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>\n%s" % e_views.evtx_record_xml_view(record)
+            assert xml is not None
+
+
+def test_render_records2(security):
+    '''
+    regression test demonstrating formatting records to xml.
+
+    Args:
+      security (bytes): the security.evtx test file contents. pytest fixture.
+    '''
+    fh = evtx.FileHeader(security, 0x0)
+    for chunk in fh.chunks():
+        for record in chunk.records():
+            xml = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>\n%s" % e_views.evtx_record_xml_view(record)
+            assert xml is not None
