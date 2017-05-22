@@ -491,5 +491,5 @@ class Record(Block):
         Raises:
           ImportError: if lxml is not installed.
         '''
-        import lxml
+        import lxml.etree
         return lxml.etree.fromstring((e_views.XML_HEADER + self.xml()).encode('utf-8'))
