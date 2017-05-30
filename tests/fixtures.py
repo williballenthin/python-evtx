@@ -66,3 +66,17 @@ def security():
         with contextlib.closing(mmap.mmap(f.fileno(), 0,
                                           access=mmap.ACCESS_READ)) as buf:
             yield buf
+
+
+@pytest.fixture
+def data_path():
+    '''
+    fetch the file system path of the directory containing test files.
+
+    Returns:
+      str: the file system path of the test directory.
+    '''
+    cd = os.path.dirname(__file__)
+    datadir = os.path.join(cd, 'data')
+    return datadir
+
