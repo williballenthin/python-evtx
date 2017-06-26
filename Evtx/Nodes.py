@@ -1469,7 +1469,7 @@ class Hex32TypeNode(VariantTypeNode):
     def string(self):
         ret = "0x"
         b = self.hex()[::-1]
-        for i in range(len(b) - 1):
+        for i in range(len(b)):
             ret += '{:02x}'.format(six.indexbytes(b, i))
         return ret
 
@@ -1489,7 +1489,7 @@ class Hex64TypeNode(VariantTypeNode):
     def string(self):
         ret = "0x"
         b = self.hex()[::-1]
-        for i in range(len(b) - 1):
+        for i in range(len(b)):
             ret += '{:02x}'.format(six.indexbytes(b, i))
         return ret
 
