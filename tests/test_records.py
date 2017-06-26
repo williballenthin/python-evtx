@@ -208,7 +208,7 @@ def test_parse_record(system):
           ['UnsignedWordTypeNode', '105'],
           ['UnsignedWordTypeNode', '105'],
           ['NullTypeNode'],
-          ['Hex64TypeNode', '0x80000000000000'],
+          ['Hex64TypeNode', '0x8000000000000000'],
           ['FiletimeTypeNode', '2012-03-14 04:17:43.354563'],
           ['NullTypeNode'],
           ['UnsignedDwordTypeNode', '820'],
@@ -272,7 +272,7 @@ def test_render_record(system):
                                      <Level>4</Level>
                                      <Task>105</Task>
                                      <Opcode>0</Opcode>
-                                     <Keywords>0x80000000000000</Keywords>
+                                     <Keywords>0x8000000000000000</Keywords>
                                      <TimeCreated SystemTime="2012-03-14 04:17:43.354563"></TimeCreated>
                                      <EventRecordID>12049</EventRecordID>
                                      <Correlation ActivityID="" RelatedActivityID=""></Correlation>
