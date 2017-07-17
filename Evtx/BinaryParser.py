@@ -98,9 +98,9 @@ def dosdate(dosdate, dostime):
         minute  = (t & 0b0000011111100000) >> 5
         hour    = (t & 0b1111100000000000) >> 11
 
-        return datetime.datetime(year, month, day, hour, minute, sec)
+        return datetime(year, month, day, hour, minute, sec)
     except:
-        return datetime.datetime.min
+        return datetime.min
 
 
 def parse_filetime(qword):
@@ -529,13 +529,13 @@ class Block(object):
         """
         o = self._offset + offset
         try:
-            parts = struct.unpack_from("<WWWWWWWW", self._buf, o)
+            parts = struct.unpack_from("<HHHHHHHH", self._buf, o)
         except struct.error:
             raise OverrunBufferException(o, len(self._buf))
-        return datetime.datetime(parts[0], parts[1],
-                                 parts[3],  # skip part 2 (day of week)
-                                 parts[4], parts[5],
-                                 parts[6], parts[7])
+        return datetime(parts[0], parts[1],
+                        parts[3],  # skip part 2 (day of week)
+                        parts[4], parts[5],
+                        parts[6], parts[7])
 
     def unpack_guid(self, offset):
         """
