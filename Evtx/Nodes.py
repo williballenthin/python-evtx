@@ -19,6 +19,7 @@ from __future__ import absolute_import
 
 import re
 import base64
+import logging
 import itertools
 
 import six
@@ -27,6 +28,9 @@ import hexdump
 from .BinaryParser import Block
 from .BinaryParser import ParseException
 from .BinaryParser import memoize
+
+
+logger = logging.getLogger(__name__)
 
 
 class SYSTEM_TOKENS:
@@ -110,6 +114,7 @@ class BXmlNode(Block):
         super(BXmlNode, self).__init__(buf, offset)
         self._chunk = chunk
         self._parent = parent
+        logger.debug('%s node at offset %s' % (self.__class__.__name__, hex(offset)))
 
     def __repr__(self):
         return "BXmlNode(buf={!r}, offset={!r}, chunk={!r}, parent={!r})".format(
@@ -767,15 +772,25 @@ class TemplateInstanceNode(BXmlNode):
         super(TemplateInstanceNode, self).__init__(buf, offset, chunk, parent)
         self.declare_field("byte", "token", 0x0)
         self.declare_field("byte", "unknown0")
-        self.declare_field("dword", "template_id")
-        self.declare_field("dword", "template_offset")
 
-        self._data_length = 0
+        if self.unknown0() == 0x01:
+            self.declare_field("dword", "template_id")
+            self.declare_field("dword", "template_offset")
 
-        if self.is_resident_template():
-            new_template = self._chunk.add_template(self.template_offset(),
-                                                    parent=self)
-            self._data_length += new_template.length()
+            self._data_length = 0
+
+            if self.is_resident_template():
+                new_template = self._chunk.add_template(self.template_offset(),
+                                                        parent=self)
+                self._data_length += new_template.length()
+
+        elif self.unknown0() == 0x00:
+            self.declare_field("guid",  "guid")
+            #self.declare_field("dword", "next_offset")
+            self.declare_field("dword", "data_length")
+
+        else:
+            raise RuntimeError('dont know how to handle template instance node variant')
 
     def __repr__(self):
         return "TemplateInstanceNode(buf={!r}, offset={!r}, chunk={!r}, parent={!r})".format(
@@ -792,20 +807,48 @@ class TemplateInstanceNode(BXmlNode):
         return self.template_offset() > self.offset() - self._chunk._offset
 
     def tag_length(self):
-        return 10
+        if self.unknown0() == 0x01:
+            return 0x0A
+        elif self.unknown0() == 0x00:
+            return 0x16
+        else:
+            raise RuntimeError('unexpected template instance node variant')
 
     def length(self):
-        return self.tag_length() + self._data_length
+        if self.unknown0() == 0x01:
+            return self.tag_length() + self._data_length
+        elif self.unknown0() == 0x00:
+            # TODO: test
+            return self.tag_length() + self.data_length()
+        else:
+            raise RuntimeError('unexpected template instance node variant')
 
     def template(self):
-        return self._chunk.templates()[self.template_offset()]
+        if self.unknown0() == 0x01:
+            return self._chunk.templates()[self.template_offset()]
+        elif self.unknown0() == 0x00:
+            # TODO: test
+            return self
+        else:
+            raise RuntimeError('unexpected template instance node variant')
 
     def children(self):
-        return []
+        if self.unknown0() == 0x01:
+            return []
+        elif self.unknown0() == 0x00:
+            #BXmlNode.children(self)
+            return super(TemplateInstanceNode, self).children()
+        else:
+            raise RuntimeError('unexpected template instance node variant')
 
-    @memoize
+    #@memoize
     def find_end_of_stream(self):
-        return self.template().find_end_of_stream()
+        if self.unknown0() == 0x01:
+            return self.template().find_end_of_stream()
+        elif self.unknown0() == 0x00:
+            return super(TemplateInstanceNode, self).find_end_of_stream()
+        else:
+            raise RuntimeError('unexpected template instance node variant')
 
 
 class NormalSubstitutionNode(BXmlNode):
