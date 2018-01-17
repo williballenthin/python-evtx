@@ -20,10 +20,11 @@
 from __future__ import absolute_import
 
 import re
-import binascii
+import sys
 import mmap
-from functools import wraps
+import binascii
 import logging
+from functools import wraps
 
 import Evtx.Views as e_views
 from .Nodes import RootNode
@@ -218,16 +219,26 @@ class FileHeader(Block):
         ofs += (self.current_chunk_number() * 0x10000)
         return ChunkHeader(self._buf, ofs)
 
-    def chunks(self):
+    def chunks(self, include_inactive=False):
         """
         @return A generator that yields the chunks of the log file
           starting with the first chunk, which is always found directly
-          after the FileHeader, and continuing to the end of the file.
+          after the FileHeader.
+
+        If `include_inactive` is set to true, enumerate chunks beyond those
+        declared in the file header (and may therefore be corrupt).
         """
+        if include_inactive:
+            chunk_count = sys.maxint
+        else:
+            chunk_count = self.chunk_count()
+
+        i = 0
         ofs = self._offset + self.header_chunk_size()
-        while ofs + 0x10000 <= len(self._buf):
+        while ofs + 0x10000 <= len(self._buf) and i < chunk_count:
             yield ChunkHeader(self._buf, ofs)
             ofs += 0x10000
+            i += 1
 
     def get_record(self, record_num):
         """
