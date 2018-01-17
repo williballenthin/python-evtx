@@ -157,7 +157,10 @@ class FileHeader(Block):
         @return A boolean that indicates if the first eight bytes of
           the FileHeader match the expected magic value.
         """
-        return self.magic() == "ElfFile\x00"
+        try:
+            return self.magic() == "ElfFile\x00"
+        except UnicodeDecodeError:
+            return False
 
     def calculate_checksum(self):
         """
@@ -305,7 +308,10 @@ class ChunkHeader(Block):
         @return A boolean that indicates if the first eight bytes of
           the ChunkHeader match the expected magic value.
         """
-        return self.magic() == "ElfChnk\x00"
+        try:
+            return self.magic() == "ElfChnk\x00"
+        except UnicodeDecodeError:
+            return False
 
     def calculate_header_checksum(self):
         """
