@@ -80,7 +80,12 @@ def main():
                 note_string = ">"
 
             if not chunk.check_magic():
-                if chunk.magic() == "\x00\x00\x00\x00\x00\x00\x00\x00":
+                try:
+                    magic = chunk.magic()
+                except UnicodeDecodeError:
+                    magic = ""
+
+                if magic == "\x00\x00\x00\x00\x00\x00\x00\x00":
                     print("%s  %4d     [EMPTY]" % (note_string, i))
                 else:
                     print("%s  %4d   [INVALID]" % (note_string, i))
