@@ -72,7 +72,7 @@ def main():
         print("Information from chunks:")
         print("  Chunk file (first/last)     log (first/last)      Header Data")
         print("- ----- --------------------- --------------------- ------ ------")
-        for (i, chunk) in enumerate(fh.chunks(), 1):
+        for (i, chunk) in enumerate(fh.chunks(include_inactive=True), 1):
             note_string = " "
             if i == fh.current_chunk_number() + 1:
                 note_string = "*"
