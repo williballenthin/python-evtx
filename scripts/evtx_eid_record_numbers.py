@@ -20,7 +20,7 @@ def main():
     args = parser.parse_args()
 
     with evtx.Evtx(args.evtx) as log:
-        for record in log.records:
+        for record in log.records():
             try:
                 node = record.lxml()
             except lxml.etree.XMLSyntaxError:
