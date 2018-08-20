@@ -229,7 +229,7 @@ class FileHeader(Block):
         declared in the file header (and may therefore be corrupt).
         """
         if include_inactive:
-            chunk_count = sys.maxint
+            chunk_count = sys.maxsize
         else:
             chunk_count = self.chunk_count()
 
