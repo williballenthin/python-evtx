@@ -18,7 +18,11 @@ def main():
 
     with evtx.Evtx(args.evtx) as log:
         r = log.get_record(args.record)
-        print(e_views.evtx_template_readable_view(r.root()))
+        if r is None:
+            print("error: record not found")
+            return -1
+        else:
+            print(e_views.evtx_template_readable_view(r.root()))
 
 
 if __name__ == "__main__":
