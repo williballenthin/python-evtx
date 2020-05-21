@@ -26,6 +26,12 @@ setuptools.setup(
             'pytest',
             'hexdump',
             'pytest-cov',
+               
+            # pin deps for python 2, see #67
+            'more_itertools==5.0.0',
+            'zipp==1.0.0',
+            'configparser==4.0.2',
+            'pyparsing==2.4.7',
             ],
         scripts=['scripts/evtx_dump.py',
                  'scripts/evtx_dump_chunk_slack.py',
