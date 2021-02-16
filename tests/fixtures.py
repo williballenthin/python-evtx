@@ -36,7 +36,6 @@ def system():
             yield buf
 
 
-@pytest.fixture
 def security_path():
     '''
     fetch the file system path of the security.evtx test file.
