@@ -15,6 +15,7 @@ jobs:
       matrix:
         include:
           - python: 2.7
+          - python: 3.8
     steps:
     - name: Checkout python-evtx with submodules
       uses: actions/checkout@v2
