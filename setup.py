@@ -23,9 +23,9 @@ setuptools.setup(
         packages=setuptools.find_packages(),
         install_requires=[
             'six',
-            'pytest',
-            'hexdump',
-            'pytest-cov',
+            'pytest==4.6.11',
+            'hexdump==3.3',
+            'pytest-cov==2.11.1',
                
             # pin deps for python 2, see #67
             'more_itertools==5.0.0',
