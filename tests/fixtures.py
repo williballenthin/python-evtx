@@ -6,7 +6,6 @@ import contextlib
 import pytest
 
 
-@pytest.fixture
 def system_path():
     '''
     fetch the file system path of the system.evtx test file.
