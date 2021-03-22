@@ -23,9 +23,8 @@ setuptools.setup(
         packages=setuptools.find_packages(),
         install_requires=[
             'six',
-            'pytest==4.6.11',
             'hexdump==3.3',
-            'pytest-cov==2.11.1',
+
                
             # pin deps for python 2, see #67
             'more_itertools==5.0.0',
@@ -33,6 +32,13 @@ setuptools.setup(
             'configparser==4.0.2',
             'pyparsing==2.4.7',
             ],
+        extras_require={
+            # For running unit tests & coverage
+            "test": [
+                'pytest-cov==2.11.1',
+                'pytest==4.6.11',
+            ]
+        },
         scripts=['scripts/evtx_dump.py',
                  'scripts/evtx_dump_chunk_slack.py',
                  'scripts/evtx_eid_record_numbers.py',
