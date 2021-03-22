@@ -30,7 +30,7 @@ jobs:
     - name: Install lxml
       run: pip install lxml      
     - name: Install python-evtx
-      run: pip install -e .
+      run: pip install -e .[test]
     - name: Run tests
       run: pytest tests/
 
