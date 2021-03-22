@@ -24,7 +24,7 @@ setuptools.setup(
         install_requires=[
             'six',
             'hexdump==3.3',
-
+            'lxml==4.6.3',
                
             # pin deps for python 2, see #67
             'more_itertools==5.0.0',
