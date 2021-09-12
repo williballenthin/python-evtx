@@ -40,7 +40,10 @@ def main():
                 last_allocated_offset = chunk_start
                 for record in chunk.records():
                     last_allocated_offset = record.offset() + record.size()
-                sys.stdout.write(buf[last_allocated_offset:chunk_start + 0x10000])
+                try:
+                    sys.stdout.buffer.write(buf[last_allocated_offset:chunk_start + 0x10000])
+                except:
+                      sys.stdout.write(buf[last_allocated_offset:chunk_start + 0x10000])
 
 
 if __name__ == "__main__":
