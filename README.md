@@ -29,9 +29,9 @@ python-evtx operates on event log files from Windows operating systems newer tha
 
 Examples
 --------
-Provided with the parsing module `Evtx` are three scripts that mimic the tools distributed with Parse-Evtx.  `evtxinfo.py` prints metadata about the event log and verifies the checksums of each chunk.  `evtxtemplates.py` builds and prints the templates used throughout the event log.  Finally, `evtxdump.py` parses the event log and transforms the binary XML into a human readable ASCII XML format.
+Provided with the parsing module `Evtx` are three scripts that mimic the tools distributed with Parse-Evtx.  `evtx_info.py` prints metadata about the event log and verifies the checksums of each chunk.  `evtx_templates.py` builds and prints the templates used throughout the event log.  Finally, `evtx_dump.py` parses the event log and transforms the binary XML into a human readable ASCII XML format.
 
-Note the length of the `evtxdump.py` script: its only 20 lines.  Now, review the contents and notice the complete implementation of the logic:
+Note the length of the `evtx_dump.py` script: its only 20 lines.  Now, review the contents and notice the complete implementation of the logic:
 
     print(e_views.XML_HEADER)
     print('<Events>')
