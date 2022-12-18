@@ -1,10 +1,12 @@
-# Written by AJ Read with help from evtx_dump.py file. Adds functionality to dump EVTX to JSON.
+# Written by AJ Read with help from evtx_dump.py file
+# Adds functionality to evtx_dump so that the user can dump evtx data formatted in JSON to the command line or a file.
+# The JSON data uses only the "EventRecordID" from the "System" XML structure while using all the fields in the "EventData" xml structure.
 
 import Evtx.Evtx as evtx
 import Evtx.Views as e_views
-import os
-import xmltodict
-import json
+import os #added dependency
+import xmltodict #added dependency
+import json #added dependency 
 
 def main():
     import argparse
