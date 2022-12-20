@@ -2,7 +2,8 @@
 #   This file is part of python-evtx.
 #   Written by AJ Read with help from evtx_dump.py file written by Willi Ballenthin.
 #
-#   Purpose: User can dump evtx data into JSON format to either the command line or a JSON file in new line delimited format.
+#   Purpose: User can dump evtx data into JSON format to either the command line or a JSON file in new line delimited format/JSON array.
+#   Details: The JSON object is created with only the EventRecordID from the System section of the evtx XML and all of the information within the EventData section.
 
 import Evtx.Evtx as evtx
 import Evtx.Views as e_views
