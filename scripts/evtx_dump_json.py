@@ -55,9 +55,9 @@ def main():
                         else:
                             data_value=event_data_subvalue
 
-                    # Add information to the JSON object for this specific log
-                    json_subline.update({data_name:data_value})
-
+                            # Add information to the JSON object for this specific log
+                            json_subline.update({data_name: data_value})
+                            
             # Print the JSON object for the specific log if not requested to output to file
             if not args.output:
                 print(json_subline)
