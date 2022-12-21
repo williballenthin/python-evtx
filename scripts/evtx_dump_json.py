@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #   This file is part of python-evtx.
-#   Written by AJ Read with help from evtx_dump.py file written by Willi Ballenthin.
+#   Written by AJ Read (ajread4) with help/inspiration from the evtx_dump.py file written by Willi Ballenthin.
 #
 #   Purpose: User can dump evtx data into JSON format to either the command line or a JSON file in new line delimited format/JSON array.
 #   Details: The JSON object is created with only the EventRecordID from the System section of the evtx XML and all of the information within the EventData section.
@@ -57,7 +57,7 @@ def main():
 
                             # Add information to the JSON object for this specific log
                             json_subline.update({data_name: data_value})
-                            
+
             # Print the JSON object for the specific log if not requested to output to file
             if not args.output:
                 print(json_subline)

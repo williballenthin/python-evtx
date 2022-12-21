@@ -24,6 +24,7 @@ setuptools.setup(
         install_requires=[
             'six',
             'hexdump==3.3',
+            'xmltodict==0.13.0', #added deps for evtx_dump_json.py script
                
             # pin deps for python 2, see #67
             'more_itertools==5.0.0',
