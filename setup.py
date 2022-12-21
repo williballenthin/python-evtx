@@ -24,6 +24,7 @@ setuptools.setup(
         install_requires=[
             'six',
             'hexdump==3.3',
+            'xmltodict==0.13.0', #added deps for evtx_dump_json.py script
                
             # pin deps for python 2, see #67
             'more_itertools==5.0.0',
@@ -40,6 +41,7 @@ setuptools.setup(
             ]
         },
         scripts=['scripts/evtx_dump.py',
+                 'scripts/evtx_dump_json.py'
                  'scripts/evtx_dump_chunk_slack.py',
                  'scripts/evtx_eid_record_numbers.py',
                  'scripts/evtx_extract_record.py',
