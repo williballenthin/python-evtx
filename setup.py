@@ -41,7 +41,7 @@ setuptools.setup(
             ]
         },
         scripts=['scripts/evtx_dump.py',
-                 'scripts/evtx_dump_json.py'
+                 'scripts/evtx_dump_json.py',
                  'scripts/evtx_dump_chunk_slack.py',
                  'scripts/evtx_eid_record_numbers.py',
                  'scripts/evtx_extract_record.py',
