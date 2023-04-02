@@ -23,21 +23,20 @@ setuptools.setup(
         packages=setuptools.find_packages(),
         install_requires=[
             'six',
-            'hexdump==3.3',
-            'xmltodict==0.13.0', #added deps for evtx_dump_json.py script
+            'hexdump>=3.3',
+            'xmltodict>=0.12.0', #added deps for evtx_dump_json.py script
                
             # pin deps for python 2, see #67
-            'more_itertools==5.0.0',
-            'zipp==1.0.0',
-            'configparser==4.0.2',
-            'pyparsing==2.4.7',
+            'more_itertools>=5.0.0',
+            'zipp>=1.0.0',
+            'pyparsing>=2.4.7',
             ],
         extras_require={
             # For running unit tests & coverage
             "test": [
-                'pytest-cov==2.11.1',
-                'pytest==4.6.11',
-                'lxml==4.6.3',
+                'pytest-cov>=2.11.1',
+                'pytest>=4.6.11',
+                'lxml>=4.6.3',
             ]
         },
         scripts=['scripts/evtx_dump.py',
