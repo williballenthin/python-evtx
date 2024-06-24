@@ -20,8 +20,6 @@ from __future__ import absolute_import
 import re
 import xml.sax.saxutils
 
-import six
-
 import Evtx.Nodes as e_nodes
 
 
@@ -180,7 +178,7 @@ def render_root_node_with_subs(root_node, subs):
 def render_root_node(root_node):
     subs = []
     for sub in root_node.substitutions():
-        if isinstance(sub, six.string_types):
+        if isinstance(sub, str):
             raise RuntimeError('string sub?')
 
         if sub is None:

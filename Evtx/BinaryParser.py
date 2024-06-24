@@ -23,8 +23,6 @@ import struct
 from datetime import datetime
 from functools import partial
 
-import six
-
 
 class memoize(object):
     """cache the return value of a method
@@ -556,7 +554,7 @@ class Block(object):
             raise OverrunBufferException(o, len(self._buf))
 
         # Yeah, this is ugly
-        h = [six.indexbytes(_bin, i) for i in range(len(_bin))]
+        h = [_bin[i] for i in range(len(_bin))]
         return """{:02x}{:02x}{:02x}{:02x}-{:02x}{:02x}-{:02x}{:02x}-{:02x}{:02x}-{:02x}{:02x}{:02x}{:02x}{:02x}{:02x}""".format(
             h[3], h[2], h[1], h[0],
             h[5], h[4],

@@ -21,7 +21,6 @@ import re
 import base64
 import itertools
 
-import six
 import hexdump
 
 from .BinaryParser import Block
@@ -1470,7 +1469,7 @@ class Hex32TypeNode(VariantTypeNode):
         ret = "0x"
         b = self.hex()[::-1]
         for i in range(len(b)):
-            ret += '{:02x}'.format(six.indexbytes(b, i))
+            ret += '{:02x}'.format(b[i])
         return ret
 
 
@@ -1490,7 +1489,7 @@ class Hex64TypeNode(VariantTypeNode):
         ret = "0x"
         b = self.hex()[::-1]
         for i in range(len(b)):
-            ret += '{:02x}'.format(six.indexbytes(b, i))
+            ret += '{:02x}'.format(b[i])
         return ret
 
 
