@@ -24,18 +24,14 @@ import Evtx.Views as e_views
 def main():
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="Dump templates from a binary EVTX file.")
-    parser.add_argument("evtx", type=str,
-                        help="Path to the Windows EVTX event log file")
+    parser = argparse.ArgumentParser(description="Dump templates from a binary EVTX file.")
+    parser.add_argument("evtx", type=str, help="Path to the Windows EVTX event log file")
     args = parser.parse_args()
 
     with evtx.Evtx(args.evtx) as log:
         for i, chunk in enumerate(log.chunks()):
             for template in list(chunk.templates().values()):
-                print("Template {%s} at chunk %d, offset %s" %
-                      (template.guid(), i,
-                       hex(template.absolute_offset(0x0))))
+                print("Template {%s} at chunk %d, offset %s" % (template.guid(), i, hex(template.absolute_offset(0x0))))
                 print(e_views.evtx_template_readable_view(template))
 
 

@@ -1,18 +1,18 @@
 #!/usr/bin/env python
 
 from lxml import etree
-#import xml.etree.cElementTree as etree
 
 from Evtx.Evtx import Evtx
 from Evtx.Views import evtx_file_xml_view
+
+# import xml.etree.cElementTree as etree
 
 
 def to_lxml(record_xml):
     """
     @type record: Record
     """
-    return etree.fromstring("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>%s" %
-                         record_xml)
+    return etree.fromstring('<?xml version="1.0" encoding="utf-8" standalone="yes" ?>%s' % record_xml)
 
 
 def xml_records(filename):
@@ -44,12 +44,9 @@ def get_child(node, tag, ns="{http://schemas.microsoft.com/win/2004/08/events/ev
 def main():
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="Print only entries from an EVTX file with a given EID.")
-    parser.add_argument("evtx", type=str,
-                        help="Path to the Windows EVTX file")
-    parser.add_argument("eid", type=int,
-                        help="The EID of records to print")
+    parser = argparse.ArgumentParser(description="Print only entries from an EVTX file with a given EID.")
+    parser.add_argument("evtx", type=str, help="Path to the Windows EVTX file")
+    parser.add_argument("eid", type=int, help="The EID of records to print")
 
     args = parser.parse_args()
 

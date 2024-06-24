@@ -22,8 +22,7 @@ import xml.sax.saxutils
 
 import Evtx.Nodes as e_nodes
 
-
-XML_HEADER = "<?xml version=\"1.1\" encoding=\"utf-8\" standalone=\"yes\" ?>\n"
+XML_HEADER = '<?xml version="1.1" encoding="utf-8" standalone="yes" ?>\n'
 
 
 class UnexpectedElementException(Exception):
@@ -32,11 +31,11 @@ class UnexpectedElementException(Exception):
 
 
 # ref: https://www.w3.org/TR/xml11/#charsets
-RESTRICTED_CHARS = re.compile('[\x01-\x08\x0B\x0C\x0E-\x1F\x7F-\x84\x86-\x9F]')
+RESTRICTED_CHARS = re.compile("[\x01-\x08\x0B\x0C\x0E-\x1F\x7F-\x84\x86-\x9F]")
 
 
 def escape_attr(s):
-    '''
+    """
     escape the given string such that it can be placed in an XML attribute, like:
 
         <foo bar='$value'>
@@ -46,15 +45,15 @@ def escape_attr(s):
 
     Returns:
       str: the escaped string.
-    '''
+    """
     esc = xml.sax.saxutils.quoteattr(s)
-    esc = esc.encode('ascii', 'xmlcharrefreplace').decode('ascii')
-    esc = RESTRICTED_CHARS.sub('', esc)
+    esc = esc.encode("ascii", "xmlcharrefreplace").decode("ascii")
+    esc = RESTRICTED_CHARS.sub("", esc)
     return esc
 
 
 def escape_value(s):
-    '''
+    """
     escape the given string such that it can be placed in an XML value location, like:
 
         <foo>
@@ -66,20 +65,20 @@ def escape_value(s):
 
     Returns:
       str: the escaped string.
-    '''
+    """
     esc = xml.sax.saxutils.escape(s)
-    esc = esc.encode('ascii', 'xmlcharrefreplace').decode('ascii')
-    esc = RESTRICTED_CHARS.sub('', esc)
+    esc = esc.encode("ascii", "xmlcharrefreplace").decode("ascii")
+    esc = RESTRICTED_CHARS.sub("", esc)
     return esc
 
 
 # ref: https://www.w3.org/TR/xml/#NT-NameStartChar
 # but we are going to require a even stricter subset.
-NAME_PATTERN = re.compile('[a-zA-Z_][a-zA-Z_\-]*')
+NAME_PATTERN = re.compile("[a-zA-Z_][a-zA-Z_\-]*")
 
 
 def validate_name(s):
-    '''
+    """
     ensure the given name can be used as an XML entity name, such as tag or attribute name.
 
     Args:
@@ -87,9 +86,9 @@ def validate_name(s):
 
     Raises:
       RuntimeError: if the string is not suitable to be an XML name.
-    '''
+    """
     if not NAME_PATTERN.match(s):
-        raise RuntimeError('invalid xml name: %s' % (s))
+        raise RuntimeError("invalid xml name: %s" % (s))
     return s
 
 
@@ -104,6 +103,7 @@ def render_root_node_with_subs(root_node, subs):
     Returns:
       str: the rendered XML document.
     """
+
     def rec(node, acc):
         if isinstance(node, e_nodes.EndOfStreamNode):
             pass  # intended
@@ -114,11 +114,11 @@ def render_root_node_with_subs(root_node, subs):
                 if isinstance(child, e_nodes.AttributeNode):
                     acc.append(" ")
                     acc.append(validate_name(child.attribute_name().string()))
-                    acc.append("=\"")
+                    acc.append('="')
                     # TODO: should use xml.sax.saxutils.quoteattr here
                     # but to do so, we'd need to ensure we're not double-quoting this value.
                     rec(child.attribute_value(), acc)
-                    acc.append("\"")
+                    acc.append('"')
             acc.append(">")
             for child in node.children():
                 rec(child, acc)
@@ -179,10 +179,10 @@ def render_root_node(root_node):
     subs = []
     for sub in root_node.substitutions():
         if isinstance(sub, str):
-            raise RuntimeError('string sub?')
+            raise RuntimeError("string sub?")
 
         if sub is None:
-            raise RuntimeError('null sub?')
+            raise RuntimeError("null sub?")
 
         subs.append(sub)
 
@@ -190,7 +190,7 @@ def render_root_node(root_node):
 
 
 def evtx_record_xml_view(record, cache=None):
-    '''
+    """
     render the given record into an XML document.
 
     Args:
@@ -198,7 +198,7 @@ def evtx_record_xml_view(record, cache=None):
 
     Returns:
       str: the rendered XML document.
-    '''
+    """
     return render_root_node(record.root())
 
 
@@ -250,9 +250,9 @@ def evtx_template_readable_view(root_node, cache=None):
                 if isinstance(child, e_nodes.AttributeNode):
                     acc.append(" ")
                     acc.append(child.attribute_name().string())
-                    acc.append("=\"")
+                    acc.append('="')
                     rec(child.attribute_value(), acc)
-                    acc.append("\"")
+                    acc.append('"')
             acc.append(">")
             for child in node.children():
                 rec(child, acc)
@@ -282,11 +282,9 @@ def evtx_template_readable_view(root_node, cache=None):
         elif isinstance(node, e_nodes.TemplateInstanceNode):
             raise UnexpectedElementException("TemplateInstanceNode")
         elif isinstance(node, e_nodes.NormalSubstitutionNode):
-            acc.append("[Normal Substitution(index={}, type={})]".format(
-                node.index(), node.type()))
+            acc.append("[Normal Substitution(index={}, type={})]".format(node.index(), node.type()))
         elif isinstance(node, e_nodes.ConditionalSubstitutionNode):
-            acc.append("[Conditional Substitution(index={}, type={})]".format(
-                node.index(), node.type()))
+            acc.append("[Conditional Substitution(index={}, type={})]".format(node.index(), node.type()))
         elif isinstance(node, e_nodes.StreamStartNode):
             pass  # intended
 

@@ -15,25 +15,21 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-import mmap
 import sys
-import contextlib
-
+import mmap
 import argparse
+import contextlib
 
 from Evtx.Evtx import FileHeader
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Dump the slack space of an EVTX file.")
-    parser.add_argument("evtx", type=str,
-                        help="Path to the Windows EVTX event log file")
+    parser = argparse.ArgumentParser(description="Dump the slack space of an EVTX file.")
+    parser.add_argument("evtx", type=str, help="Path to the Windows EVTX event log file")
     args = parser.parse_args()
 
-    with open(args.evtx, 'r') as f:
-        with contextlib.closing(mmap.mmap(f.fileno(), 0,
-                                          access=mmap.ACCESS_READ)) as buf:
+    with open(args.evtx, "r") as f:
+        with contextlib.closing(mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)) as buf:
             fh = FileHeader(buf, 0x0)
             for chunk in fh.chunks():
                 chunk_start = chunk.offset()
@@ -41,9 +37,9 @@ def main():
                 for record in chunk.records():
                     last_allocated_offset = record.offset() + record.size()
                 try:
-                    sys.stdout.buffer.write(buf[last_allocated_offset:chunk_start + 0x10000])
+                    sys.stdout.buffer.write(buf[last_allocated_offset : chunk_start + 0x10000])
                 except:
-                      sys.stdout.write(buf[last_allocated_offset:chunk_start + 0x10000])
+                    sys.stdout.write(buf[last_allocated_offset : chunk_start + 0x10000])
 
 
 if __name__ == "__main__":

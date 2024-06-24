@@ -46,16 +46,17 @@ class EvtxFormatter(object):
         self._indent()
         yield self._l("magic: %s" % (fh.magic()))
         for num_field in [
-                "oldest_chunk",
-                "current_chunk_number",
-                "next_record_number",
-                "header_size",
-                "minor_version",
-                "major_version",
-                "header_chunk_size",
-                "chunk_count",
-                "flags",
-                "checksum"]:
+            "oldest_chunk",
+            "current_chunk_number",
+            "next_record_number",
+            "header_size",
+            "minor_version",
+            "major_version",
+            "header_chunk_size",
+            "chunk_count",
+            "flags",
+            "checksum",
+        ]:
             yield self._l("%s: %s" % (num_field, hex(getattr(fh, num_field)())))
 
         yield self._l("verify: %s" % (fh.verify()))
@@ -74,15 +75,16 @@ class EvtxFormatter(object):
         yield self._l("magic: %s" % (chunk.magic()))
 
         for num_field in [
-                "file_first_record_number",
-                "file_last_record_number",
-                "log_first_record_number",
-                "log_last_record_number",
-                "header_size",
-                "last_record_offset",
-                "next_record_offset",
-                "data_checksum",
-                "header_checksum"]:
+            "file_first_record_number",
+            "file_last_record_number",
+            "log_first_record_number",
+            "log_last_record_number",
+            "header_size",
+            "last_record_offset",
+            "next_record_offset",
+            "data_checksum",
+            "header_checksum",
+        ]:
             yield self._l("%s: %s" % (num_field, hex(getattr(chunk, num_field)())))
 
         yield self._l("verify: %s" % (chunk.verify()))
@@ -169,10 +171,8 @@ class EvtxFormatter(object):
 def main():
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="Dump the structure of an EVTX file.")
-    parser.add_argument("evtx", type=str,
-                        help="Path to the Windows EVTX event log file")
+    parser = argparse.ArgumentParser(description="Dump the structure of an EVTX file.")
+    parser.add_argument("evtx", type=str, help="Path to the Windows EVTX event log file")
     args = parser.parse_args()
 
     with evtx.Evtx(args.evtx) as log:

@@ -22,18 +22,16 @@ import Evtx.Evtx as evtx
 
 def main():
     import argparse
-    parser = argparse.ArgumentParser(
-        description="Dump information about an EVTX file.")
-    parser.add_argument("evtx", type=str,
-                        help="Path to the Windows EVTX event log file")
+
+    parser = argparse.ArgumentParser(description="Dump information about an EVTX file.")
+    parser.add_argument("evtx", type=str, help="Path to the Windows EVTX event log file")
     args = parser.parse_args()
 
     with evtx.Evtx(args.evtx) as log:
         fh = log.get_file_header()
 
         print("Information from file header:")
-        print(("Format version  : %d.%d" % (fh.major_version(),
-                                            fh.minor_version())))
+        print(("Format version  : %d.%d" % (fh.major_version(), fh.minor_version())))
         print(("Flags           : 0x%08x" % (fh.flags())))
         dirty_string = "clean"
         if fh.is_dirty():
@@ -43,8 +41,7 @@ def main():
         if fh.is_full():
             full_string = "yes"
         print(("Log is full     : %s" % (full_string)))
-        print(("Current chunk   : %d of %d" % (fh.current_chunk_number(),
-                                               fh.chunk_count())))
+        print(("Current chunk   : %d of %d" % (fh.current_chunk_number(), fh.chunk_count())))
         print(("Oldest chunk    : %d" % (fh.oldest_chunk() + 1)))
         print(("Next record#    : %d" % (fh.next_record_number())))
         checksum_string = "fail"
@@ -64,15 +61,14 @@ def main():
             next_record_num = last_chunk.log_last_record_number() + 1
 
             print("Suspected updated header values (header is dirty):")
-            print(("Current chunk   : %d of %d" % (chunk_count,
-                                                   chunk_count)))
+            print(("Current chunk   : %d of %d" % (chunk_count, chunk_count)))
             print(("Next record#    : %d" % (next_record_num)))
             print("")
 
         print("Information from chunks:")
         print("  Chunk file (first/last)     log (first/last)      Header Data")
         print("- ----- --------------------- --------------------- ------ ------")
-        for (i, chunk) in enumerate(fh.chunks(include_inactive=True), 1):
+        for i, chunk in enumerate(fh.chunks(include_inactive=True), 1):
             note_string = " "
             if i == fh.current_chunk_number() + 1:
                 note_string = "*"
@@ -99,15 +95,19 @@ def main():
             if chunk.calculate_data_checksum() == chunk.data_checksum():
                 data_checksum_string = "pass"
 
-            print("%s  %4d   %8d  %8d    %8d  %8d   %s   %s" %
-                  (note_string,
-                   i,
-                   chunk.file_first_record_number(),
-                   chunk.file_last_record_number(),
-                   chunk.log_first_record_number(),
-                   chunk.log_last_record_number(),
-                   header_checksum_string,
-                   data_checksum_string))
+            print(
+                "%s  %4d   %8d  %8d    %8d  %8d   %s   %s"
+                % (
+                    note_string,
+                    i,
+                    chunk.file_first_record_number(),
+                    chunk.file_last_record_number(),
+                    chunk.log_first_record_number(),
+                    chunk.log_last_record_number(),
+                    header_checksum_string,
+                    data_checksum_string,
+                )
+            )
 
 
 if __name__ == "__main__":

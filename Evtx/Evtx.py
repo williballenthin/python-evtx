@@ -22,24 +22,21 @@ from __future__ import absolute_import
 import re
 import sys
 import mmap
-import binascii
 import logging
+import binascii
 from functools import wraps
 
 import Evtx.Views as e_views
-from .Nodes import RootNode
-from .Nodes import TemplateNode
-from .Nodes import NameStringNode
-from .BinaryParser import Block
-from .BinaryParser import ParseException
+
+from .Nodes import RootNode, TemplateNode, NameStringNode
+from .BinaryParser import Block, ParseException
 
 logger = logging.getLogger(__name__)
 
 
 class InvalidRecordException(ParseException):
     def __init__(self):
-        super(InvalidRecordException, self).__init__(
-            "Invalid record structure")
+        super(InvalidRecordException, self).__init__("Invalid record structure")
 
 
 class Evtx(object):
@@ -51,6 +48,7 @@ class Evtx(object):
     Note, this class will mmap the target file, so ensure
       your platform supports this operation.
     """
+
     def __init__(self, filename):
         """
         @type filename:  str
@@ -80,13 +78,14 @@ class Evtx(object):
           that the `with` statement is used, or `__enter__()`
           and `__exit__()` are called explicitly.
         """
+
         @wraps(func)
         def wrapped(self, *args, **kwargs):
             if self._buf is None:
-                raise TypeError("An Evtx object must be used with"
-                                " a context (see the `with` statement).")
+                raise TypeError("An Evtx object must be used with" " a context (see the `with` statement).")
             else:
                 return func(self, *args, **kwargs)
+
         return wrapped
 
     @ensure_contexted
@@ -135,17 +134,17 @@ class FileHeader(Block):
         logger.debug("FILE HEADER at {}.".format(hex(offset)))
         super(FileHeader, self).__init__(buf, offset)
         self.declare_field("string", "magic", 0x0, length=8)
-        self.declare_field("qword",  "oldest_chunk")
-        self.declare_field("qword",  "current_chunk_number")
-        self.declare_field("qword",  "next_record_number")
-        self.declare_field("dword",  "header_size")
-        self.declare_field("word",   "minor_version")
-        self.declare_field("word",   "major_version")
-        self.declare_field("word",   "header_chunk_size")
-        self.declare_field("word",   "chunk_count")
-        self.declare_field("binary", "unused1", length=0x4c)
-        self.declare_field("dword",  "flags")
-        self.declare_field("dword",  "checksum")
+        self.declare_field("qword", "oldest_chunk")
+        self.declare_field("qword", "current_chunk_number")
+        self.declare_field("qword", "next_record_number")
+        self.declare_field("dword", "header_size")
+        self.declare_field("word", "minor_version")
+        self.declare_field("word", "major_version")
+        self.declare_field("word", "header_chunk_size")
+        self.declare_field("word", "chunk_count")
+        self.declare_field("binary", "unused1", length=0x4C)
+        self.declare_field("dword", "flags")
+        self.declare_field("dword", "checksum")
 
     def __repr__(self):
         return "FileHeader(buf={!r}, offset={!r})".format(self._buf, self._offset)
@@ -177,11 +176,13 @@ class FileHeader(Block):
           successfully passes a set of heuristic checks that
           all EVTX FileHeaders should pass.
         """
-        return self.check_magic() and \
-            self.major_version() == 0x3 and \
-            self.minor_version() == 0x1 and \
-            self.header_chunk_size() == 0x1000 and \
-            self.checksum() == self.calculate_checksum()
+        return (
+            self.check_magic()
+            and self.major_version() == 0x3
+            and self.minor_version() == 0x1
+            and self.header_chunk_size() == 0x1000
+            and self.checksum() == self.calculate_checksum()
+        )
 
     def is_dirty(self):
         """
@@ -216,7 +217,7 @@ class FileHeader(Block):
           indicated by the FileHeader.
         """
         ofs = self._offset + self.header_chunk_size()
-        ofs += (self.current_chunk_number() * 0x10000)
+        ofs += self.current_chunk_number() * 0x10000
         return ChunkHeader(self._buf, ofs)
 
     def chunks(self, include_inactive=False):
@@ -274,8 +275,9 @@ class Template(object):
         if self._xml is not None:
             return
         matcher = "\[(?:Normal|Conditional) Substitution\(index=(\d+), type=\d+\)\]"
-        self._xml = re.sub(matcher, "{\\1:}",
-                           self._template_node.template_format().replace("{", "{{").replace("}", "}}"))
+        self._xml = re.sub(
+            matcher, "{\\1:}", self._template_node.template_format().replace("{", "{{").replace("}", "}}")
+        )
 
     def make_substitutions(self, substitutions):
         """
@@ -297,16 +299,16 @@ class ChunkHeader(Block):
         self._templates = None
 
         self.declare_field("string", "magic", 0x0, length=8)
-        self.declare_field("qword",  "file_first_record_number")
-        self.declare_field("qword",  "file_last_record_number")
-        self.declare_field("qword",  "log_first_record_number")
-        self.declare_field("qword",  "log_last_record_number")
-        self.declare_field("dword",  "header_size")
-        self.declare_field("dword",  "last_record_offset")
-        self.declare_field("dword",  "next_record_offset")
-        self.declare_field("dword",  "data_checksum")
+        self.declare_field("qword", "file_first_record_number")
+        self.declare_field("qword", "file_last_record_number")
+        self.declare_field("qword", "log_first_record_number")
+        self.declare_field("qword", "log_last_record_number")
+        self.declare_field("dword", "header_size")
+        self.declare_field("dword", "last_record_offset")
+        self.declare_field("dword", "next_record_offset")
+        self.declare_field("dword", "data_checksum")
         self.declare_field("binary", "unused", length=0x44)
-        self.declare_field("dword",  "header_checksum")
+        self.declare_field("dword", "header_checksum")
 
     def __repr__(self):
         return "ChunkHeader(buf={!r}, offset={!r})".format(self._buf, self._offset)
@@ -347,9 +349,11 @@ class ChunkHeader(Block):
           successfully passes a set of heuristic checks that
           all EVTX ChunkHeaders should pass.
         """
-        return self.check_magic() and \
-            self.calculate_header_checksum() == self.header_checksum() and \
-            self.calculate_data_checksum() == self.data_checksum()
+        return (
+            self.check_magic()
+            and self.calculate_header_checksum() == self.header_checksum()
+            and self.calculate_data_checksum() == self.data_checksum()
+        )
 
     def _load_strings(self):
         if self._strings is None:
@@ -378,8 +382,7 @@ class ChunkHeader(Block):
         """
         if self._strings is None:
             self._load_strings()
-        string_node = NameStringNode(self._buf, self._offset + offset,
-                                     self, parent or self)
+        string_node = NameStringNode(self._buf, self._offset + offset, self, parent or self)
         self._strings[offset] = string_node
         return string_node
 
@@ -396,7 +399,7 @@ class ChunkHeader(Block):
                 # this is a direct port from A.S.'s code
                 token = self.unpack_byte(ofs - 10)
                 pointer = self.unpack_dword(ofs - 4)
-                if token != 0x0c or pointer != ofs:
+                if token != 0x0C or pointer != ofs:
                     logger.warning("Unexpected token encountered")
                     ofs = 0
                     continue
@@ -414,8 +417,7 @@ class ChunkHeader(Block):
         if self._templates is None:
             self._load_templates()
 
-        node = TemplateNode(self._buf, self._offset + offset,
-                            self, parent or self)
+        node = TemplateNode(self._buf, self._offset + offset, self, parent or self)
         self._templates[offset] = node
         return node
 
@@ -439,9 +441,7 @@ class ChunkHeader(Block):
         while record._offset < self._offset + self.next_record_offset() and record.length() > 0:
             yield record
             try:
-                record = Record(self._buf,
-                                record._offset + record.length(),
-                                self)
+                record = Record(self._buf, record._offset + record.length(), self)
             except InvalidRecordException:
                 return
 
@@ -485,20 +485,20 @@ class Record(Block):
         @return A string that is a copy of the buffer that makes
           up this record.
         """
-        return self._buf[self.offset():self.offset() + self.size()]
+        return self._buf[self.offset() : self.offset() + self.size()]
 
     def xml(self):
-        '''
+        """
         render the record into XML.
         does not include the xml declaration header.
 
         Returns:
           str: the rendered xml document.
-        '''
+        """
         return e_views.evtx_record_xml_view(self)
 
     def lxml(self):
-        '''
+        """
         render the record into a lxml document.
         this is useful for querying data from the record using xpath, etc.
 
@@ -509,6 +509,7 @@ class Record(Block):
 
         Raises:
           ImportError: if lxml is not installed.
-        '''
+        """
         import lxml.etree
-        return lxml.etree.fromstring((e_views.XML_HEADER + self.xml()).encode('utf-8'))
+
+        return lxml.etree.fromstring((e_views.XML_HEADER + self.xml()).encode("utf-8"))

@@ -2,10 +2,7 @@
 import hexdump
 
 import Evtx.Evtx as evtx
-from Evtx.Nodes import RootNode
-from Evtx.Nodes import BXmlTypeNode
-from Evtx.Nodes import TemplateInstanceNode
-from Evtx.Nodes import VariantTypeNode
+from Evtx.Nodes import RootNode, BXmlTypeNode, VariantTypeNode, TemplateInstanceNode
 
 
 def describe_root(record, root, indent=0, suppress_values=False):
@@ -14,6 +11,7 @@ def describe_root(record, root, indent=0, suppress_values=False):
       record (Evtx.Record):
       indent (int):
     """
+
     def format_node(n, extra=None, indent=0):
         """
         Depends on closure over `record` and `suppress_values`.
@@ -26,7 +24,7 @@ def describe_root(record, root, indent=0, suppress_values=False):
           str:
         """
         ret = ""
-        indent_s = '  ' * indent
+        indent_s = "  " * indent
         name = n.__class__.__name__
         offset = n.offset() - record.offset()
         if extra is not None:
@@ -67,7 +65,7 @@ def describe_root(record, root, indent=0, suppress_values=False):
 
         if isinstance(node, RootNode):
             ofs = node.tag_and_children_length()
-            indent_s = '  ' * (indent + 1)
+            indent_s = "  " * (indent + 1)
             offset = node.offset() - record.offset() + ofs
             ret += "%sSubstitutions(offset=%s)\n" % (indent_s, hex(offset))
             for sub in node.substitutions():
@@ -83,14 +81,10 @@ def describe_root(record, root, indent=0, suppress_values=False):
 def main():
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="Pretty print the binary structure of an EVTX record.")
-    parser.add_argument("evtx", type=str,
-                        help="Path to the Windows EVTX file")
-    parser.add_argument("record", type=int,
-                        help="Record number")
-    parser.add_argument("--suppress_values", action="store_true",
-                        help="Do not print the values of substitutions.")
+    parser = argparse.ArgumentParser(description="Pretty print the binary structure of an EVTX record.")
+    parser.add_argument("evtx", type=str, help="Path to the Windows EVTX file")
+    parser.add_argument("record", type=int, help="Record number")
+    parser.add_argument("--suppress_values", action="store_true", help="Do not print the values of substitutions.")
     args = parser.parse_args()
 
     with evtx.Evtx(args.evtx) as log:

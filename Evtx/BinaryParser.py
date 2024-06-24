@@ -43,6 +43,7 @@ class memoize(object):
     Obj.add_to(1) # not enough arguments
     Obj.add_to(1, 2) # returns 3, result is not cached
     """
+
     def __init__(self, func):
         self.func = func
 
@@ -82,19 +83,19 @@ def dosdate(dosdate, dostime):
     returns: datetime.datetime or datetime.datetime.min on error
     """
     try:
-        t  = ord(dosdate[1]) << 8
+        t = ord(dosdate[1]) << 8
         t |= ord(dosdate[0])
-        day   = t & 0b0000000000011111
+        day = t & 0b0000000000011111
         month = (t & 0b0000000111100000) >> 5
-        year  = (t & 0b1111111000000000) >> 9
+        year = (t & 0b1111111000000000) >> 9
         year += 1980
 
-        t  = ord(dostime[1]) << 8
+        t = ord(dostime[1]) << 8
         t |= ord(dostime[0])
-        sec     = t & 0b0000000000011111
-        sec    *= 2
-        minute  = (t & 0b0000011111100000) >> 5
-        hour    = (t & 0b1111100000000000) >> 11
+        sec = t & 0b0000000000011111
+        sec *= 2
+        minute = (t & 0b0000011111100000) >> 5
+        hour = (t & 0b1111100000000000) >> 11
 
         return datetime.datetime(year, month, day, hour, minute, sec)
     except:
@@ -105,7 +106,7 @@ def parse_filetime(qword):
     # see http://integriography.wordpress.com/2010/01/16/using-phython-to-parse-and-present-windows-64-bit-timestamps/
     if qword == 0:
         return datetime.datetime.min
-    
+
     try:
         return datetime.datetime.fromtimestamp(float(qword) * 1e-7 - 11644473600, datetime.UTC)
     except (ValueError, OSError):
@@ -116,6 +117,7 @@ class BinaryParserException(Exception):
     """
     Base Exception class for binary parsing.
     """
+
     def __init__(self, value):
         """
         Constructor.
@@ -137,6 +139,7 @@ class ParseException(BinaryParserException):
     An exception to be thrown during binary parsing, such as
     when an invalid header is encountered.
     """
+
     def __init__(self, value):
         """
         Constructor.
@@ -169,6 +172,7 @@ class Block(object):
     Base class for structure blocks in binary parsing.
     A block is associated with a offset into a byte-string.
     """
+
     def __init__(self, buf, offset):
         """
         Constructor.
@@ -201,15 +205,18 @@ class Block(object):
             offset = self._implicit_offset
 
         if length is None:
+
             def no_length_handler():
                 f = getattr(self, "unpack_" + type)
                 return f(offset)
+
             setattr(self, name, no_length_handler)
         else:
 
             def explicit_length_handler():
                 f = getattr(self, "unpack_" + type)
                 return f(offset, length)
+
             setattr(self, name, explicit_length_handler)
 
         setattr(self, "_off_" + name, offset)
@@ -252,11 +259,9 @@ class Block(object):
         elif type == "wstring" and length is not None:
             self._implicit_offset = offset + (2 * length)
         elif "string" in type and length is None:
-            raise ParseException("Implicit offset not supported "
-                                 "for dynamic length strings")
+            raise ParseException("Implicit offset not supported " "for dynamic length strings")
         else:
-            raise ParseException("Implicit offset not supported "
-                                 "for type: {}".format(type))
+            raise ParseException("Implicit offset not supported " "for type: {}".format(type))
 
     def current_field_offset(self):
         return self._implicit_offset
@@ -473,7 +478,7 @@ class Block(object):
         Throws:
         - `OverrunBufferException`
         """
-        return self.unpack_binary(offset, length).decode('ascii')
+        return self.unpack_binary(offset, length).decode("ascii")
 
     def unpack_wstring(self, offset, length):
         """
@@ -490,7 +495,7 @@ class Block(object):
         try:
             return bytes(self._buf[start:end]).decode("utf16")
         except AttributeError:  # already a 'str' ?
-            return bytes(self._buf[start:end]).decode('utf16')
+            return bytes(self._buf[start:end]).decode("utf16")
 
     def unpack_dosdate(self, offset):
         """
@@ -503,7 +508,7 @@ class Block(object):
         """
         try:
             o = self._offset + offset
-            return dosdate(self._buf[o:o + 2], self._buf[o + 2:o + 4])
+            return dosdate(self._buf[o : o + 2], self._buf[o + 2 : o + 4])
         except struct.error:
             raise OverrunBufferException(o, len(self._buf))
 
@@ -533,10 +538,9 @@ class Block(object):
             parts = struct.unpack_from("<HHHHHHHH", self._buf, o)
         except struct.error:
             raise OverrunBufferException(o, len(self._buf))
-        return datetime.datetime(parts[0], parts[1],
-                                parts[3],  # skip part 2 (day of week)
-                                parts[4], parts[5],
-                                parts[6], parts[7])
+        return datetime.datetime(
+            parts[0], parts[1], parts[3], parts[4], parts[5], parts[6], parts[7]  # skip part 2 (day of week)
+        )
 
     def unpack_guid(self, offset):
         """
@@ -549,18 +553,15 @@ class Block(object):
         o = self._offset + offset
 
         try:
-            _bin = bytes(self._buf[o:o + 16])
+            _bin = bytes(self._buf[o : o + 16])
         except IndexError:
             raise OverrunBufferException(o, len(self._buf))
 
         # Yeah, this is ugly
         h = [_bin[i] for i in range(len(_bin))]
         return """{:02x}{:02x}{:02x}{:02x}-{:02x}{:02x}-{:02x}{:02x}-{:02x}{:02x}-{:02x}{:02x}{:02x}{:02x}{:02x}{:02x}""".format(
-            h[3], h[2], h[1], h[0],
-            h[5], h[4],
-            h[7], h[6],
-            h[8], h[9],
-            h[10], h[11], h[12], h[13], h[14], h[15])
+            h[3], h[2], h[1], h[0], h[5], h[4], h[7], h[6], h[8], h[9], h[10], h[11], h[12], h[13], h[14], h[15]
+        )
 
     def absolute_offset(self, offset):
         """

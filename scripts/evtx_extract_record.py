@@ -23,12 +23,9 @@ import Evtx.Evtx as evtx
 def main():
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="Write the raw data for a EVTX record to STDOUT")
-    parser.add_argument("evtx", type=str,
-                        help="Path to the Windows EVTX file")
-    parser.add_argument("record", type=int,
-                        help="The record number of the record to extract")
+    parser = argparse.ArgumentParser(description="Write the raw data for a EVTX record to STDOUT")
+    parser.add_argument("evtx", type=str, help="Path to the Windows EVTX file")
+    parser.add_argument("record", type=int, help="The record number of the record to extract")
     args = parser.parse_args()
 
     with evtx.Evtx(args.evtx) as log:

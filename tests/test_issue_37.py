@@ -1,18 +1,18 @@
 import os
+
 import pytest
+from fixtures import *
 
 import Evtx.Evtx as evtx
 
-from fixtures import *
-
 
 def test_corrupt_ascii_example(data_path):
-    '''
+    """
     regression test demonstrating issue 37.
 
     Args:
       data_path (str): the file system path of the test directory.
-    '''
+    """
     # record number two contains a QNAME xml element
     # with an ASCII text value that is invalid ASCII:
     #
@@ -23,23 +23,23 @@ def test_corrupt_ascii_example(data_path):
     #                  ^^ ^^ ^^
     #
     with pytest.raises(UnicodeDecodeError):
-        with evtx.Evtx(os.path.join(data_path, 'dns_log_malformed.evtx')) as log:
+        with evtx.Evtx(os.path.join(data_path, "dns_log_malformed.evtx")) as log:
             for chunk in log.chunks():
                 for record in chunk.records():
                     assert record.xml() is not None
 
 
 def test_continue_parsing_after_corrupt_ascii(data_path):
-    '''
+    """
     regression test demonstrating issue 37.
 
     Args:
       data_path (str): the file system path of the test directory.
-    '''
+    """
     attempted = 0
     completed = 0
     failed = 0
-    with evtx.Evtx(os.path.join(data_path, 'dns_log_malformed.evtx')) as log:
+    with evtx.Evtx(os.path.join(data_path, "dns_log_malformed.evtx")) as log:
         for chunk in log.chunks():
             for record in chunk.records():
                 try:

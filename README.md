@@ -50,6 +50,16 @@ Updates to python-evtx are pushed to PyPi, so you can install the module using e
 
 The source code for python-evtx is hosted at Github, and you may download, fork, and review it from this repository (http://www.github.com/williballenthin/python-evtx).  Please report issues or feature requests through Github's bug tracker associated with the project.
 
+Development
+-----------
+For formatting, use isort:
+    
+    isort --length-sort --profile black --line-length=120 Evtx/ scripts/ tests/
+
+and black:
+
+    black --line-length=120 Evtx/ scripts/ tests/
+
 License
 -------
 python-evtx is licensed under the Apache License, Version 2.0.  This means it is freely available for use and modification in a personal and professional capacity.  
