@@ -14,8 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - python: 2.7
           - python: 3.8
+          - python: 3.11
     steps:
     - name: Checkout python-evtx with submodules
       uses: actions/checkout@v2
@@ -25,10 +25,6 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python }}
-    - name: Install lxml deps
-      run: sudo apt-get install -y libxml2-dev libxslt1-dev python-dev zlib1g-dev
-    - name: Install lxml
-      run: pip install lxml      
     - name: Install python-evtx
       run: pip install -e .[test]
     - name: Run tests
