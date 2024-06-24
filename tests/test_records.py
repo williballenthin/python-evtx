@@ -209,7 +209,7 @@ def test_parse_record(system):
           ['UnsignedWordTypeNode', '105'],
           ['NullTypeNode'],
           ['Hex64TypeNode', '0x8000000000000000'],
-          ['FiletimeTypeNode', '2012-03-14 04:17:43.354563'],
+          ['FiletimeTypeNode', '2012-03-14 04:17:43.354563+00:00'],
           ['NullTypeNode'],
           ['UnsignedDwordTypeNode', '820'],
           ['UnsignedDwordTypeNode', '2868'],
@@ -248,7 +248,7 @@ def test_parse_record(system):
                     ['EndOfStreamNode']]]]],
               ['Substitutions', None, [
                 ['WstringTypeNode', 'System'],
-                ['WstringTypeNode', 'C:\Windows\System32\Winevt\Logs\Archive-System-2012-03-14-04-17-39-932.evtx']]]]]]]]]]]
+                ['WstringTypeNode', r'C:\Windows\System32\Winevt\Logs\Archive-System-2012-03-14-04-17-39-932.evtx']]]]]]]]]]]
 
     assert extract_structure(record.root()) == expected
 
@@ -273,7 +273,7 @@ def test_render_record(system):
                                      <Task>105</Task>
                                      <Opcode>0</Opcode>
                                      <Keywords>0x8000000000000000</Keywords>
-                                     <TimeCreated SystemTime="2012-03-14 04:17:43.354563"></TimeCreated>
+                                     <TimeCreated SystemTime="2012-03-14 04:17:43.354563+00:00"></TimeCreated>
                                      <EventRecordID>12049</EventRecordID>
                                      <Correlation ActivityID="" RelatedActivityID=""></Correlation>
                                      <Execution ProcessID="820" ThreadID="2868"></Execution>

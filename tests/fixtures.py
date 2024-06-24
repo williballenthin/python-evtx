@@ -19,7 +19,7 @@ def system_path():
     return systempath
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def system():
     '''
     yields the contents of the system.evtx test file.
@@ -49,7 +49,7 @@ def security_path():
     return secpath
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def security():
     '''
     yields the contents of the security.evtx test file.

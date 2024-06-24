@@ -44,5 +44,5 @@ def test_systemtime(data_path):
                 continue
 
             time_created = get_children(record.lxml(), ['System', 'TimeCreated'])
-            assert time_created.get('SystemTime') == '2017-04-21 07:41:17.003393'
+            assert time_created.get('SystemTime') == '2017-04-21 07:41:17.003393+00:00'
 
