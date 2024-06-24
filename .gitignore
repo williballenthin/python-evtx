@@ -38,3 +38,6 @@ nosetests.xml
 need-to-fix/*
 testing-evtxs/*
 
+.direnv/
+.env/
+.envrc
