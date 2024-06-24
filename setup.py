@@ -24,16 +24,12 @@ setuptools.setup(
         python_requires='>=3.8',
         install_requires=[
             'hexdump>=3.3',
-               
-            'more_itertools>=5.0.0',
-            'zipp>=1.0.0',
-            'pyparsing>=2.4.7',
             ],
         extras_require={
             "test": [
-                'pytest-cov>=2.11.1',
-                'pytest>=4.6.11',
-                'lxml>=4.6.3',
+                'pytest-cov==5.0.0',
+                'pytest==8.2.2',
+                'lxml==5.2.2',
             ]
         },
         scripts=['scripts/evtx_dump.py',

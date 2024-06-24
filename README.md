@@ -18,7 +18,7 @@ Joachim Metz also released a cross-platform, LGPL licensed C++ based parser in 2
 
 Dependencies
 ------------
-python-evtx works on both the 2.7 and 3.x versions of the Python programming language. As it is purely Python, the module works equally well across platforms.  The code does not depend on any modules that require separate compilation; however, if you have lxml installed, its even nicer.
+python-evtx is a pure Python 3 module, so it works equally well across platforms like Windows, macOS, and Linux. 
 
 python-evtx operates on event log files from Windows operating systems newer than Windows Vista.  These files typically have the file extension .evtx.  Version 5.09 of the `file` utility identifies such a file as "MS Vista Windows Event Log".  To manual confirm the file type, look for the ASCII string "ElfFile" in the first seven bytes:
 
@@ -44,7 +44,7 @@ Working with python-evtx is really easy!
 
 Installation
 ------------
-Updates to python-evtx are pushed to PyPi, so you can install the module using either `easy_install` or `pip`.  For example, you can use `pip` like so:
+Updates to python-evtx are pushed to PyPi, so you can install the module using `pip`.  For example:
 
     pip install python-evtx
 
