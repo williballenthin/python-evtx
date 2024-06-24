@@ -1,5 +1,3 @@
-from fixtures import *
-
 import Evtx.Evtx as evtx
 
 EMPTY_MAGIC = "\x00" * 0x8

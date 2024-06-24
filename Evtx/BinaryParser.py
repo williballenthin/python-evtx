@@ -98,7 +98,7 @@ def dosdate(dosdate, dostime):
         hour = (t & 0b1111100000000000) >> 11
 
         return datetime.datetime(year, month, day, hour, minute, sec)
-    except:
+    except ValueError:
         return datetime.datetime.min
 
 

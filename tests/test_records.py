@@ -1,16 +1,14 @@
 import textwrap
+import importlib.util
 
 import pytest
-from fixtures import *
 
 import Evtx.Evtx as evtx
 import Evtx.Nodes as e_nodes
 
-try:
-    import lxml
-
+if importlib.util.find_spec("lxml"):
     no_lxml = False
-except:
+else:
     no_lxml = True
 
 

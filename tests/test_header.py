@@ -1,5 +1,3 @@
-from fixtures import *
-
 import Evtx.Evtx as evtx
 
 

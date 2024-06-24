@@ -13,7 +13,6 @@ import json
 import xmltodict
 
 import Evtx.Evtx as evtx
-import Evtx.Views as e_views
 
 
 def main():

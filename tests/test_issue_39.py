@@ -1,8 +1,5 @@
 import os
 
-import pytest
-from fixtures import *
-
 import Evtx.Evtx as evtx
 
 
