@@ -108,7 +108,7 @@ def parse_filetime(qword):
         return datetime.datetime.min
 
     try:
-        return datetime.datetime.fromtimestamp(float(qword) * 1e-7 - 11644473600, datetime.UTC)
+        return datetime.datetime.fromtimestamp(float(qword) * 1e-7 - 11644473600, datetime.timezone.utc)
     except (ValueError, OSError):
         return datetime.datetime.min
 
