@@ -74,7 +74,7 @@ def escape_value(s):
 
 # ref: https://www.w3.org/TR/xml/#NT-NameStartChar
 # but we are going to require a even stricter subset.
-NAME_PATTERN = re.compile("[a-zA-Z_][a-zA-Z_\-]*")
+NAME_PATTERN = re.compile(r"[a-zA-Z_][a-zA-Z_\-]*")
 
 
 def validate_name(s):

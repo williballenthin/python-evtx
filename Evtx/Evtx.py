@@ -274,7 +274,7 @@ class Template(object):
         """
         if self._xml is not None:
             return
-        matcher = "\[(?:Normal|Conditional) Substitution\(index=(\d+), type=\d+\)\]"
+        matcher = r"\[(?:Normal|Conditional) Substitution\(index=(\d+), type=\d+\)\]"
         self._xml = re.sub(
             matcher, "{\\1:}", self._template_node.template_format().replace("{", "{{").replace("}", "}}")
         )
