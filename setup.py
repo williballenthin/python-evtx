@@ -30,6 +30,9 @@ setuptools.setup(
                 'pytest-cov==5.0.0',
                 'pytest==8.2.2',
                 'lxml==5.2.2',
+                'black==24.4.2',
+                'isort==5.13.2',
+                'ruff==0.4.10',
             ]
         },
         scripts=['scripts/evtx_dump.py',

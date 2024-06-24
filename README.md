@@ -60,6 +60,10 @@ and black:
 
     black --line-length=120 Evtx/ scripts/ tests/
 
+For linting, use ruff:
+
+    ruff check Evtx/ scripts/ tests/
+
 License
 -------
 python-evtx is licensed under the Apache License, Version 2.0.  This means it is freely available for use and modification in a personal and professional capacity.  
