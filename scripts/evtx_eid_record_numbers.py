@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import lxml.etree
-from filter_records import get_child
+from evtx_filter_records import get_child
 
 import Evtx.Evtx as evtx
 
