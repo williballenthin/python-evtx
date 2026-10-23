@@ -360,7 +360,14 @@ class ChunkHeader(Block):
             self._strings = {}
         for i in range(64):
             ofs = self.unpack_dword(0x80 + (i * 4))
+            seen = set()
             while ofs > 0:
+                if ofs in seen:
+                    # the on-disk next_offset chain points back to an offset we
+                    # already followed; a malformed chunk can make this cyclic,
+                    # so stop instead of looping forever.
+                    break
+                seen.add(ofs)
                 string_node = self.add_string(ofs)
                 ofs = string_node.next_offset()
 
@@ -394,7 +401,12 @@ class ChunkHeader(Block):
             self._templates = {}
         for i in range(32):
             ofs = self.unpack_dword(0x180 + (i * 4))
+            seen = set()
             while ofs > 0:
+                if ofs in seen:
+                    # see _load_strings: guard against a cyclic next_offset chain.
+                    break
+                seen.add(ofs)
                 # unclear why these are found before the offset
                 # this is a direct port from A.S.'s code
                 token = self.unpack_byte(ofs - 10)
