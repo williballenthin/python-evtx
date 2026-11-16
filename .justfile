@@ -1,14 +1,14 @@
 isort:
-    uvx isort --length-sort --profile black --line-length 120 Evtx/ tests/ scripts/
+    uvx isort --length-sort --profile black --line-length 120 Evtx/ tests/ evtx_scripts/
 
 black:
-    uvx black --line-length 120 Evtx/ tests/ scripts/
+    uvx black --line-length 120 Evtx/ tests/ evtx_scripts/
 
 ruff:
-    uvx ruff check --line-length 120 Evtx/ tests/ scripts/
+    uvx ruff check --line-length 120 Evtx/ tests/ evtx_scripts/
 
 mypy:
-    uvx mypy --check-untyped-defs --ignore-missing-imports Evtx/ tests/ scripts/
+    uvx mypy --check-untyped-defs --ignore-missing-imports Evtx/ tests/ evtx_scripts/
 
 lint:
     -just isort

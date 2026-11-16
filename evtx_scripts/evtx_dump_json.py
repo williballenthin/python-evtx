@@ -35,7 +35,7 @@ def main():
             data_dict = xmltodict.parse(record.xml())
 
             # Loop through each key,value pair of the System section of the evtx logs and extract the EventRecordID
-            for event_system_key, event_system_value in data_dict["Event"]["System"].items():
+            for event_system_key, event_system_value in data_dict.get("Event",{}).get("System",{}).items():
                 if event_system_key == "EventRecordID":
                     json_subline = {}
                     firstline = {event_system_key: event_system_value}
@@ -44,7 +44,7 @@ def main():
                     json_subline.update(firstline)  # add the event ID to JSON subline
 
             # Loop through each key, value pair of the EventData section of the evtx logs
-            for event_data_key, event_data_value in data_dict["Event"]["EventData"].items():
+            for event_data_key, event_data_value in data_dict.get("Event",{}).get("EventData",{}).items():
                 for values in event_data_value:
 
                     # Loop through each subvalue within the EvenData section to extract necessary information

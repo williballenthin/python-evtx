@@ -2,6 +2,11 @@
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["Evtx*", "evtx_scripts*"]
+exclude = ["tests", "tests.*"]
+
 [project]
 name = "python-evtx"
 version = "0.8.1"
@@ -47,19 +52,16 @@ test = [
 ]
 
 [project.scripts]
-evtx_dump = "scripts.evtx_dump:main"
-evtx_dump_json = "scripts.evtx_dump_json:main"
-evtx_dump_chunk_slack = "scripts.evtx_dump_chunk_slack:main"
-evtx_eid_record_numbers = "scripts.evtx_eid_record_numbers:main"
-evtx_extract_record = "scripts.evtx_extract_record:main"
-evtx_filter_records = "scripts.evtx_filter_records:main"
-evtx_info = "scripts.evtx_info:main"
-evtx_record_structure = "scripts.evtx_record_structure:main"
-evtx_structure = "scripts.evtx_structure:main"
-evtx_templates = "scripts.evtx_templates:main"
-
-[tool.setuptools]
-packages = ["Evtx"]
+evtx_dump = "evtx_scripts.evtx_dump:main"
+evtx_dump_json = "evtx_scripts.evtx_dump_json:main"
+evtx_dump_chunk_slack = "evtx_scripts.evtx_dump_chunk_slack:main"
+evtx_eid_record_numbers = "evtx_scripts.evtx_eid_record_numbers:main"
+evtx_extract_record = "evtx_scripts.evtx_extract_record:main"
+evtx_filter_records = "evtx_scripts.evtx_filter_records:main"
+evtx_info = "evtx_scripts.evtx_info:main"
+evtx_record_structure = "evtx_scripts.evtx_record_structure:main"
+evtx_structure = "evtx_scripts.evtx_structure:main"
+evtx_templates = "evtx_scripts.evtx_templates:main"
 
 [tool.black]
 line-length = 120

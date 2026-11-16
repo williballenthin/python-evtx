@@ -467,9 +467,10 @@ def get_variant_value(buf, offset, chunk, parent, type_, length=None):
         NODE_TYPES.BXML: BXmlTypeNode,
         NODE_TYPES.WSTRINGARRAY: WstringArrayTypeNode,
     }
+    types.update(ARRAY_TYPES)
     try:
         TypeClass = types[type_]
-    except IndexError:
+    except KeyError:
         raise NotImplementedError("Type {} not implemented".format(type_))
     return TypeClass(buf, offset, chunk, parent, length=length)
 
@@ -1603,3 +1604,62 @@ node_readable_tokens = [
     "Conditional Substitution",
     "Start of Stream",
 ]
+
+
+def _fixed_array_type_node(element_class, element_size):
+    """
+    Build a variant type for an array of fixed-width values: the elements are
+    stored one after another, and each is rendered by `element_class`.
+    The array renders as <string> pieces, as WstringArrayTypeNode does.
+    """
+
+    class FixedArrayTypeNode(VariantTypeNode):
+        def __init__(self, buf, offset, chunk, parent, length=None):
+            super().__init__(buf, offset, chunk, parent, length=length)
+            if self._length is None:
+                raise NotImplementedError("an array value outside a substitution has no size")
+            if self._length % element_size != 0:
+                raise ParseException(
+                    f"array of {self._length} bytes is not a whole number of {element_size}-byte values"
+                )
+
+        def tag_length(self):
+            return self._length
+
+        def string(self):
+            acc = []
+            for index in range(self._length // element_size):
+                element = element_class(
+                    self._buf, self.offset() + index * element_size, self._chunk, self, length=element_size
+                )
+                acc.append("<string>")
+                acc.append(element.string())
+                acc.append("</string>\n")
+            return "".join(acc)
+
+    FixedArrayTypeNode.__name__ = f"{element_class.__name__}Array"
+    return FixedArrayTypeNode
+
+
+# Array value types whose element has a fixed size: the array flag (0x80) or'd
+# with the element's value type.
+ARRAY_TYPES = {
+    0x80 | value_type: _fixed_array_type_node(element_class, element_size)
+    for value_type, element_class, element_size in (
+        (NODE_TYPES.SIGNED_BYTE, SignedByteTypeNode, 1),
+        (NODE_TYPES.UNSIGNED_BYTE, UnsignedByteTypeNode, 1),
+        (NODE_TYPES.SIGNED_WORD, SignedWordTypeNode, 2),
+        (NODE_TYPES.UNSIGNED_WORD, UnsignedWordTypeNode, 2),
+        (NODE_TYPES.SIGNED_DWORD, SignedDwordTypeNode, 4),
+        (NODE_TYPES.UNSIGNED_DWORD, UnsignedDwordTypeNode, 4),
+        (NODE_TYPES.SIGNED_QWORD, SignedQwordTypeNode, 8),
+        (NODE_TYPES.UNSIGNED_QWORD, UnsignedQwordTypeNode, 8),
+        (NODE_TYPES.FLOAT, FloatTypeNode, 4),
+        (NODE_TYPES.DOUBLE, DoubleTypeNode, 8),
+        (NODE_TYPES.GUID, GuidTypeNode, 16),
+        (NODE_TYPES.FILETIME, FiletimeTypeNode, 8),
+        (NODE_TYPES.SYSTEMTIME, SystemtimeTypeNode, 16),
+        (NODE_TYPES.HEX32, Hex32TypeNode, 4),
+        (NODE_TYPES.HEX64, Hex64TypeNode, 8),
+    )
+}
